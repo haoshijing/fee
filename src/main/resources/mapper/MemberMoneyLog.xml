@@ -8,13 +8,7 @@
     </sql>
     <!-- 插入一条记录 -->
 
-    <select id = "selectAll" resultType="com.yingliguoji.fee.po.MemberMoneyLog" >
-        select id from  <include refid="tableName"/>
-
-    </select>
-
-
-    <insert id="insert" parameterType="com.yingliguoji.fee.po.MemberMoneyLog">
+    <insert id="insert" parameterType="com.yingliguoji.fee.po.MemberMoneyLogPo">
 
         insert into <include refid="tableName"/>
         (

@@ -8,10 +8,11 @@
     </sql>
     <!-- 插入一条记录 -->
 
-    <select id = "findByMemAndClassify" resultType="com.yingliguoji.fee.po.RebatePo">
+    <select id = "find" resultType="RebatePo">
         select * from <include refid="tableName"/>
-        where user_id = #{userId}
-        and class_id = #{classId}
+        where user_id =243  and class_id = 1
+        limit 1
     </select>
+
 
 </mapper>

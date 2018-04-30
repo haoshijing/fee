@@ -2,16 +2,17 @@ package com.yingliguoji.fee.dao;
 
 
 import com.yingliguoji.fee.po.MemberClassifyPo;
+import org.apache.ibatis.annotations.Param;
 
 import java.math.BigDecimal;
 
 public interface MemberClassifyMapper {
 
-    int insert(MemberClassifyPo classifyPo);
+    Integer insert(MemberClassifyPo classifyPo);
 
-    int queryCount(MemberClassifyPo classifyPo);
+    Integer queryCount(MemberClassifyPo classifyPo);
 
-    int update(MemberClassifyPo memberClassifyPo);
+    Integer update(MemberClassifyPo memberClassifyPo);
 
-    BigDecimal sumMoney(Integer memberId);
+    BigDecimal sumMoney(@Param("memberId") Integer memberId, @Param("cid") Integer classifyId);
 }

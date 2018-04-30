@@ -25,7 +25,7 @@
         )
     </insert>
     
-    <select id="queryCount" resultType="java.lang.Integer">
+    <select id="queryCount" parameterType="com.yingliguoji.fee.po.MemberClassifyPo" resultType="java.lang.Integer">
         select count(1) from <include refid="tableName"/>
            where memberId = #{memberId}
         and classifyId = #{classifyId}
@@ -34,9 +34,11 @@
     <!-- 插入一条记录 -->
 
 
-    <select id="update" parameterType="com.yingliguoji.fee.po.MemberClassifyPo">
+    <select id="update" parameterType="com.yingliguoji.fee.po.MemberClassifyPo"
+            resultType="java.lang.Integer">
 
-        update <include refid="tableName"/> SET
+        update <include refid="tableName"/>
+        SET
         money = #{money}
         where memberId = #{memberId}
         and classifyId = #{classifyId}
@@ -46,6 +48,6 @@
     <select id="sumMoney" resultType="java.math.BigDecimal">
         select sum(money) from <include refid="tableName"/>
         where memberId = #{memberId}
-        and classifyId = #{classifyId}
+        and classifyId = #{cid}
     </select>
 </mapper>

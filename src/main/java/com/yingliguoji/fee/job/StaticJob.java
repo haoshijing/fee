@@ -5,13 +5,16 @@ import com.yingliguoji.fee.dao.ClassifyMapper;
 import com.yingliguoji.fee.dao.MemberMapper;
 import com.yingliguoji.fee.po.ClassifyPo;
 import com.yingliguoji.fee.po.MemberPo;
+import com.yingliguoji.fee.service.GameRecordService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.event.ApplicationStartedEvent;
 import org.springframework.boot.context.event.ApplicationStartingEvent;
 import org.springframework.boot.context.event.SpringApplicationEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Repository;
 
+import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -24,24 +27,29 @@ public class StaticJob {
     @Autowired
     private MemberMapper memberMapper;
 
-    private ClassifyMapper classifyMapper;
+    @Autowired
+    private GameRecordService gameRecordService;
 
     ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
-    @EventListener
-    public void work(ApplicationStartingEvent event){
-        work();
+
+    @PostConstruct
+    public void init(){
+        try {
+            work();
+        }catch (Throwable e){
+            log.error("",e);
+        }
     }
 
     private void work(){
 
-        List<ClassifyPo> classifyPos = classifyMapper.selectAll();
         executorService.scheduleWithFixedDelay(new Runnable() {
             @Override
             public void run() {
                 List<MemberPo> memberPoList = memberMapper.selectAll();
                 memberPoList.forEach(memberPo -> {
                     Integer memberId = memberPo.getId();
-
+                    gameRecordService.calMemberBet(243);
                 });
 
             }

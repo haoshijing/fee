@@ -50,14 +50,16 @@ public class GameRecordService {
                 memberClassifyPo.setCreateTime(System.currentTimeMillis());
                 memberClassifyMapper.insert(memberClassifyPo);
             }else{
+                memberClassifyPo.setMoney(money);
                 memberClassifyPo.setLastUpdateTime(System.currentTimeMillis());
                 memberClassifyMapper.update(memberClassifyPo);
             }
 
             //算一下总数
+            Integer classifyId = classifyPo.getId();
 
-            BigDecimal sumMoney = memberClassifyMapper.sumMoney(memberId);
-            if(sumMoney.intValue() >= 10000){
+            BigDecimal sumMoney = memberClassifyMapper.sumMoney(memberId,classifyId);
+            if(sumMoney != null && sumMoney.intValue() >= 10){
                 //触发反水
                 handlerMemFee(memberId,classifyPo.getId());
                 //增加一条扣除总数的记录
@@ -65,7 +67,7 @@ public class GameRecordService {
                 newPo.setClassifyId(classifyPo.getId());
                 newPo.setMemberId(memberId);
                 memberClassifyPo.setType(2);
-                memberClassifyPo.setMoney(new BigDecimal(-10000));
+                memberClassifyPo.setMoney(new BigDecimal(-10));
                 memberClassifyMapper.insert(memberClassifyPo);
 
             }
@@ -99,19 +101,16 @@ public class GameRecordService {
         MemberPo memberPo;
         while ((memberPo = memberMapper.findById(memberId)) != null){
             //
-            RebatePo queryPo = new RebatePo();
-            queryPo.setClass_id(classifyId);
-            queryPo.setUser_id(memberId);
 
-            RebatePo dbPo = rebateMapper.findByMemAndClassify(queryPo);
+            RebatePo dataPo = rebateMapper.find(memberId,classifyId);
 
-            if(dbPo != null){
+            if(dataPo != null){
                 //增加反水记录
                 MemberPo beforeMemberPo = memberMapper.findById(memberId);
                 MemberMoneyLogPo log = new MemberMoneyLogPo();
                 log.setBeforeMoney(beforeMemberPo.getMoney());
-                log.setMemo("代理返现金额:"+(dbPo.getQuota() -kouchu));
-                log.setMoney(new BigDecimal(dbPo.getQuota() -kouchu));
+                log.setMemo("代理返现金额:"+(dataPo.getQuota() -kouchu));
+                log.setMoney(new BigDecimal(dataPo.getQuota() -kouchu));
                 log.setType(1);
 
                 MemberPo updatePo = new MemberPo();
@@ -126,9 +125,8 @@ public class GameRecordService {
                 log.setAfterMoney(afterPo.getMoney());
 
                 memberMoneyLogMapper.insert(log);
-                //修改代理的的xx钱
+                kouchu = dataPo.getQuota();
             }
-            kouchu = dbPo.getQuota();
             memberId = memberPo.getTop_id();
         }
 

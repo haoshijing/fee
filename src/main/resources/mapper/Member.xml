@@ -13,7 +13,7 @@
 
     </select>
 
-    <select id = "selectById" resultType="com.yingliguoji.fee.po.MemberPo">
+    <select id = "findById" resultType="com.yingliguoji.fee.po.MemberPo">
         select * from <include refid="tableName"/>
         where id = #{id}
     </select>
@@ -22,7 +22,7 @@
         update <include refid="tableName"/>
         set money = #{money}  + money ,
         <if test = "fs_money != null">
-            fs_money = #{fs_money} + money
+            fs_money = #{fs_money} + fs_money
         </if>
         where id = #{id}
     </update>

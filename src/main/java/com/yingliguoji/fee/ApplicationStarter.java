@@ -9,7 +9,7 @@ import org.springframework.context.annotation.ImportResource;
 @ImportResource({"classpath:application-context.xml"})
 public class ApplicationStarter {
     public static void main(String[] args) {
-        SpringApplication.run(ApplicationStarter.class, args);
+        SpringApplication.run(ApplicationStarter.class, args).start();
     }
 
 }
