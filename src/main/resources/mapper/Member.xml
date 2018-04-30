@@ -18,4 +18,12 @@
         where id = #{id}
     </select>
 
+    <update id="update" parameterType="com.yingliguoji.fee.po.MemberPo">
+        update <include refid="tableName"/>
+        set money = #{money}  + money ,
+        <if test = "fs_money != null">
+            fs_money = #{fs_money} + money
+        </if>
+        where id = #{id}
+    </update>
 </mapper>

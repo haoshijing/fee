@@ -3,10 +3,7 @@ package com.yingliguoji.fee.service;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.yingliguoji.fee.dao.*;
-import com.yingliguoji.fee.po.ClassifyPo;
-import com.yingliguoji.fee.po.MemberClassifyPo;
-import com.yingliguoji.fee.po.MemberPo;
-import com.yingliguoji.fee.po.RebatePo;
+import com.yingliguoji.fee.po.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -31,6 +28,9 @@ public class GameRecordService {
 
     @Autowired
     private RebateMapper rebateMapper;
+
+    @Autowired
+    private MemberMoneyLogMapper memberMoneyLogMapper;
 
 
     public void calMemberBet(Integer memberId) {
@@ -107,6 +107,25 @@ public class GameRecordService {
 
             if(dbPo != null){
                 //增加反水记录
+                MemberPo beforeMemberPo = memberMapper.findById(memberId);
+                MemberMoneyLogPo log = new MemberMoneyLogPo();
+                log.setBeforeMoney(beforeMemberPo.getMoney());
+                log.setMemo("代理返现金额:"+(dbPo.getQuota() -kouchu));
+                log.setMoney(new BigDecimal(dbPo.getQuota() -kouchu));
+                log.setType(1);
+
+                MemberPo updatePo = new MemberPo();
+                updatePo.setId(memberId);
+                updatePo.setMoney(log.getMoney());
+                updatePo.setFs_money(log.getMoney());
+
+                memberMapper.update(updatePo);
+
+                MemberPo afterPo = memberMapper.findById(memberId);
+
+                log.setAfterMoney(afterPo.getMoney());
+
+                memberMoneyLogMapper.insert(log);
                 //修改代理的的xx钱
             }
             kouchu = dbPo.getQuota();

@@ -8,4 +8,6 @@ public interface MemberMapper {
     List<MemberPo> selectAll();
 
     MemberPo findById(Integer memberId);
+
+    int update(MemberPo memberPo);
 }

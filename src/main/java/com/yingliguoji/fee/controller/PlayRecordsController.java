@@ -44,6 +44,7 @@ public class PlayRecordsController {
                                 item.setClassiFyId(classifyPo.getId());
                                 item.setName(classifyPo.getName());
                                 BigDecimal bigDecimal = gameRecordService.getMoney(memberId,recordRequest.getStart(),recordRequest.getEnd(),classifyPo);
+                                item.setMoney(bigDecimal.doubleValue());
                                 return item;
                             }).collect(Collectors.toList());
                     recordTotalVo.setMemberId(memberId);
