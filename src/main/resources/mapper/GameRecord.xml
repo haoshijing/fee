@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yingliguoji.fee.dao.GameRecordMapper">
+
+    <sql id="tableName">
+        game_record
+    </sql>
+    <!-- 插入一条记录 -->
+
+    <select id = "selectAll" resultType="com.yingliguoji.fee.po.GameRecordPo" >
+        select * from  <include refid="tableName"/>
+
+    </select>
+
+
+    <select id="getPlayerTotal" resultType="java.math.BigDecimal">
+        select sum(reAmount) from <include refid="tableName" />
+
+        where
+        memberId =#{memberId}
+        <if test = "gameTypes != null and gameTypes.size() > 0">
+            AND gameType in
+            <foreach collection="gameTypes" close=")" open="(" separator="," item="type">
+                #{type}
+            </foreach>
+
+        </if>
+
+        <if test = "startTime != null and startTime != ''">
+            AND betTime >= #{startTime}
+        </if>
+
+        <if test = "endTime != null and endTime != ''">
+            AND endTime <![CDATA[ <= ]]> #{endTime}
+        </if>
+    </select>
+</mapper>

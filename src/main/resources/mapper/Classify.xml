@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yingliguoji.fee.dao.ClassifyMapper">
+
+    <sql id="tableName">
+        classify
+    </sql>
+    <!-- 插入一条记录 -->
+
+    <select id = "selectAll" resultType="com.yingliguoji.fee.po.ClassifyPo" >
+        select * from  <include refid="tableName"/>
+
+    </select>
+
+</mapper>
