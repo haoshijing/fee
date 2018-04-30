@@ -7,6 +7,6 @@ import java.util.List;
 @Data
 public class PlayerRecordRequest {
     private List<Integer> memberIds;
-    private String startTime;
-    private String endTime;
+    private Integer start;
+    private Integer end;
 }

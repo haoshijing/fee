@@ -9,4 +9,5 @@ public class MemberPo {
     private Integer money;
     private Integer status;
     private Integer fs_money;
+    private Integer top_id;
 }

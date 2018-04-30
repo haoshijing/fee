@@ -9,8 +9,13 @@
     <!-- 插入一条记录 -->
 
     <select id = "selectAll" resultType="com.yingliguoji.fee.po.MemberPo" >
-        select * from  <include refid="tableName"/>
+        select id from  <include refid="tableName"/>
 
+    </select>
+
+    <select id = "selectById" resultType="com.yingliguoji.fee.po.MemberPo">
+        select * from <include refid="tableName"/>
+        where id = #{id}
     </select>
 
 </mapper>

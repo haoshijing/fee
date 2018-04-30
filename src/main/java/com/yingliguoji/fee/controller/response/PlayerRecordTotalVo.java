@@ -13,7 +13,7 @@ public class PlayerRecordTotalVo {
     @Data
     public static class ClassiFyItem{
         private Integer classiFyId;
-        private Integer money;
+        private Double money;
         private String name;
 
     }

@@ -7,12 +7,14 @@ import com.yingliguoji.fee.controller.response.PlayerRecordTotalVo;
 import com.yingliguoji.fee.dao.ClassifyMapper;
 import com.yingliguoji.fee.dao.GameRecordMapper;
 import com.yingliguoji.fee.po.ClassifyPo;
+import com.yingliguoji.fee.service.GameRecordService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -24,8 +26,7 @@ public class PlayRecordsController {
     private ClassifyMapper classifyMapper;
 
     @Autowired
-    private GameRecordMapper gameRecordMapper;
-
+    private GameRecordService gameRecordService;
     @RequestMapping("/getPlayerRecordTotal")
     public List<PlayerRecordTotalVo> getPlayerRecordTotal(@RequestBody PlayerRecordRequest recordRequest) {
 
@@ -42,23 +43,11 @@ public class PlayRecordsController {
                                 PlayerRecordTotalVo.ClassiFyItem item = new PlayerRecordTotalVo.ClassiFyItem();
                                 item.setClassiFyId(classifyPo.getId());
                                 item.setName(classifyPo.getName());
-                                String type = classifyPo.getType();
-                                String []typeArr = type.split(",");
-                                List<Integer> gameTypes = Lists.newArrayList();
-                                for(String typeStr:typeArr){
-                                    gameTypes.add(Integer.valueOf(typeStr));
-                                }
-
-                                Map<String,Object> params  = Maps.newHashMap();
-                                params.put("memberId",memberId);
-                                params.put("startTime",recordRequest.getStartTime());
-                                params.put("endTime",recordRequest.getEndTime());
-                                params.put("gameTypes",gameTypes);
-
-                                Integer money = gameRecordMapper.getPlayerTotal(params);
-                                item.setMoney(money);
+                                BigDecimal bigDecimal = gameRecordService.getMoney(memberId,recordRequest.getStart(),recordRequest.getEnd(),classifyPo);
                                 return item;
                             }).collect(Collectors.toList());
+                    recordTotalVo.setMemberId(memberId);
+                    recordTotalVo.setClassiFyItemList(items);
 
                     return recordTotalVo;
                 }

@@ -16,9 +16,8 @@
 
     <select id="getPlayerTotal" resultType="java.math.BigDecimal">
         select sum(reAmount) from <include refid="tableName" />
-
         where
-        memberId =#{memberId}
+        member_id =#{memberId}
         <if test = "gameTypes != null and gameTypes.size() > 0">
             AND gameType in
             <foreach collection="gameTypes" close=")" open="(" separator="," item="type">
