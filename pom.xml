@@ -92,6 +92,12 @@
             <version>4.0.0</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-common</artifactId>
+            <version>4.1.24.Final</version>
+        </dependency>
+
 
         <dependency>
             <groupId>commons-lang</groupId>

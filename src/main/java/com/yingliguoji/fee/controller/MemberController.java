@@ -1,5 +1,6 @@
 package com.yingliguoji.fee.controller;
 
+import com.yingliguoji.fee.controller.response.BranchAgentVo;
 import com.yingliguoji.fee.dao.MemberMapper;
 import com.yingliguoji.fee.dao.RebateMapper;
 import com.yingliguoji.fee.po.MemberPo;
@@ -42,7 +43,11 @@ public class MemberController {
         return 0;
     }
 
-    @RequestMapping
+    @RequestMapping("/branchAgentDataList")
+    public List<BranchAgentVo> branchAgentVoList(Integer branchId){
+        List<BranchAgentVo> vos = memberService.branchAgentVoList(branchId);
+        return vos;
+    }
 
     @RequestMapping("/memberList")
     public String test(Integer memberId) {
