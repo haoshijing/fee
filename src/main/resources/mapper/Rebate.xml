@@ -10,7 +10,7 @@
 
     <select id = "find" resultType="RebatePo">
         select * from <include refid="tableName"/>
-        where user_id =243  and class_id = 1
+        where user_id =#{userId}  and class_id = #{cid}
         limit 1
     </select>
 

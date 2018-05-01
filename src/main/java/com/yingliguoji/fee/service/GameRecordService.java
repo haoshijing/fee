@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -30,7 +32,7 @@ public class GameRecordService {
     private RebateMapper rebateMapper;
 
     @Autowired
-    private MemberMoneyLogMapper memberMoneyLogMapper;
+    private DividendMapper dividendMapper;
 
 
     public void calMemberBet(Integer memberId) {
@@ -68,7 +70,7 @@ public class GameRecordService {
                 newPo.setMemberId(memberId);
                 memberClassifyPo.setType(2);
                 memberClassifyPo.setMoney(new BigDecimal(-10));
-                memberClassifyMapper.insert(memberClassifyPo);
+                memberClassifyMapper.insert(newPo);
 
             }
 
@@ -100,18 +102,18 @@ public class GameRecordService {
         Integer kouchu = 0;
         MemberPo memberPo;
         while ((memberPo = memberMapper.findById(memberId)) != null){
-            //
-
             RebatePo dataPo = rebateMapper.find(memberId,classifyId);
-
             if(dataPo != null){
                 //增加反水记录
                 MemberPo beforeMemberPo = memberMapper.findById(memberId);
-                MemberMoneyLogPo log = new MemberMoneyLogPo();
+                DividendPo log = new DividendPo();
                 log.setBeforeMoney(beforeMemberPo.getMoney());
-                log.setMemo("代理返现金额:"+(dataPo.getQuota() -kouchu));
+                log.setDescribe("返水:"+(dataPo.getQuota() -kouchu));
                 log.setMoney(new BigDecimal(dataPo.getQuota() -kouchu));
-                log.setType(1);
+                log.setType(3);
+                log.setMemberId(memberId);
+                Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+                log.setCreatedAt(timestamp);
 
                 MemberPo updatePo = new MemberPo();
                 updatePo.setId(memberId);
@@ -124,11 +126,12 @@ public class GameRecordService {
 
                 log.setAfterMoney(afterPo.getMoney());
 
-                memberMoneyLogMapper.insert(log);
+                dividendMapper.insert(log);
                 kouchu = dataPo.getQuota();
             }
             memberId = memberPo.getTop_id();
         }
 
     }
+
 }

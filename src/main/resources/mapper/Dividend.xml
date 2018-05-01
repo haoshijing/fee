@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.yingliguoji.fee.dao.MemberMoneyLogMapper">
+<mapper namespace="com.yingliguoji.fee.dao.DividendMapper">
 
     <sql id="tableName">
-        members
+        dividend
     </sql>
     <!-- 插入一条记录 -->
 
-    <insert id="insert" parameterType="com.yingliguoji.fee.po.MemberMoneyLogPo">
+    <insert id="insert" parameterType="com.yingliguoji.fee.po.DividendPo">
 
         insert into <include refid="tableName"/>
         (
-        memberId,
-        money
+        member_id,
+        money,
         `type`,
-        memo,
-        beforeMoney,
-        afterMoney,
-        createTime
+        `describe`,
+        before_money,
+        after_money,
+        created_at
         )
 
         VALUES (
@@ -26,10 +26,10 @@
         #{memberId},
         #{money},
         #{type},
-        #{memo},
+        #{describe},
         #{beforeMoney},
         #{afterMoney},
-        #{createTime}
+        #{createdAt}
         )
 
     </insert>
