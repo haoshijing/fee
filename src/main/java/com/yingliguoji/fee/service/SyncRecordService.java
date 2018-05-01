@@ -8,6 +8,9 @@ import com.yingliguoji.fee.po.MemberPo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
+import java.sql.Timestamp;
+
 @Repository
 public class SyncRecordService {
 
@@ -31,9 +34,12 @@ public class SyncRecordService {
         gameRecordPo.setMemberId(memberPo.getId());
         gameRecordPo.setName(memberPo.getName());
         gameRecordPo.setPlayType(20000);
-        gameRecordPo.se
+        Timestamp timestamp = new Timestamp(playRecordRequest.getBetTime());
+        gameRecordPo.setBetTime(timestamp);
+        gameRecordPo.setReAmount(new BigDecimal(playRecordRequest.getReAmount()));
+        gameRecordPo.setBetAmount(new BigDecimal(playRecordRequest.getBetAmount()));
 
-        return gameRecordMapper.insert(ga)
+        return gameRecordMapper.insert(gameRecordPo);
 
     }
 
