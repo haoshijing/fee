@@ -38,6 +38,9 @@ public class GameRecordService {
     @Value("${fireData}")
     private Integer fireData;
 
+    private static final int TYPE_ADD  = 1;
+    private static final int TYPE_JIAN = 2;
+
 
     @Transactional
     public void calMemberBet(Integer memberId) {
@@ -49,7 +52,7 @@ public class GameRecordService {
             MemberClassifyPo memberClassifyPo = new MemberClassifyPo();
             memberClassifyPo.setClassifyId(classifyPo.getId());
             memberClassifyPo.setMemberId(memberId);
-            memberClassifyPo.setType(1);
+            memberClassifyPo.setType(TYPE_ADD);
 
             Integer count = memberClassifyMapper.queryCount(memberClassifyPo);
             if(count == 0){
@@ -68,16 +71,15 @@ public class GameRecordService {
             BigDecimal sumMoney = memberClassifyMapper.sumMoney(memberId,classifyId);
                if(sumMoney != null && sumMoney.intValue() >= fireData){
                 //触发反水
-                handlerMemFee(memberId,classifyPo.getId());
+                handlerMemFee(memberId,classifyPo.getId(),sumMoney);
                 //增加一条扣除总数的记录
                 MemberClassifyPo newPo = new MemberClassifyPo();
                 newPo.setClassifyId(classifyPo.getId());
                 newPo.setMemberId(memberId);
-                newPo.setType(2);
+                newPo.setType(TYPE_JIAN);
                 newPo.setCreateTime(System.currentTimeMillis());
-                newPo.setMoney(new BigDecimal(0-fireData));
+                newPo.setMoney(sumMoney.multiply(new BigDecimal(-1)));
                 memberClassifyMapper.insert(newPo);
-
             }
 
         });
@@ -138,7 +140,7 @@ public class GameRecordService {
 
     }
 
-    public void handlerMemFee(Integer memberId,Integer classifyId){
+    public void handlerMemFee(Integer memberId,Integer classifyId,BigDecimal sumMoney){
         Integer kouchu = 0;
         MemberPo memberPo;
         while ((memberPo = memberMapper.findById(memberId)) != null){
@@ -148,8 +150,10 @@ public class GameRecordService {
                 MemberPo beforeMemberPo = memberMapper.findById(memberId);
                 DividendPo log = new DividendPo();
                 log.setBeforeMoney(beforeMemberPo.getMoney());
-                log.setDescribe("返水:"+(dataPo.getQuota() -kouchu));
-                log.setMoney(new BigDecimal(dataPo.getQuota() -kouchu));
+                Integer getMoney = dataPo.getQuota() -kouchu;
+                BigDecimal money = sumMoney.divide(new BigDecimal(fireData)).multiply(new BigDecimal(getMoney));
+                log.setDescribe("返水:类别:"+classifyId+""+getMoney);
+                log.setMoney(money);
                 log.setType(3);
                 log.setMemberId(memberId);
                 Timestamp timestamp = new Timestamp(System.currentTimeMillis());

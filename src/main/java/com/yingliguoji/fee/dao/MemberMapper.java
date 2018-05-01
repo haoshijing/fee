@@ -12,4 +12,6 @@ public interface MemberMapper {
     int update(MemberPo memberPo);
 
     MemberPo findByName(String name);
+
+    List<MemberPo> selectList(MemberPo queryPo);
 }

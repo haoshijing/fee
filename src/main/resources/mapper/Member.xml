@@ -8,26 +8,30 @@
     </sql>
     <!-- 插入一条记录 -->
 
-    <select id = "selectAll" resultType="com.yingliguoji.fee.po.MemberPo" >
-        select id from  <include refid="tableName"/>
+    <select id="selectAll" resultType="com.yingliguoji.fee.po.MemberPo">
+        select id from
+        <include refid="tableName"/>
 
     </select>
 
-    <select id = "findById" resultType="com.yingliguoji.fee.po.MemberPo">
-        select * from <include refid="tableName"/>
+    <select id="findById" resultType="com.yingliguoji.fee.po.MemberPo">
+        select * from
+        <include refid="tableName"/>
         where id = #{id}
     </select>
 
 
-    <select id = "findByName" resultType="com.yingliguoji.fee.po.MemberPo">
-        select * from <include refid="tableName"/>
+    <select id="findByName" resultType="com.yingliguoji.fee.po.MemberPo">
+        select * from
+        <include refid="tableName"/>
         where name = #{name}
     </select>
 
     <update id="update" parameterType="com.yingliguoji.fee.po.MemberPo">
-        update <include refid="tableName"/>
-        set money = #{money}  + money ,
-        <if test = "fs_money != null">
+        update
+        <include refid="tableName"/>
+        set money = #{money} + money ,
+        <if test="fs_money != null">
             fs_money = #{fs_money} + fs_money
         </if>
         where id = #{id}
@@ -37,4 +41,24 @@
         update members set branch_id = #{branchId}
         where name = #{name}
     </update>
+
+    <select id="selectList" parameterType="com.yingliguoji.fee.po.MemberPo"
+            resultType="com.yingliguoji.fee.po.MemberPo">
+        select * from
+        <include refid="tableName"/>
+        <where>
+            1 = 1
+            <if test="top_id != null">
+                and top_id = #{top_id}
+            </if>
+            <if test="branch_id != null">
+                AND branch_id = #{branch_id}
+            </if>
+            <if test="is_daili != null">
+                AND is_daili = #{is_daili}
+            </if>
+
+        </where>
+    </select>
+
 </mapper>
