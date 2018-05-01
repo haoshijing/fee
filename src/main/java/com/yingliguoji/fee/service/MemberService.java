@@ -5,6 +5,7 @@ import com.yingliguoji.fee.controller.response.BranchAgentVo;
 import com.yingliguoji.fee.dao.MemberMapper;
 import com.yingliguoji.fee.po.MemberPo;
 import io.netty.util.concurrent.DefaultEventExecutor;
+import io.netty.util.concurrent.DefaultThreadFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +22,7 @@ public class MemberService {
     private DefaultEventExecutor defaultEventExecutor;
 
     public MemberService(){
-
+        defaultEventExecutor = new DefaultEventExecutor(new DefaultThreadFactory("QueryMemberDataService"))
     }
 
     public List<MemberPo> getMemberIds(Integer proxyId) {
@@ -46,11 +47,16 @@ public class MemberService {
         return memberMapper.selectList(queryPo);
     }
 
-    public List<BranchAgentVo> branchAgentVoList(Integer branchId) {
-        List<MemberPo> proxyList = getMemberIds(branchId);
+    public List<BranchAgentVo> branchAgentVoList(Integer branchId,Integer start,Integer end) {
+
+        List<MemberPo> proxyList = getAllUnderProxy(branchId);
         return proxyList.stream().map(
                 memberPo -> {
                     BranchAgentVo branchAgentVo = new BranchAgentVo();
+                    branchAgentVo.setName(memberPo.getName());
+                    branchAgentVo.setRealName(memberPo.getReal_name());
+
+
                     return branchAgentVo;
                 }
         ).collect(Collectors.toList());
