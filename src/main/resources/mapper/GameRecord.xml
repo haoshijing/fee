@@ -13,9 +13,29 @@
 
     </select>
 
-
     <select id="getPlayerTotal" resultType="java.math.BigDecimal">
         select sum(reAmount) from <include refid="tableName" />
+        where
+        member_id =#{memberId}
+        <if test = "gameTypes != null and gameTypes.size() > 0">
+            AND gameType in
+            <foreach collection="gameTypes" close=")" open="(" separator="," item="type">
+                #{type}
+            </foreach>
+
+        </if>
+
+        <if test = "startTime != null and startTime != ''">
+            AND betTime >= #{startTime}
+        </if>
+
+        <if test = "endTime != null and endTime != ''">
+            AND endTime <![CDATA[ <= ]]> #{endTime}
+        </if>
+    </select>
+
+    <select id="getValidBetTotal" resultType="java.math.BigDecimal">
+        select sum(validBetAmount) from <include refid="tableName" />
         where
         member_id =#{memberId}
         <if test = "gameTypes != null and gameTypes.size() > 0">

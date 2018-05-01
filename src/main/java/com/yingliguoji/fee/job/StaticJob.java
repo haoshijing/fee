@@ -49,11 +49,11 @@ public class StaticJob {
                 List<MemberPo> memberPoList = memberMapper.selectAll();
                 memberPoList.forEach(memberPo -> {
                     Integer memberId = memberPo.getId();
-                    gameRecordService.calMemberBet(243);
+                    gameRecordService.calMemberBet(memberId);
                 });
 
             }
-        },1,3, TimeUnit.MINUTES);
+        },1,3000, TimeUnit.SECONDS);
     }
 
 }

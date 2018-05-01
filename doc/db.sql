@@ -1,5 +1,6 @@
 
 alter table  classify modify column type  varchar(255)  comment '游戏分类';
+drop table if EXISTS member_records_total;
 create table member_records_total
 (
 id int primary key auto_increment,
@@ -10,7 +11,7 @@ type int comment '1-统计,2-扣除',
 createTime bigint comment '创建时间',
 lastUpdatetTime bigint comment '创建时间'
 );
-
+drop table if EXISTS member_money_log;
 create table member_money_log
 (
 id int primary key auto_increment,

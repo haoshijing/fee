@@ -5,6 +5,7 @@ import com.google.common.collect.Maps;
 import com.yingliguoji.fee.dao.*;
 import com.yingliguoji.fee.po.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
@@ -34,13 +35,16 @@ public class GameRecordService {
     @Autowired
     private DividendMapper dividendMapper;
 
+    @Value("${fireData}")
+    private Integer fireData;
+
 
     public void calMemberBet(Integer memberId) {
         List<ClassifyPo> classifyPoList = classifyMapper.selectAll();
 
         classifyPoList.forEach(classifyPo -> {
 
-            BigDecimal money = getMoney(memberId,null,null,classifyPo);
+            BigDecimal money = getBetMoney(memberId,null,null,classifyPo);
             MemberClassifyPo memberClassifyPo = new MemberClassifyPo();
             memberClassifyPo.setClassifyId(classifyPo.getId());
             memberClassifyPo.setMemberId(memberId);
@@ -61,15 +65,16 @@ public class GameRecordService {
             Integer classifyId = classifyPo.getId();
 
             BigDecimal sumMoney = memberClassifyMapper.sumMoney(memberId,classifyId);
-            if(sumMoney != null && sumMoney.intValue() >= 10){
+               if(sumMoney != null && sumMoney.intValue() >= fireData){
                 //触发反水
                 handlerMemFee(memberId,classifyPo.getId());
                 //增加一条扣除总数的记录
                 MemberClassifyPo newPo = new MemberClassifyPo();
                 newPo.setClassifyId(classifyPo.getId());
                 newPo.setMemberId(memberId);
-                memberClassifyPo.setType(2);
-                memberClassifyPo.setMoney(new BigDecimal(-10));
+                newPo.setType(2);
+                newPo.setCreateTime(System.currentTimeMillis());
+                newPo.setMoney(new BigDecimal(0-fireData));
                 memberClassifyMapper.insert(newPo);
 
             }
@@ -94,6 +99,32 @@ public class GameRecordService {
         params.put("gameTypes", gameTypes);
 
         BigDecimal money = gameRecordMapper.getPlayerTotal(params);
+        if(money == null){
+            return new BigDecimal(0);
+        }
+        return  money;
+
+    }
+
+    public BigDecimal getBetMoney(Integer memberId, Integer start, Integer end, ClassifyPo classifyPo) {
+
+        String type = classifyPo.getType();
+        String[] typeArr = type.split(",");
+        List<Integer> gameTypes = Lists.newArrayList();
+        for (String typeStr : typeArr) {
+            gameTypes.add(Integer.valueOf(typeStr));
+        }
+
+        Map<String, Object> params = Maps.newHashMap();
+        params.put("memberId", memberId);
+        params.put("startTime", start);
+        params.put("endTime", end);
+        params.put("gameTypes", gameTypes);
+
+        BigDecimal money = gameRecordMapper.getValidBetTotal(params);
+        if(money == null){
+            return new BigDecimal(0);
+        }
         return  money;
 
     }
@@ -133,5 +164,4 @@ public class GameRecordService {
         }
 
     }
-
 }
