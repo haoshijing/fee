@@ -25,6 +25,7 @@
 
         </if>
 
+
         <if test = "startTime != null and startTime != ''">
             AND betTime >= #{startTime}
         </if>
@@ -54,4 +55,40 @@
             AND betTime <![CDATA[ <= ]]> #{endTime}
         </if>
     </select>
+
+    <select id="queryByTradeNo" parameterType="java.lang.String" resultType="java.lang.Integer">
+        select count(1) from <include refid="tableName" />
+        where billNo = #{tradeNo}
+    </select>
+
+    <insert id="insert" parameterType="com.yingliguoji.fee.po.GameRecordPo">
+        INSERT INTO <include refid="tableName"/>
+        (
+        rowid
+        billNo,
+        api_type,
+        playerName,
+        name,
+        member_id,
+        gameCode,
+        betTime,
+        gameType,
+        betAmount,
+        validBetAmount
+        )
+        VALUES
+        (
+        0,
+        #{billNo},
+        8,
+        #{name},
+        #{name},
+        #{memberId},
+        'YLCP',
+        #{betTime},
+        #{gameType},
+        #{betAmount},
+        #{validBetAmount}
+        )
+    </insert>
 </mapper>

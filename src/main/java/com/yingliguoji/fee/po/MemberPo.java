@@ -12,4 +12,5 @@ public class MemberPo {
     private Integer status;
     private BigDecimal fs_money;
     private Integer top_id;
+    private Integer is_dai;
 }

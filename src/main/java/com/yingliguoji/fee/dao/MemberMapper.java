@@ -10,4 +10,6 @@ public interface MemberMapper {
     MemberPo findById(Integer memberId);
 
     int update(MemberPo memberPo);
+
+    MemberPo findByName(String name);
 }

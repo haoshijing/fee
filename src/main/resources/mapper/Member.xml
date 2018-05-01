@@ -18,6 +18,12 @@
         where id = #{id}
     </select>
 
+
+    <select id = "findByName" resultType="com.yingliguoji.fee.po.MemberPo">
+        select * from <include refid="tableName"/>
+        where name = #{name}
+    </select>
+
     <update id="update" parameterType="com.yingliguoji.fee.po.MemberPo">
         update <include refid="tableName"/>
         set money = #{money}  + money ,
@@ -25,5 +31,9 @@
             fs_money = #{fs_money} + fs_money
         </if>
         where id = #{id}
+    </update>
+
+    <update id="updateBranchId" parameterType="java.lang.">
+        update members set
     </update>
 </mapper>
