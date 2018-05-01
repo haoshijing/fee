@@ -8,7 +8,7 @@
     </sql>
     <!-- 插入一条记录 -->
 
-    <select id = "find" resultType="RebatePo">
+    <select id = "find" resultType="com.yingliguoji.fee.po.RebatePo">
         select * from <include refid="tableName"/>
         where user_id =#{userId}  and class_id = #{cid}
         limit 1

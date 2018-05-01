@@ -105,13 +105,13 @@
         </dependency>
     </dependencies>
     <build>
-        <finalName>syncjob</finalName>
+        <finalName>fee</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>com.yingliguoji.fee.ApplicationStartLauncher</mainClass>
+                    <mainClass>com.yingliguoji.fee.ApplicationStarter</mainClass>
                 </configuration>
                 <executions>
                     <execution>
