@@ -53,7 +53,7 @@ public class StaticJob {
                 });
 
             }
-        },1,3000, TimeUnit.SECONDS);
+        },1,20, TimeUnit.MINUTES);
     }
 
 }
