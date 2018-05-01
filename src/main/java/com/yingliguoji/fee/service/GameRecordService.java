@@ -95,8 +95,16 @@ public class GameRecordService {
 
         Map<String, Object> params = Maps.newHashMap();
         params.put("memberId", memberId);
-        params.put("startTime", start);
-        params.put("endTime", end);
+
+        if(start != null){
+            Long startTime = (start*1000L);
+            Timestamp startTimestamp = new Timestamp(startTime);
+            params.put("startTime", startTimestamp.toString());
+        }
+        if(end != null) {
+            Long endTime = (end*1000L);
+            params.put("endTime", new Timestamp(endTime).toString());
+        }
         params.put("gameTypes", gameTypes);
 
         BigDecimal money = gameRecordMapper.getPlayerTotal(params);

@@ -30,7 +30,7 @@
         </if>
 
         <if test = "endTime != null and endTime != ''">
-            AND endTime <![CDATA[ <= ]]> #{endTime}
+            AND betTime <![CDATA[ <= ]]> #{endTime}
         </if>
     </select>
 
@@ -51,7 +51,7 @@
         </if>
 
         <if test = "endTime != null and endTime != ''">
-            AND endTime <![CDATA[ <= ]]> #{endTime}
+            AND betTime <![CDATA[ <= ]]> #{endTime}
         </if>
     </select>
 </mapper>
