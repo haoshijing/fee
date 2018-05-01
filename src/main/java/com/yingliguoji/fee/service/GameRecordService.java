@@ -7,10 +7,10 @@ import com.yingliguoji.fee.po.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -39,6 +39,7 @@ public class GameRecordService {
     private Integer fireData;
 
 
+    @Transactional
     public void calMemberBet(Integer memberId) {
         List<ClassifyPo> classifyPoList = classifyMapper.selectAll();
 
@@ -129,7 +130,7 @@ public class GameRecordService {
 
     }
 
-    private void handlerMemFee(Integer memberId,Integer classifyId){
+    public void handlerMemFee(Integer memberId,Integer classifyId){
         Integer kouchu = 0;
         MemberPo memberPo;
         while ((memberPo = memberMapper.findById(memberId)) != null){
