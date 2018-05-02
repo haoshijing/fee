@@ -92,7 +92,7 @@ public class MemberService {
                             Timestamp endTimeStamp = new Timestamp(end);
                             endTimeStampStr = endTimeStamp.toString();
                         }
-                        totalBet = gameRecordMapper.getBets(memberIds, startTimeStampStr, endTimeStampStr);
+                        totalBet = gameRecordMapper.getTotalValidBet(memberIds, startTimeStampStr, endTimeStampStr);
                     }
                     branchAgentVo.setTotalBet(totalBet);
                     return branchAgentVo;

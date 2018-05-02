@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -41,7 +40,8 @@ public class PlayRecordsController {
                                 PlayerRecordTotalVo.ClassiFyItem item = new PlayerRecordTotalVo.ClassiFyItem();
                                 item.setClassiFyId(classifyPo.getId());
                                 item.setName(classifyPo.getName());
-                                BigDecimal bigDecimal = gameRecordService.getMoney(memberId,recordRequest.getStart(),recordRequest.getEnd(),classifyPo);
+                                List<Integer> gameTypes = getGameTypes(classifyPo);
+                                BigDecimal bigDecimal = gameRecordService.getMoney(memberId,recordRequest.getStart(),recordRequest.getEnd(),gameTypes);
                                 item.setMoney(bigDecimal.doubleValue());
                                 return item;
                             }).collect(Collectors.toList());
@@ -52,6 +52,16 @@ public class PlayRecordsController {
                 }
         ).collect(Collectors.toList());
         return recordTotalVos;
+    }
+
+    private List<Integer> getGameTypes(ClassifyPo classifyPo) {
+        String type = classifyPo.getType();
+        String[] typeArr = type.split(",");
+        List<Integer> gameTypes = Lists.newArrayList();
+        for (String typeStr : typeArr) {
+            gameTypes.add(Integer.valueOf(typeStr));
+        }
+        return gameTypes;
     }
 
 }
