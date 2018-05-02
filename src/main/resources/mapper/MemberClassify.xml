@@ -14,14 +14,14 @@
         memberId,
         classifyId,
         money,
-        type,
+        feeTime,
         createTime
         )
         VALUES (
         #{memberId},
         #{classifyId},
         #{money},
-        #{type},
+        #{feeTime},
         #{createTime}
         )
     </insert>
@@ -34,7 +34,6 @@
         <if test="feeTime != null">
             AND feeTime = #{feeTime}
         </if>
-        and type = #{type}
     </select>
     <!-- 插入一条记录 -->
 
@@ -48,7 +47,6 @@
         money = #{money}
         where memberId = #{memberId}
         and classifyId = #{classifyId}
-        and type = #{type}
     </select>
 
     <select id="sumMoney" resultType="java.math.BigDecimal">

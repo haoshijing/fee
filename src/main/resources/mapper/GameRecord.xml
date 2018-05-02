@@ -77,22 +77,6 @@
         AND netAmount > 0
      </select>
 
-    <select id="getTotalValidBet" resultType="java.math.BigDecimal">
-        select sum(vaildBetAmount) from <include refid="tableName" />
-        where member_id in
-        <foreach collection="memberIds" item="memberId" separator="," open="(" close=")">
-            #{memberId}
-        </foreach>
-        <if test = "startTime != null and startTime != ''">
-            AND betTime >= #{startTime}
-        </if>
-
-        <if test = "endTime != null and endTime != ''">
-            AND betTime <![CDATA[ <= ]]> #{endTime}
-        </if>
-        AND netAmount > 0
-    </select>
-
     <insert id="insert" parameterType="com.yingliguoji.fee.po.GameRecordPo">
         INSERT INTO <include refid="tableName"/>
         (

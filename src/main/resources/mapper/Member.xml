@@ -30,10 +30,8 @@
     <update id="update" parameterType="com.yingliguoji.fee.po.MemberPo">
         update
         <include refid="tableName"/>
-        set money = #{money} + money ,
-        <if test="fs_money != null">
-            fs_money = #{fs_money} + fs_money
-        </if>
+        set money = #{money} + money
+
         where id = #{id}
     </update>
 

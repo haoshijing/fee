@@ -7,13 +7,9 @@ import com.yingliguoji.fee.service.FeeService;
 import lombok.extern.slf4j.Slf4j;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Repository;
-
-import javax.annotation.PostConstruct;
 import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 @Repository
 @Slf4j
@@ -26,34 +22,30 @@ public class StaticJob {
     @Autowired
     private FeeService feeService;
 
-    ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
 
-    @PostConstruct
-    public void init(){
+    @Scheduled(cron = "0 30 0 * * ?")
+    public void execute() {
         try {
+            log.info("start work");
             work();
-        }catch (Throwable e){
-            log.error("",e);
+            log.info(" end work");
+        } catch (Throwable e) {
+            log.error("", e);
         }
     }
 
-    private void work(){
+    private void work() {
 
-        executorService.scheduleWithFixedDelay(new Runnable() {
-            @Override
-            public void run() {
-                DateTime endDate = new DateTime().withTime(0,0,0,0);
-                Long end = endDate.getMillis();
-                Long start = endDate.plusDays(-1).getMillis();
 
-                List<MemberPo> memberPoList = memberMapper.selectAll();
-                memberPoList.forEach(memberPo -> {
-                    Integer memberId = memberPo.getId();
-                    feeService.backFeeToAgent(memberId,start,end);
-                });
+        DateTime endDate = new DateTime().withTime(0, 0, 0, 0);
+        Long end = endDate.getMillis();
+        Long start = endDate.plusDays(-1).getMillis();
 
-            }
-        },1,20, TimeUnit.MINUTES);
+        List<MemberPo> memberPoList = memberMapper.selectAll();
+        memberPoList.forEach(memberPo -> {
+            Integer memberId = memberPo.getId();
+            feeService.backFeeToAgent(memberId, start, end);
+        });
     }
 
 }

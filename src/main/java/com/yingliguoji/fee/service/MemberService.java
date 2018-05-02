@@ -27,7 +27,7 @@ public class MemberService {
     private DefaultEventExecutor defaultEventExecutor;
 
     public MemberService() {
-        defaultEventExecutor = new DefaultEventExecutor(new DefaultThreadFactory("QueryMemberDataService"))
+        defaultEventExecutor = new DefaultEventExecutor(new DefaultThreadFactory("QueryMemberDataService"));
     }
 
     public List<MemberPo> getMemberIds(Integer proxyId) {

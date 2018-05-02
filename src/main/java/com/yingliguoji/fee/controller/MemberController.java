@@ -5,6 +5,7 @@ import com.yingliguoji.fee.dao.MemberMapper;
 import com.yingliguoji.fee.dao.RebateMapper;
 import com.yingliguoji.fee.po.MemberPo;
 import com.yingliguoji.fee.po.RebatePo;
+import com.yingliguoji.fee.service.FeeService;
 import com.yingliguoji.fee.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,6 +23,10 @@ public class MemberController {
 
     @Autowired
     private MemberService memberService;
+
+    @Autowired
+    private FeeService feeService;
+
 
     @Autowired
     private RebateMapper rebateMapper;
@@ -43,26 +48,12 @@ public class MemberController {
         return 0;
     }
 
-    @RequestMapping("/branchAgentDataList")
-    public List<BranchAgentVo> branchAgentVoList(Integer branchId,Integer start,Integer end){
-        Long startTimeMill = null;
-        Long endTimeMill = null;
-        if(start != null){
-            startTimeMill = start *1000L;
-        }
-        if(end != null){
-            endTimeMill = end*1000L;
-        }
-        List<BranchAgentVo> vos = memberService.branchAgentVoList(branchId,startTimeMill,endTimeMill);
-        return vos;
-    }
 
-    @RequestMapping("/memberList")
-    public String test(Integer memberId) {
-        List<MemberPo> memberPoList = memberService.getMemberIds(278);
-        memberPoList.forEach(memberPo -> {
-            System.out.println("memberId = [" + memberPo.getId() + "]");
-        });
-        return "ok";
+    @RequestMapping("/back")
+    public Boolean testBackToMember(Integer memberId){
+        Long start = 1525190400000L;
+        Long end = 1525276800000L;
+        feeService.backFeeToAgent(memberId,start,end);
+        return true;
     }
 }
