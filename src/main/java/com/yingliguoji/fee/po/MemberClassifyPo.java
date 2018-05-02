@@ -10,7 +10,6 @@ public class MemberClassifyPo {
     private Integer memberId;
     private Integer classifyId;
     private BigDecimal money;
-    private Integer type;
+    private Long feeTime;
     private Long createTime;
-    private Long lastUpdateTime;
 }

@@ -1,11 +1,9 @@
 package com.yingliguoji.fee.controller;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.yingliguoji.fee.controller.response.PlayerRecordRequest;
 import com.yingliguoji.fee.controller.response.PlayerRecordTotalVo;
 import com.yingliguoji.fee.dao.ClassifyMapper;
-import com.yingliguoji.fee.dao.GameRecordMapper;
 import com.yingliguoji.fee.po.ClassifyPo;
 import com.yingliguoji.fee.service.GameRecordService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,4 +53,5 @@ public class PlayRecordsController {
         ).collect(Collectors.toList());
         return recordTotalVos;
     }
+
 }

@@ -3,6 +3,7 @@ package com.yingliguoji.fee.dao;
 import com.yingliguoji.fee.po.GameRecordPo;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Map;
 
 public interface GameRecordMapper {
@@ -14,6 +15,8 @@ public interface GameRecordMapper {
     Integer queryByTradeNo(String tradeNo);
 
     Integer insert(GameRecordPo gameRecordPo);
+
+    BigDecimal getTotalValidBet(List<Integer> memberIds,String start,String end);
 }
 
 

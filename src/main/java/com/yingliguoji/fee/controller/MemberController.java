@@ -44,8 +44,16 @@ public class MemberController {
     }
 
     @RequestMapping("/branchAgentDataList")
-    public List<BranchAgentVo> branchAgentVoList(Integer branchId){
-        List<BranchAgentVo> vos = memberService.branchAgentVoList(branchId);
+    public List<BranchAgentVo> branchAgentVoList(Integer branchId,Integer start,Integer end){
+        Long startTimeMill = null;
+        Long endTimeMill = null;
+        if(start != null){
+            startTimeMill = start *1000L;
+        }
+        if(end != null){
+            endTimeMill = end*1000L;
+        }
+        List<BranchAgentVo> vos = memberService.branchAgentVoList(branchId,startTimeMill,endTimeMill);
         return vos;
     }
 

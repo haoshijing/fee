@@ -1,17 +1,12 @@
 package com.yingliguoji.fee.job;
 
-import com.yingliguoji.fee.ApplicationStarter;
-import com.yingliguoji.fee.dao.ClassifyMapper;
+
 import com.yingliguoji.fee.dao.MemberMapper;
-import com.yingliguoji.fee.po.ClassifyPo;
 import com.yingliguoji.fee.po.MemberPo;
-import com.yingliguoji.fee.service.GameRecordService;
+import com.yingliguoji.fee.service.FeeService;
 import lombok.extern.slf4j.Slf4j;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.event.ApplicationStartedEvent;
-import org.springframework.boot.context.event.ApplicationStartingEvent;
-import org.springframework.boot.context.event.SpringApplicationEvent;
-import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.PostConstruct;
@@ -27,8 +22,9 @@ public class StaticJob {
     @Autowired
     private MemberMapper memberMapper;
 
+
     @Autowired
-    private GameRecordService gameRecordService;
+    private FeeService feeService;
 
     ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
 
@@ -46,10 +42,14 @@ public class StaticJob {
         executorService.scheduleWithFixedDelay(new Runnable() {
             @Override
             public void run() {
+                DateTime endDate = new DateTime().withTime(0,0,0,0);
+                Long end = endDate.getMillis();
+                Long start = endDate.plusDays(-1).getMillis();
+
                 List<MemberPo> memberPoList = memberMapper.selectAll();
                 memberPoList.forEach(memberPo -> {
                     Integer memberId = memberPo.getId();
-                    gameRecordService.calMemberBet(memberId);
+                    feeService.backFeeToAgent(memberId,start,end);
                 });
 
             }
