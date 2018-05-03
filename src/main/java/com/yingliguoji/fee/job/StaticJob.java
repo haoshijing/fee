@@ -23,7 +23,7 @@ public class StaticJob {
     private FeeService feeService;
 
 
-    @Scheduled(cron = "0 30 0 * * ?")
+    @Scheduled(cron = "0 30 * * * ?")
     public void execute() {
         try {
             log.info("start work");
