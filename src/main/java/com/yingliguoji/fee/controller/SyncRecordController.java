@@ -15,8 +15,8 @@ public class SyncRecordController {
     @Autowired
     private SyncRecordService syncRecordService;
     @RequestMapping("/syncData")
-    public Integer syncData(@RequestBody PlayRecordRequest playRecordRequest){
-        Integer ret = syncRecordService.syncData(playRecordRequest);
+    public Boolean syncData(@RequestBody PlayRecordRequest playRecordRequest){
+        Boolean ret = syncRecordService.syncData(playRecordRequest);
         return ret;
     }
 
