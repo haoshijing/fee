@@ -48,7 +48,6 @@ public class MemberController {
         return 0;
     }
 
-
     @RequestMapping("/back")
     public Boolean testBackToMember(Integer memberId){
         Long start = 1525190400000L;

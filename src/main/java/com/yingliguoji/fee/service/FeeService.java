@@ -95,7 +95,7 @@ public class FeeService extends BaseService {
 
                 MemberPo updatePo = new MemberPo();
                 updatePo.setId(memberId);
-                updatePo.setMoney(log.getMoney());
+                updatePo.setFs_money(log.getMoney());
 
                 memberMapper.update(updatePo);
 
