@@ -15,6 +15,5 @@ public class PlayerRecordTotalVo {
         private Integer classiFyId;
         private Double money;
         private String name;
-
     }
 }
