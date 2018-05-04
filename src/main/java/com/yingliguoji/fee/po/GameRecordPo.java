@@ -15,4 +15,5 @@ public class GameRecordPo {
     private BigDecimal reAmount;
     private BigDecimal betAmount;
     private Timestamp betTime;
+    private BigDecimal validBetAmount;
 }

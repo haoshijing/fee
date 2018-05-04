@@ -1,5 +1,7 @@
 package com.yingliguoji.fee.controller;
 
+import com.yingliguoji.fee.ApiResponse;
+import com.yingliguoji.fee.controller.request.MemberUpgradeRequest;
 import com.yingliguoji.fee.controller.response.BranchAgentVo;
 import com.yingliguoji.fee.dao.MemberMapper;
 import com.yingliguoji.fee.dao.RebateMapper;
@@ -7,8 +9,10 @@ import com.yingliguoji.fee.po.MemberPo;
 import com.yingliguoji.fee.po.RebatePo;
 import com.yingliguoji.fee.service.FeeService;
 import com.yingliguoji.fee.service.MemberService;
+import com.yingliguoji.fee.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,7 +26,7 @@ public class MemberController {
     private Integer betId;
 
     @Autowired
-    private MemberService memberService;
+    private UserService userService;
 
     @Autowired
     private FeeService feeService;
@@ -47,6 +51,14 @@ public class MemberController {
         }
         return 0;
     }
+
+    @RequestMapping("/upgrade")
+    public ApiResponse<Boolean> upgrade(@RequestBody MemberUpgradeRequest request){
+        Boolean ret =   userService.upgradeToAgent(request);
+        return new ApiResponse(ret);
+    }
+
+
 
     @RequestMapping("/back")
     public Boolean testBackToMember(Integer memberId){

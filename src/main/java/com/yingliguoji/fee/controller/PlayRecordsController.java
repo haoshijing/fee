@@ -55,7 +55,7 @@ public class PlayRecordsController {
     }
 
     private List<Integer> getGameTypes(ClassifyPo classifyPo) {
-        String type = classifyPo.getType();
+        String type = classifyPo.getSmallType();
         String[] typeArr = type.split(",");
         List<Integer> gameTypes = Lists.newArrayList();
         for (String typeStr : typeArr) {

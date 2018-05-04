@@ -1,5 +1,5 @@
 
-alter table  classify modify column type  varchar(255)  comment '游戏分类';
+alter table  classify add column smallType  varchar(255)  comment '游戏分类';
 drop table if EXISTS member_records_total;
 create table member_records_total
 (

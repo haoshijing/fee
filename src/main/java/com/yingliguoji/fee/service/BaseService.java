@@ -7,7 +7,7 @@ import java.util.List;
 
 public class BaseService {
     protected List<Integer> getGameTypes(ClassifyPo classifyPo) {
-        String type = classifyPo.getType();
+        String type = classifyPo.getSmallType();
         String[] typeArr = type.split(",");
         List<Integer> gameTypes = Lists.newArrayList();
         for (String typeStr : typeArr) {

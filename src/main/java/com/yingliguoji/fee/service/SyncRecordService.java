@@ -20,14 +20,14 @@ public class SyncRecordService {
     @Autowired
     private MemberMapper memberMapper;
 
-    public Boolean syncData(PlayRecordRequest playRecordRequest) {
+    public Integer syncData(PlayRecordRequest playRecordRequest) {
 
-        if(!checkRecord(playRecordRequest.getTradeNo())){
-            return  false;
+        if(checkRecord(playRecordRequest.getTradeNo())){
+            return  2;
         }
         MemberPo memberPo = memberMapper.findByName(playRecordRequest.getUserName());
         if(memberPo == null){
-            return  false;
+            return  3;
         }
         GameRecordPo gameRecordPo  = new GameRecordPo();
         gameRecordPo.setBillNo(playRecordRequest.getTradeNo());
@@ -38,7 +38,8 @@ public class SyncRecordService {
         gameRecordPo.setBetTime(timestamp);
         gameRecordPo.setReAmount(new BigDecimal(playRecordRequest.getReAmount()));
         gameRecordPo.setBetAmount(new BigDecimal(playRecordRequest.getBetAmount()));
-        return gameRecordMapper.insert(gameRecordPo) > 0;
+
+        return gameRecordMapper.insert(gameRecordPo);
 
     }
 

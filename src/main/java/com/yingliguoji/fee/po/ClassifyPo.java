@@ -5,6 +5,7 @@ import lombok.Data;
 @Data
 public class ClassifyPo {
     private Integer id;
-    private String type;
+    private Integer type;
     private String name;
+    private String smallType;
 }

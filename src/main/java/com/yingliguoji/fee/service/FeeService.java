@@ -40,7 +40,7 @@ public class FeeService extends BaseService {
     public void backFeeToAgent(Integer memberId, Long start, Long end) {
         List<ClassifyPo> classifyPoList = classifyMapper.selectAll();
         classifyPoList.forEach(classifyPo -> {
-            String type = classifyPo.getType();
+            String type = classifyPo.getSmallType();
             String[] typeArr = type.split(",");
             List<Integer> gameTypes = Lists.newArrayList();
             for (String typeStr : typeArr) {
