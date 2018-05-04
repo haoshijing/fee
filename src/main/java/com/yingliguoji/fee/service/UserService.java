@@ -43,7 +43,7 @@ public class UserService {
             }
             UserPo userPo = new UserPo();
             userPo.setIsSuperAdmin(2);
-            userPo.setEmail(newUserName);
+            userPo.setEmail(memberPo.getReal_name());
             userPo.setName(newUserName);
             userPo.setCreatedAt(new Timestamp(System.currentTimeMillis()));
             userPo.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
