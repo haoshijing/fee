@@ -10,6 +10,7 @@ import com.yingliguoji.fee.po.RebatePo;
 import com.yingliguoji.fee.service.FeeService;
 import com.yingliguoji.fee.service.MemberService;
 import com.yingliguoji.fee.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,6 +21,7 @@ import java.util.List;
 
 @RequestMapping("/")
 @RestController
+@Slf4j
 public class MemberController {
 
     @Value("${betId}")
@@ -58,6 +60,7 @@ public class MemberController {
             Boolean ret = userService.upgradeToAgent(memberId);
             return new ApiResponse(ret);
         }catch (Exception e){
+            log.error("",e);
             return new ApiResponse(false);
         }
 

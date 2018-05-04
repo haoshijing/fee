@@ -27,10 +27,15 @@
         where name = #{name}
     </select>
 
+    <update id="updateById" parameterType="com.yingliguoji.fee.po.MemberPo">
+        UPDATE   <include refid="tableName"/>
+        set top_id = #{top_id}   where id = #{id}
+    </update>
+
     <update id="update" parameterType="com.yingliguoji.fee.po.MemberPo">
         update
         <include refid="tableName"/>
-        set money = #{money} + money
+        set fs_money = #{fs_money} + fs_money
 
         where id = #{id}
     </update>

@@ -1,6 +1,5 @@
 package com.yingliguoji.fee.service;
 
-import com.yingliguoji.fee.controller.request.MemberUpgradeRequest;
 import com.yingliguoji.fee.dao.MemberMapper;
 import com.yingliguoji.fee.dao.UserMapper;
 import com.yingliguoji.fee.po.MemberPo;
@@ -49,15 +48,21 @@ public class UserService {
             userPo.setCreatedAt(new Timestamp(System.currentTimeMillis()));
             userPo.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
             userPo.setPassword(memberPo.getPassword());
-            userPo.setRoleId(0);
+            userPo.setRoleId(1);
             userPo.setInvitation(UUID.randomUUID().toString().replace("-","").substring(0,8));
             userPo.setRememberToken(memberPo.getRemember_token());
             userMapper.insert(userPo);
+
+            MemberPo updatePo = new MemberPo();
+            updatePo.setId(memberId);
+            updatePo.setTop_id(0);
+            memberMapper.updateById(updatePo);
+
             Integer branchId = userPo.getId();
             List<MemberPo> memberPoList = memberService.getMemberIds(memberId);
             List<Integer> memberIds = memberPoList.stream().map(
                     memberPo1 -> {
-                       return memberPo.getId();
+                       return memberPo1.getId();
                     }
             ).collect(Collectors.toList());
             if(!CollectionUtils.isEmpty(memberIds)) {
