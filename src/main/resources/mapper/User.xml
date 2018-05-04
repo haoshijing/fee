@@ -4,7 +4,7 @@
 <mapper namespace="com.yingliguoji.fee.dao.UserMapper">
 
     <sql id="tableName">
-        game_record
+        users
     </sql>
     <insert id="insert" parameterType="com.yingliguoji.fee.po.UserPo" useGeneratedKeys="true" keyProperty="id">
         Insert into
@@ -12,26 +12,42 @@
         (
         name,
         password,
-        isSuperAdmin,
-        roleId,
-        rememberToken,
-        createdAt,
-        updatedAt,
-        invitation
+        email,
+        is_super_admin,
+        role_id,
+        remember_token,
+        created_at,
+        updated_at,
+        invitation,
+        telnum,
+        qq,
+        super,
+        wechat,
+        proportion
         )
         VALUES
         (
         #{name},
         #{password},
+        #{email},
         #{isSuperAdmin},
         #{roleId},
         #{rememberToken},
         #{createdAt},
         #{updatedAt},
-        #{invitation}
+        #{invitation},
+        #{telnum},
+        #{qq},
+        #{superVal},
+        #{wechat},
+        #{proportion}
         )
-
     </insert>
 
+    <select id = "findByName" resultType="com.yingliguoji.fee.po.UserPo">
+        select name from <include refid="tableName"/>
+        where name = #{name}
+
+    </select>
 
 </mapper>

@@ -4,4 +4,6 @@ import com.yingliguoji.fee.po.UserPo;
 
 public interface UserMapper {
     Integer insert(UserPo userPo);
+
+    UserPo findByName(String name);
 }

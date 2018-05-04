@@ -1,6 +1,7 @@
 package com.yingliguoji.fee.controller;
 
 
+import com.yingliguoji.fee.ApiResponse;
 import com.yingliguoji.fee.controller.request.PlayRecordRequest;
 import com.yingliguoji.fee.service.SyncRecordService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,9 +16,9 @@ public class SyncRecordController {
     @Autowired
     private SyncRecordService syncRecordService;
     @RequestMapping("/syncData")
-    public Boolean syncData(@RequestBody PlayRecordRequest playRecordRequest){
-        Boolean ret = syncRecordService.syncData(playRecordRequest);
-        return ret;
+    public ApiResponse<Integer> syncData(@RequestBody PlayRecordRequest playRecordRequest){
+        int ret = syncRecordService.syncData(playRecordRequest);
+        return new ApiResponse<>(ret);
     }
 
     @RequestMapping("/checkTradeNo")

@@ -8,6 +8,7 @@ import java.sql.Timestamp;
 public class UserPo {
     private Integer id;
     private String name;
+    private String email;
     private String password;
     private Integer isSuperAdmin;
     private Integer roleId;
@@ -15,4 +16,10 @@ public class UserPo {
     private Timestamp createdAt;
     private Timestamp updatedAt;
     private String invitation;
+    private String telnum = "";
+    private String qq = "";
+    private Integer superVal = 0;
+    private String wechat = "";
+    private String proportion = "";
+    private String lines = "";
 }

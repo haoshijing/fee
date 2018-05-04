@@ -53,9 +53,14 @@ public class MemberController {
     }
 
     @RequestMapping("/upgrade")
-    public ApiResponse<Boolean> upgrade(@RequestBody MemberUpgradeRequest request){
-        Boolean ret =   userService.upgradeToAgent(request);
-        return new ApiResponse(ret);
+    public ApiResponse<Boolean> upgrade(Integer memberId){
+        try {
+            Boolean ret = userService.upgradeToAgent(memberId);
+            return new ApiResponse(ret);
+        }catch (Exception e){
+            return new ApiResponse(false);
+        }
+
     }
 
 
