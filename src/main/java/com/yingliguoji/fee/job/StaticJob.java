@@ -35,8 +35,6 @@ public class StaticJob {
     }
 
     private void work() {
-
-
         DateTime endDate = new DateTime().withTime(0, 0, 0, 0);
         Long end = endDate.getMillis();
         Long start = endDate.plusDays(-1).getMillis();
