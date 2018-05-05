@@ -1,6 +1,7 @@
 package com.yingliguoji.fee.controller;
 
 import com.google.common.collect.Lists;
+import com.yingliguoji.fee.ApiResponse;
 import com.yingliguoji.fee.controller.response.PlayerRecordRequest;
 import com.yingliguoji.fee.controller.response.PlayerRecordTotalVo;
 import com.yingliguoji.fee.dao.ClassifyMapper;
@@ -29,12 +30,13 @@ public class PlayRecordsController {
     private MemberService memberService;
 
     @RequestMapping("/getPlayerRecordTotal")
-    public List<PlayerRecordTotalVo> getPlayerRecordTotal(@RequestBody PlayerRecordRequest recordRequest) {
+    public ApiResponse<List<PlayerRecordTotalVo>> getPlayerRecordTotal(@RequestBody PlayerRecordRequest recordRequest) {
 
         List<ClassifyPo> classifyPos = classifyMapper.selectAll();
         Integer proxyId = recordRequest.getProxyId();
+
         if (proxyId == null) {
-            return Lists.newArrayList();
+            return new ApiResponse<>(Lists.newArrayList());
         }
         List<Integer> memberIds = memberService.getMemberIds(proxyId).stream()
                 .filter(memberPo -> {
@@ -63,7 +65,7 @@ public class PlayRecordsController {
                     return recordTotalVo;
                 }
         ).collect(Collectors.toList());
-        return recordTotalVos;
+        return new ApiResponse(recordTotalVos);
     }
 
     private List<Integer> getGameTypes(ClassifyPo classifyPo) {

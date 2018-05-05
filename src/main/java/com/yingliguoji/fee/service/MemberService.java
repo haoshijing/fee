@@ -86,16 +86,17 @@ public class MemberService {
             }
             branchFeeVo.setReAmount(reAmountMoney);
             BigDecimal realAmountMoney = new BigDecimal(0);
+            if (userPo.getProportion() == null) {
+                userPo.setProportion(0);
+            }
             if (!CollectionUtils.isEmpty(memberIds)) {
                 BigDecimal feeTotal = feeService.getTotalFee(userPo.getId(), 2, memberIds, classifyPos, start, end);
                 branchFeeVo.setRealAmount(reAmountMoney);
                 branchFeeVo.setTotalBet(totalBet);
-                if (userPo.getProportion() == null) {
-                    userPo.setProportion(0);
-                }
                 realAmountMoney = reAmountMoney.add(feeTotal.multiply(new BigDecimal(-1))).multiply(new BigDecimal(userPo.getProportion()))
                         .divide(new BigDecimal(100));
             }
+            branchFeeVo.setProportion(userPo.getProportion());
             branchFeeVo.setRealAmount(realAmountMoney);
             return branchFeeVo;
 
@@ -138,6 +139,7 @@ public class MemberService {
                     if (userPo.getProportion() == null) {
                         userPo.setProportion(0);
                     }
+                    branchAgentVo.setProportion(userPo.getProportion());
                     branchAgentVo.setRealAmount(reAmountMoney.add(feeTotal).
                             multiply(new BigDecimal(userPo.getProportion())).
                             divide(new BigDecimal(100)));

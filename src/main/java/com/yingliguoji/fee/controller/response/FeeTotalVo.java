@@ -11,4 +11,5 @@ public class FeeTotalVo {
     private BigDecimal totalBet;
     private BigDecimal reAmount;
     private BigDecimal realAmount;
+    private Integer proportion;
 }
