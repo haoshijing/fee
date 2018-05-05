@@ -37,13 +37,4 @@ public class MemberController {
             return new ApiResponse(false);
         }
     }
-
-
-    @RequestMapping("/back")
-    public Boolean testBackToMember(Integer memberId){
-        Long start = 1525190400000L;
-        Long end = 1525276800000L;
-        feeService.backFeeToAgent(memberId,start,end);
-        return true;
-    }
 }
