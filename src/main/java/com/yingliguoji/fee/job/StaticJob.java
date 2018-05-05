@@ -9,6 +9,8 @@ import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Repository;
+
+import javax.annotation.PostConstruct;
 import java.util.List;
 
 @Repository
@@ -22,6 +24,10 @@ public class StaticJob {
     @Autowired
     private FeeService feeService;
 
+    @PostConstruct
+    public void init(){
+        work();
+    }
 
     @Scheduled(cron = "0 30 * * * ?")
     public void execute() {

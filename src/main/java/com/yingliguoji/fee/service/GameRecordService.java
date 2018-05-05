@@ -50,10 +50,10 @@ public class GameRecordService {
     }
 
     public BigDecimal getBetMoney(Integer memberId, Long start, Long end,List<Integer> gameTypes) {
-
-
         Map<String, Object> params = Maps.newHashMap();
-        params.put("memberId", memberId);
+        List<Integer> memberIds = Lists.newArrayList();
+        memberIds.add(memberId);
+        params.put("memberIds", memberIds);
         if(start != null){
             Timestamp startTimestamp = new Timestamp(start);
             params.put("startTime", startTimestamp.toString());
