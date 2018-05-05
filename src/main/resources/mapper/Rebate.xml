@@ -11,6 +11,7 @@
     <select id = "find" resultType="com.yingliguoji.fee.po.RebatePo">
         select * from <include refid="tableName"/>
         where user_id =#{userId}  and class_id = #{cid}
+        and percentage = #{percentage}
         limit 1
     </select>
 

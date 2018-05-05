@@ -44,6 +44,10 @@
         )
     </insert>
 
+    <select id="getAllBranch" resultType="com.yingliguoji.fee.po.UserPo">
+        select * from <include refid="tableName"/>
+        where is_super_admin = 2
+    </select>
     <select id = "findByName" resultType="com.yingliguoji.fee.po.UserPo">
         select name from <include refid="tableName"/>
         where name = #{name}

@@ -20,7 +20,7 @@ public class GameRecordService {
     @Value("${fireData}")
     private Integer fireData;
 
-    public BigDecimal getReAmountTotal(List<Integer> memberIds, Integer start, Integer end, List<Integer> gameTypes) {
+    public BigDecimal getReAmountTotal(List<Integer> memberIds, List<Integer> gameTypes, Integer start, Integer end) {
         QueryDataVo queryDataVo = getQueryPo(memberIds,start,end,gameTypes);
         BigDecimal money = gameRecordMapper.getReAmountTotal(queryDataVo.getMemberIds(),
                 queryDataVo.getStartTime(),
@@ -33,7 +33,7 @@ public class GameRecordService {
 
     }
 
-    public BigDecimal getTotalValidBet(List<Integer> memberIds, Integer start, Integer end,List<Integer> gameTypes) {
+    public BigDecimal getTotalValidBet(List<Integer> memberIds,List<Integer> gameTypes, Integer start, Integer end) {
         String startTime = null;
         String endTime = null;
         if(start != null){

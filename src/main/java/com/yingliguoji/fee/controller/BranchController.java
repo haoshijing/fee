@@ -1,6 +1,6 @@
 package com.yingliguoji.fee.controller;
 
-import com.yingliguoji.fee.controller.response.BranchAgentVo;
+import com.yingliguoji.fee.controller.response.FeeTotalVo;
 import com.yingliguoji.fee.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,10 +14,16 @@ public class BranchController {
     @Autowired
     private MemberService memberService;
 
-    @RequestMapping("/queryAllBranchList")
-    public List<BranchAgentVo> queryAllBranchList(Integer branchId){
+    @RequestMapping("/queryBranchAgentFeetList")
+    public List<FeeTotalVo> queryBranchAgentFeetList(Integer branchId,Integer start ,Integer end){
 
-        List<BranchAgentVo> vos = memberService.branchAgentVoList(branchId,null,null);
+        List<FeeTotalVo> vos = memberService.branchAgentVoList(branchId,start,end);
         return vos;
     }
+    @RequestMapping("/queryBranchFeetList")
+    public List<FeeTotalVo> queryBranchFeetList(Integer start ,Integer end){
+        List<FeeTotalVo> vos = memberService.getBranchFeeList(start,end);
+        return vos;
+    }
+
 }

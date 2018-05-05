@@ -6,5 +6,5 @@ import org.apache.ibatis.annotations.Param;
 
 public interface RebateMapper {
 
-    RebatePo find(@Param("userId")Integer userId,@Param("cid")Integer classId);
+    RebatePo find(@Param("userId")Integer userId,@Param("cid")Integer classId,@Param("percentage")Integer percentage);
 }

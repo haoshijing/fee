@@ -7,9 +7,7 @@ import com.yingliguoji.fee.dao.ClassifyMapper;
 import com.yingliguoji.fee.po.ClassifyPo;
 import com.yingliguoji.fee.service.GameRecordService;
 import com.yingliguoji.fee.service.MemberService;
-import com.yingliguoji.fee.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -54,8 +52,8 @@ public class PlayRecordsController {
                                 item.setName(classifyPo.getName());
                                 List<Integer> gameTypes = getGameTypes(classifyPo);
                                 List<Integer> queryMembers = Lists.newArrayList(memberId);
-                                BigDecimal bigDecimal = gameRecordService.getReAmountTotal(queryMembers,
-                                        recordRequest.getStart(), recordRequest.getEnd(), gameTypes);
+                                BigDecimal bigDecimal = gameRecordService.getReAmountTotal(queryMembers, gameTypes,
+                                        recordRequest.getStart(), recordRequest.getEnd());
                                 item.setMoney(bigDecimal.doubleValue());
                                 return item;
                             }).collect(Collectors.toList());

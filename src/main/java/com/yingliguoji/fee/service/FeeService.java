@@ -36,7 +36,6 @@ public class FeeService extends BaseService {
     @Value("${fireData}")
     private Integer fireData;
 
-
     public void backFeeToAgent(Integer memberId, Long start, Long end) {
         List<ClassifyPo> classifyPoList = classifyMapper.selectAll();
         classifyPoList.forEach(classifyPo -> {
@@ -54,12 +53,36 @@ public class FeeService extends BaseService {
             if(end != null){
                 endSec = end.intValue()/1000;
             }
-            BigDecimal money = gameRecordService.getTotalValidBet(Lists.newArrayList(memberId), startSec, endSec, gameTypes);
+            BigDecimal money = gameRecordService.getTotalValidBet(Lists.newArrayList(memberId), gameTypes,startSec, endSec);
             if(money != null && money.intValue() > 0) {
                 beginToBack(classifyPo.getId(), memberId, end, money);
            }
         });
+    }
 
+    public BigDecimal getTotalFee(Integer branchId,Integer type,List<Integer> memberIds ,List<ClassifyPo> classifyPos,Integer start,Integer end){
+        BigDecimal total = new BigDecimal(0);
+        List<BigDecimal> list = Lists.newArrayList();
+        classifyPos.forEach(classifyPo -> {
+            String smallType = classifyPo.getSmallType();
+            String []smallTypeArr = smallType.split(",");
+            List<Integer> gameTypes = Lists.newArrayList();
+            for(String gameTypeStr: smallTypeArr){
+                gameTypes.add(Integer.valueOf(gameTypeStr));
+                BigDecimal sumMoney = gameRecordService.getTotalValidBet(memberIds,gameTypes,start,end);
+                if(sumMoney.intValue() > 0){
+                    RebatePo rebatePo = rebateMapper.find(branchId,classifyPo.getId(),type);
+                    if(rebatePo != null) {
+                        BigDecimal sum = sumMoney.divide(new BigDecimal(fireData)).multiply(new BigDecimal(rebatePo.getQuota()));
+                        list.add(sum);
+                    }
+                }
+            }
+        });
+        for(BigDecimal sum : list){
+            total = total.add(sum);
+        }
+        return total;
     }
 
     @Transactional
@@ -86,7 +109,7 @@ public class FeeService extends BaseService {
         Integer kouchu = 0;
         MemberPo memberPo;
         while ((memberPo = memberMapper.findById(memberId)) != null){
-            RebatePo dataPo = rebateMapper.find(memberId,classifyId);
+            RebatePo dataPo = rebateMapper.find(memberId,classifyId,1);
             if(dataPo != null){
                 //增加反水记录
                 MemberPo beforeMemberPo = memberMapper.findById(memberId);
@@ -111,6 +134,5 @@ public class FeeService extends BaseService {
             }
             memberId = memberPo.getTop_id();
         }
-
     }
 }

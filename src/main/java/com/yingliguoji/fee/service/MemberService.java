@@ -1,12 +1,14 @@
 package com.yingliguoji.fee.service;
 
 import com.google.common.collect.Lists;
-import com.yingliguoji.fee.controller.response.BranchAgentVo;
-import com.yingliguoji.fee.dao.GameRecordMapper;
+import com.yingliguoji.fee.controller.response.FeeTotalVo;
+import com.yingliguoji.fee.dao.ClassifyMapper;
 import com.yingliguoji.fee.dao.MemberMapper;
+import com.yingliguoji.fee.dao.UserMapper;
+import com.yingliguoji.fee.po.ClassifyPo;
 import com.yingliguoji.fee.po.MemberPo;
-import io.netty.util.concurrent.DefaultEventExecutor;
-import io.netty.util.concurrent.DefaultThreadFactory;
+
+import com.yingliguoji.fee.po.UserPo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -23,6 +25,14 @@ public class MemberService {
     @Autowired
     private GameRecordService gameRecordMapper;
 
+    @Autowired
+    private ClassifyMapper classifyMapper;
+
+    @Autowired
+    private UserMapper userMapper;
+
+    @Autowired
+    private FeeService feeService;
 
     public MemberService() {
     }
@@ -49,11 +59,47 @@ public class MemberService {
         return memberMapper.selectList(queryPo);
     }
 
-    public List<BranchAgentVo> branchAgentVoList(Integer branchId, Integer start, Integer end) {
+
+    public List<FeeTotalVo> getBranchFeeList(Integer start,Integer end) {
+        List<UserPo> userPos = userMapper.getAllBranch();
+        final List<ClassifyPo> classifyPos = classifyMapper.selectAll();
+        List<FeeTotalVo> feeTotalVos =  userPos.stream().map(userPo -> {
+            FeeTotalVo branchFeeVo = new FeeTotalVo();
+            Integer branchId = userPo.getId();
+            MemberPo queryPo = new MemberPo();
+            queryPo.setBranch_id(branchId);
+            List<MemberPo> memberPos = memberMapper.selectList(queryPo);
+            List<Integer> memberIds = memberPos.stream().map(memberPo1 -> {
+                return memberPo1.getId();
+            }).collect(Collectors.toList());
+            branchFeeVo.setName(userPo.getEmail());
+            branchFeeVo.setRealName(userPo.getName());
+            BigDecimal totalBet = new BigDecimal(0);
+            if (!CollectionUtils.isEmpty(memberIds)) {
+                totalBet = gameRecordMapper.getTotalValidBet(memberIds,Lists.newArrayList(), start, end);
+            }
+
+            BigDecimal reAmountMoney = new BigDecimal(0);
+            if (!CollectionUtils.isEmpty(memberIds)) {
+                reAmountMoney = gameRecordMapper.getReAmountTotal(memberIds,Lists.newArrayList(), start, end);
+            }
+            BigDecimal feeTotal = feeService.getTotalFee(userPo.getId(),2,memberIds,classifyPos,start,end);
+            branchFeeVo.setRealAmount(reAmountMoney);
+            branchFeeVo.setTotalBet(totalBet);
+            branchFeeVo.setRealAmount(reAmountMoney.add(feeTotal));
+            return branchFeeVo;
+
+        }).collect(Collectors.toList());
+        return feeTotalVos;
+    }
+
+
+    public List<FeeTotalVo> branchAgentVoList(Integer branchId, Integer start, Integer end) {
         List<MemberPo> proxyList = getAllUnderProxy(branchId);
+        final List<ClassifyPo> classifyPos = classifyMapper.selectAll();
         return proxyList.stream().map(
                 memberPo -> {
-                    BranchAgentVo branchAgentVo = new BranchAgentVo();
+                    FeeTotalVo branchAgentVo = new FeeTotalVo();
                     branchAgentVo.setName(memberPo.getName());
                     branchAgentVo.setRealName(memberPo.getReal_name());
                     List<MemberPo> memberPos = getMemberIds(memberPo.getId());
@@ -63,17 +109,21 @@ public class MemberService {
 
                     BigDecimal totalBet = new BigDecimal(0);
                     if (!CollectionUtils.isEmpty(memberIds)) {
-                        totalBet = gameRecordMapper.getTotalValidBet(memberIds, start, end,Lists.newArrayList());
+                        totalBet = gameRecordMapper.getTotalValidBet(memberIds,Lists.newArrayList(), start, end);
                     }
 
                     BigDecimal reAmountMoney = new BigDecimal(0);
                     if (!CollectionUtils.isEmpty(memberIds)) {
-                        reAmountMoney = gameRecordMapper.getReAmountTotal(memberIds, start, end,Lists.newArrayList());
+                        reAmountMoney = gameRecordMapper.getReAmountTotal(memberIds,Lists.newArrayList(), start, end);
                     }
+
+                    BigDecimal feeTotal = feeService.getTotalFee(memberPo.getId(),1,memberIds,classifyPos,start,end);
                     branchAgentVo.setRealAmount(reAmountMoney);
                     branchAgentVo.setTotalBet(totalBet);
+                    branchAgentVo.setRealAmount(reAmountMoney.add(feeTotal));
                     return branchAgentVo;
                 }
         ).collect(Collectors.toList());
     }
+
 }

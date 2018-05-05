@@ -5,7 +5,7 @@ import lombok.Data;
 import java.math.BigDecimal;
 
 @Data
-public class BranchAgentVo {
+public class FeeTotalVo {
     private String name;
     private String realName;
     private BigDecimal totalBet;
