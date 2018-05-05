@@ -106,7 +106,6 @@ public class MemberService {
                     List<Integer> memberIds = memberPos.stream().map(memberPo1 -> {
                         return memberPo1.getId();
                     }).collect(Collectors.toList());
-
                     BigDecimal totalBet = new BigDecimal(0);
                     if (!CollectionUtils.isEmpty(memberIds)) {
                         totalBet = gameRecordMapper.getTotalValidBet(memberIds,Lists.newArrayList(), start, end);
@@ -117,8 +116,11 @@ public class MemberService {
                         reAmountMoney = gameRecordMapper.getReAmountTotal(memberIds,Lists.newArrayList(), start, end);
                     }
 
-                    BigDecimal feeTotal = feeService.getTotalFee(memberPo.getId(),1,memberIds,classifyPos,start,end);
-                    branchAgentVo.setRealAmount(reAmountMoney);
+                    BigDecimal feeTotal = new BigDecimal(0);
+                    if (!CollectionUtils.isEmpty(memberIds)) {
+                        feeTotal =   feeService.getTotalFee(memberPo.getId(), 1, memberIds, classifyPos, start, end);
+                    }
+                    branchAgentVo.setReAmount(reAmountMoney);
                     branchAgentVo.setTotalBet(totalBet);
                     branchAgentVo.setRealAmount(reAmountMoney.add(feeTotal));
                     return branchAgentVo;
