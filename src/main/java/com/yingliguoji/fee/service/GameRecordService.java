@@ -1,6 +1,5 @@
 package com.yingliguoji.fee.service;
 
-import com.google.common.collect.Lists;
 import com.yingliguoji.fee.dao.*;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +9,6 @@ import org.springframework.stereotype.Repository;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.List;
-import java.util.Map;
 
 @Repository
 public class GameRecordService {
@@ -45,7 +43,7 @@ public class GameRecordService {
         if(end != null) {
             startTime =  new Timestamp(end*1000L).toString();
         }
-        BigDecimal money = gameRecordMapper.getTotalValidBet(memberIds,startTime,endTime,gameTypes);
+        BigDecimal money = gameRecordMapper.getValidBetTotal(memberIds,startTime,endTime,gameTypes);
         if(money == null){
             return new BigDecimal(0);
         }

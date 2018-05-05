@@ -25,12 +25,12 @@
 
         </if>
 
-        <if test = "startTime != null and startTime != ''">
-            AND created_at >= #{startTime}
+        <if test = "start != null and start != ''">
+            AND created_at >= #{start}
         </if>
 
-        <if test = "endTime != null and endTime != ''">
-            AND created_at <![CDATA[ <= ]]> #{endTime}
+        <if test = "end != null and end != ''">
+            AND created_at <![CDATA[ <= ]]> #{end}
         </if>
         and reAmount <![CDATA[  <> 0]]>
     </select>
@@ -47,12 +47,12 @@
         <foreach collection="memberIds" item="memberId" separator="," open="(" close=")">
             #{memberId}
         </foreach>
-        <if test = "startTime != null and startTime != ''">
-            AND created_at >= #{startTime}
+        <if test = "start != null and start != ''">
+            AND created_at >= #{start}
         </if>
 
-        <if test = "endTime != null and endTime != ''">
-            AND created_at <![CDATA[ <= ]]> #{endTime}
+        <if test = "end != null and end != ''">
+            AND created_at <![CDATA[ <= ]]> #{end}
         </if>
         and reAmount <![CDATA[  <> 0]]>
      </select>
@@ -63,7 +63,7 @@
         <foreach collection="memberIds" item="memberId" separator="," open="(" close=")">
             #{memberId}
         </foreach>
-        <if test = "startTime != null and startTime != ''">
+        <if test = "start != null and start != ''">
             AND created_at >= #{startTime}
         </if>
 

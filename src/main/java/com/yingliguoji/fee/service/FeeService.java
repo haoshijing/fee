@@ -46,7 +46,15 @@ public class FeeService extends BaseService {
             for (String typeStr : typeArr) {
                 gameTypes.add(Integer.valueOf(typeStr));
             }
-            BigDecimal money = gameRecordService.getBetMoney(memberId, start, end, gameTypes);
+            Integer startSec = null;
+            Integer endSec = null;
+            if(start != null){
+                startSec = start.intValue()/1000;
+            }
+            if(end != null){
+                endSec = end.intValue()/1000;
+            }
+            BigDecimal money = gameRecordService.getTotalValidBet(Lists.newArrayList(memberId), startSec, endSec, gameTypes);
             if(money != null && money.intValue() > 0) {
                 beginToBack(classifyPo.getId(), memberId, end, money);
            }

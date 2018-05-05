@@ -13,10 +13,14 @@ public interface GameRecordMapper {
 
     Integer insert(GameRecordPo gameRecordPo);
 
-    BigDecimal getTotalValidBet(@Param("memberIds") List<Integer> memberIds,@Param("start") String start, @Param("end") String end,
+    BigDecimal getValidBetTotal(@Param("memberIds") List<Integer> memberIds,
+                                @Param("start") String start,
+                                @Param("end") String end,
                                 @Param("gameTypes") List<Integer> gameTypes);
 
-    BigDecimal getReAmountTotal(@Param("memberIds") List<Integer> memberIds,@Param("start")  String start,  @Param("end") String end,
+    BigDecimal getReAmountTotal(@Param("memberIds") List<Integer> memberIds,
+                                @Param("start")  String start,
+                                @Param("end") String end,
                                 @Param("gameTypes") List<Integer> gameTypes);
 }
 
