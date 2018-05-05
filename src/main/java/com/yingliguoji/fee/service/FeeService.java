@@ -92,17 +92,12 @@ public class FeeService extends BaseService {
                 log.setMemberId(memberId);
                 Timestamp timestamp = new Timestamp(System.currentTimeMillis());
                 log.setCreatedAt(timestamp);
-
                 MemberPo updatePo = new MemberPo();
                 updatePo.setId(memberId);
                 updatePo.setFs_money(log.getMoney());
-
                 memberMapper.update(updatePo);
-
                 MemberPo afterPo = memberMapper.findById(memberId);
-
                 log.setAfterMoney(afterPo.getMoney());
-
                 dividendMapper.insert(log);
                 kouchu = dataPo.getQuota();
             }

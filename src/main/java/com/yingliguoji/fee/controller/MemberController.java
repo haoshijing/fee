@@ -63,9 +63,7 @@ public class MemberController {
             log.error("",e);
             return new ApiResponse(false);
         }
-
     }
-
 
 
     @RequestMapping("/back")

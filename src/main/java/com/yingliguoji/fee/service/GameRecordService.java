@@ -1,13 +1,11 @@
 package com.yingliguoji.fee.service;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.yingliguoji.fee.dao.*;
-import com.yingliguoji.fee.po.*;
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -24,24 +22,12 @@ public class GameRecordService {
     @Value("${fireData}")
     private Integer fireData;
 
-
-    public BigDecimal getMoney(Integer memberId, Integer start, Integer end, List<Integer> gameTypes) {
-
-        Map<String, Object> params = Maps.newHashMap();
-        params.put("memberId", memberId);
-
-        if(start != null){
-            Long startTime = (start*1000L);
-            Timestamp startTimestamp = new Timestamp(startTime);
-            params.put("startTime", startTimestamp.toString());
-        }
-        if(end != null) {
-            Long endTime = (end*1000L);
-            params.put("endTime", new Timestamp(endTime).toString());
-        }
-        params.put("gameTypes", gameTypes);
-
-        BigDecimal money = gameRecordMapper.getPlayerTotal(params);
+    public BigDecimal getReAmountTotal(List<Integer> memberIds, Integer start, Integer end, List<Integer> gameTypes) {
+        QueryDataVo queryDataVo = getQueryPo(memberIds,start,end,gameTypes);
+        BigDecimal money = gameRecordMapper.getReAmountTotal(queryDataVo.getMemberIds(),
+                queryDataVo.getStartTime(),
+                queryDataVo.getEndTime(),
+                queryDataVo.getGameTypes());
         if(money == null){
             return new BigDecimal(0);
         }
@@ -49,27 +35,47 @@ public class GameRecordService {
 
     }
 
-    public BigDecimal getBetMoney(Integer memberId, Long start, Long end,List<Integer> gameTypes) {
-        Map<String, Object> params = Maps.newHashMap();
-        List<Integer> memberIds = Lists.newArrayList();
-        memberIds.add(memberId);
-        params.put("memberIds", memberIds);
+    public BigDecimal getTotalValidBet(List<Integer> memberIds, Integer start, Integer end,List<Integer> gameTypes) {
+        String startTime = null;
+        String endTime = null;
         if(start != null){
-            Timestamp startTimestamp = new Timestamp(start);
-            params.put("startTime", startTimestamp.toString());
+            Timestamp startTimestamp = new Timestamp(start*1000L);
+            startTime =  startTimestamp.toString();
         }
-        if(end != null){
-            Timestamp endTimestamp = new Timestamp(end);
-            params.put("endTime", endTimestamp.toString());
+        if(end != null) {
+            startTime =  new Timestamp(end*1000L).toString();
         }
-
-        params.put("gameTypes", gameTypes);
-
-        BigDecimal money = gameRecordMapper.getValidBetTotal(params);
+        BigDecimal money = gameRecordMapper.getTotalValidBet(memberIds,startTime,endTime,gameTypes);
         if(money == null){
             return new BigDecimal(0);
         }
         return  money;
+    }
 
+    private QueryDataVo getQueryPo(List<Integer> memberIds, Integer start, Integer end, List<Integer> gameTypes) {
+        QueryDataVo queryDataVo = new QueryDataVo();
+        String startTime = null;
+        String endTime = null;
+        if(start != null){
+            Long startTimeMill = (start*1000L);
+            Timestamp startTimestamp = new Timestamp(startTimeMill);
+            startTime =  startTimestamp.toString();
+        }
+        if(end != null) {
+            Long endTimeMill = (end*1000L);
+            startTime =  new Timestamp(endTimeMill).toString();
+        }
+        queryDataVo.setEndTime(endTime);
+        queryDataVo.setStartTime(startTime);
+        queryDataVo.setGameTypes(gameTypes);
+        queryDataVo.setMemberIds(memberIds);
+        return queryDataVo;
+    }
+    @Data
+    private class QueryDataVo{
+        private List<Integer> memberIds;
+        private String startTime;
+        private String endTime;
+        private List<Integer> gameTypes;
     }
 }

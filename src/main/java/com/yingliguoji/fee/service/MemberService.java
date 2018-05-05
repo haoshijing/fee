@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import java.math.BigDecimal;
-import java.sql.Timestamp;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,12 +21,10 @@ public class MemberService {
     private MemberMapper memberMapper;
 
     @Autowired
-    private GameRecordMapper gameRecordMapper;
+    private GameRecordService gameRecordMapper;
 
-    private DefaultEventExecutor defaultEventExecutor;
 
     public MemberService() {
-        defaultEventExecutor = new DefaultEventExecutor(new DefaultThreadFactory("QueryMemberDataService"));
     }
 
     public List<MemberPo> getMemberIds(Integer proxyId) {
@@ -52,8 +49,7 @@ public class MemberService {
         return memberMapper.selectList(queryPo);
     }
 
-    public List<BranchAgentVo> branchAgentVoList(Integer branchId, Long start, Long end) {
-
+    public List<BranchAgentVo> branchAgentVoList(Integer branchId, Integer start, Integer end) {
         List<MemberPo> proxyList = getAllUnderProxy(branchId);
         return proxyList.stream().map(
                 memberPo -> {
@@ -67,33 +63,14 @@ public class MemberService {
 
                     BigDecimal totalBet = new BigDecimal(0);
                     if (!CollectionUtils.isEmpty(memberIds)) {
-                        String startTimeStampStr = "";
-                        String endTimeStampStr = null;
-                        if (start != null) {
-                            Timestamp startTimeStamp = new Timestamp(start);
-                            startTimeStampStr = startTimeStamp.toString();
-                        }
-                        if (end != null) {
-                            Timestamp endTimeStamp = new Timestamp(end);
-                            endTimeStampStr = endTimeStamp.toString();
-                        }
-                        totalBet = gameRecordMapper.getTotalValidBet(memberIds, startTimeStampStr, endTimeStampStr);
+                        totalBet = gameRecordMapper.getTotalValidBet(memberIds, start, end,Lists.newArrayList());
                     }
 
                     BigDecimal reAmountMoney = new BigDecimal(0);
                     if (!CollectionUtils.isEmpty(memberIds)) {
-                        String startTimeStampStr = "";
-                        String endTimeStampStr = null;
-                        if (start != null) {
-                            Timestamp startTimeStamp = new Timestamp(start);
-                            startTimeStampStr = startTimeStamp.toString();
-                        }
-                        if (end != null) {
-                            Timestamp endTimeStamp = new Timestamp(end);
-                            endTimeStampStr = endTimeStamp.toString();
-                        }
-                        totalBet = gameRecordMapper.getTotalValidBet(memberIds, startTimeStampStr, endTimeStampStr);
+                        reAmountMoney = gameRecordMapper.getReAmountTotal(memberIds, start, end,Lists.newArrayList());
                     }
+                    branchAgentVo.setRealAmount(reAmountMoney);
                     branchAgentVo.setTotalBet(totalBet);
                     return branchAgentVo;
                 }

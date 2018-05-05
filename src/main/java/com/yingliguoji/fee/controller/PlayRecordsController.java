@@ -6,6 +6,8 @@ import com.yingliguoji.fee.controller.response.PlayerRecordTotalVo;
 import com.yingliguoji.fee.dao.ClassifyMapper;
 import com.yingliguoji.fee.po.ClassifyPo;
 import com.yingliguoji.fee.service.GameRecordService;
+import com.yingliguoji.fee.service.MemberService;
+import com.yingliguoji.fee.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,15 +26,25 @@ public class PlayRecordsController {
 
     @Autowired
     private GameRecordService gameRecordService;
+
+    @Autowired
+    private MemberService memberService;
+
     @RequestMapping("/getPlayerRecordTotal")
     public List<PlayerRecordTotalVo> getPlayerRecordTotal(@RequestBody PlayerRecordRequest recordRequest) {
 
         List<ClassifyPo> classifyPos = classifyMapper.selectAll();
-        if(CollectionUtils.isEmpty(recordRequest.getMemberIds())){
+        Integer proxyId = recordRequest.getProxyId();
+        if (proxyId == null) {
             return Lists.newArrayList();
         }
-
-        List<PlayerRecordTotalVo> recordTotalVos = recordRequest.getMemberIds().stream().map(
+        List<Integer> memberIds = memberService.getMemberIds(proxyId).stream()
+                .filter(memberPo -> {
+                    return memberPo != null;
+                }).map(memberPo -> {
+                    return memberPo.getId();
+                }).collect(Collectors.toList());
+        List<PlayerRecordTotalVo> recordTotalVos = memberIds.stream().map(
                 memberId -> {
                     PlayerRecordTotalVo recordTotalVo = new PlayerRecordTotalVo();
                     List<PlayerRecordTotalVo.ClassiFyItem> items =
@@ -41,7 +53,9 @@ public class PlayRecordsController {
                                 item.setClassiFyId(classifyPo.getId());
                                 item.setName(classifyPo.getName());
                                 List<Integer> gameTypes = getGameTypes(classifyPo);
-                                BigDecimal bigDecimal = gameRecordService.getMoney(memberId,recordRequest.getStart(),recordRequest.getEnd(),gameTypes);
+                                List<Integer> queryMembers = Lists.newArrayList(memberId);
+                                BigDecimal bigDecimal = gameRecordService.getReAmountTotal(queryMembers,
+                                        recordRequest.getStart(), recordRequest.getEnd(), gameTypes);
                                 item.setMoney(bigDecimal.doubleValue());
                                 return item;
                             }).collect(Collectors.toList());
@@ -63,5 +77,4 @@ public class PlayRecordsController {
         }
         return gameTypes;
     }
-
 }
