@@ -94,15 +94,16 @@ public class FeeService extends BaseService {
         Integer count = memberClassifyMapper.queryCount(memberClassifyPo);
         if(count == 0){
             handlerMemFee(memberId,classifyId,sumMoney);
+            MemberClassifyPo insertPo = new MemberClassifyPo();
+            insertPo.setClassifyId(classifyId);
+            insertPo.setMemberId(memberId);
+            insertPo.setFeeTime(end);
+            insertPo.setMoney(sumMoney);
+            insertPo.setCreateTime(System.currentTimeMillis());
+            memberClassifyMapper.insert(insertPo);
         }
         //写入到日志
-        MemberClassifyPo insertPo = new MemberClassifyPo();
-        insertPo.setClassifyId(classifyId);
-        insertPo.setMemberId(memberId);
-        insertPo.setFeeTime(end);
-        insertPo.setMoney(sumMoney);
-        insertPo.setCreateTime(System.currentTimeMillis());
-        memberClassifyMapper.insert(insertPo);
+
     }
 
     public void handlerMemFee(Integer memberId,Integer classifyId,BigDecimal sumMoney){

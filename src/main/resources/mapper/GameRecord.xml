@@ -47,6 +47,14 @@
         <foreach collection="memberIds" item="memberId" separator="," open="(" close=")">
             #{memberId}
         </foreach>
+        <if test = "gameTypes != null and gameTypes.size() > 0">
+            AND gameType in
+            <foreach collection="gameTypes" close=")" open="(" separator="," item="type">
+                #{type}
+            </foreach>
+
+        </if>
+
         <if test = "start != null and start != ''">
             AND created_at >= #{start}
         </if>
@@ -63,6 +71,13 @@
         <foreach collection="memberIds" item="memberId" separator="," open="(" close=")">
             #{memberId}
         </foreach>
+        <if test = "gameTypes != null and gameTypes.size() > 0">
+            AND gameType in
+            <foreach collection="gameTypes" close=")" open="(" separator="," item="type">
+                #{type}
+            </foreach>
+        </if>
+
         <if test = "start != null and start != ''">
             AND created_at >= #{startTime}
         </if>
