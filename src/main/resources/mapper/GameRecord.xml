@@ -14,7 +14,7 @@
     </select>
 
     <select id="getPlayerTotal" resultType="java.math.BigDecimal">
-        select sum(reAmount) from <include refid="tableName" />
+        select COALESCE(  sum(reAmount),0) from <include refid="tableName" />
         where
         member_id =#{memberId}
         <if test = "gameTypes != null and gameTypes.size() > 0">
@@ -42,7 +42,7 @@
     </select>
 
     <select id="getValidBetTotal" resultType="java.math.BigDecimal">
-        select sum(validBetAmount) from <include refid="tableName" />
+        select COALESCE( sum(validBetAmount) ,0) from <include refid="tableName" />
         where member_id in
         <foreach collection="memberIds" item="memberId" separator="," open="(" close=")">
             #{memberId}
@@ -66,7 +66,7 @@
      </select>
 
     <select id="getReAmountTotal" resultType="java.math.BigDecimal">
-        select sum(reAmount) from <include refid="tableName" />
+        select COALESCE( sum(reAmount),0) from <include refid="tableName" />
         where member_id in
         <foreach collection="memberIds" item="memberId" separator="," open="(" close=")">
             #{memberId}
@@ -82,8 +82,8 @@
             AND created_at >= #{startTime}
         </if>
 
-        <if test = "endTime != null and endTime != ''">
-            AND created_at <![CDATA[ <= ]]> #{endTime}
+        <if test = "end != null and end != ''">
+            AND created_at <![CDATA[ <= ]]> #{end}
         </if>
         and reAmount <![CDATA[  <> 0]]>
     </select>

@@ -115,7 +115,7 @@ public class FeeService extends BaseService {
                 //增加反水记录
                 MemberPo beforeMemberPo = memberMapper.findById(memberId);
                 DividendPo log = new DividendPo();
-                log.setBeforeMoney(beforeMemberPo.getMoney());
+                log.setBeforeMoney(beforeMemberPo.getFs_money());
                 Integer getMoney = dataPo.getQuota() -kouchu;
                 BigDecimal money = sumMoney.divide(new BigDecimal(fireData)).multiply(new BigDecimal(getMoney));
                 log.setDescribe("返水-类别:"+classifyId+"金钱:"+getMoney);
@@ -129,7 +129,7 @@ public class FeeService extends BaseService {
                 updatePo.setFs_money(log.getMoney());
                 memberMapper.update(updatePo);
                 MemberPo afterPo = memberMapper.findById(memberId);
-                log.setAfterMoney(afterPo.getMoney());
+                log.setAfterMoney(afterPo.getFs_money());
                 dividendMapper.insert(log);
                 kouchu = dataPo.getQuota();
             }

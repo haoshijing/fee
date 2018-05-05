@@ -12,6 +12,7 @@ import com.yingliguoji.fee.po.UserPo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -60,10 +61,10 @@ public class MemberService {
     }
 
 
-    public List<FeeTotalVo> getBranchFeeList(Integer start,Integer end) {
+    public List<FeeTotalVo> getBranchFeeList(Integer start, Integer end) {
         List<UserPo> userPos = userMapper.getAllBranch();
         final List<ClassifyPo> classifyPos = classifyMapper.selectAll();
-        List<FeeTotalVo> feeTotalVos =  userPos.stream().map(userPo -> {
+        List<FeeTotalVo> feeTotalVos = userPos.stream().map(userPo -> {
             FeeTotalVo branchFeeVo = new FeeTotalVo();
             Integer branchId = userPo.getId();
             MemberPo queryPo = new MemberPo();
@@ -76,17 +77,26 @@ public class MemberService {
             branchFeeVo.setRealName(userPo.getName());
             BigDecimal totalBet = new BigDecimal(0);
             if (!CollectionUtils.isEmpty(memberIds)) {
-                totalBet = gameRecordMapper.getTotalValidBet(memberIds,Lists.newArrayList(), start, end);
+                totalBet = gameRecordMapper.getTotalValidBet(memberIds, Lists.newArrayList(), start, end);
             }
-
+            branchFeeVo.setTotalBet(totalBet);
             BigDecimal reAmountMoney = new BigDecimal(0);
             if (!CollectionUtils.isEmpty(memberIds)) {
-                reAmountMoney = gameRecordMapper.getReAmountTotal(memberIds,Lists.newArrayList(), start, end);
+                reAmountMoney = gameRecordMapper.getReAmountTotal(memberIds, Lists.newArrayList(), start, end).multiply(new BigDecimal(-1));
             }
-            BigDecimal feeTotal = feeService.getTotalFee(userPo.getId(),2,memberIds,classifyPos,start,end);
-            branchFeeVo.setRealAmount(reAmountMoney);
-            branchFeeVo.setTotalBet(totalBet);
-            branchFeeVo.setRealAmount(reAmountMoney.add(feeTotal));
+            branchFeeVo.setReAmount(reAmountMoney);
+            BigDecimal realAmountMoney = new BigDecimal(0);
+            if (!CollectionUtils.isEmpty(memberIds)) {
+                BigDecimal feeTotal = feeService.getTotalFee(userPo.getId(), 2, memberIds, classifyPos, start, end);
+                branchFeeVo.setRealAmount(reAmountMoney);
+                branchFeeVo.setTotalBet(totalBet);
+                if (userPo.getProportion() == null) {
+                    userPo.setProportion(0);
+                }
+                realAmountMoney = reAmountMoney.add(feeTotal.multiply(new BigDecimal(-1))).multiply(new BigDecimal(userPo.getProportion()))
+                        .divide(new BigDecimal(100));
+            }
+            branchFeeVo.setRealAmount(realAmountMoney);
             return branchFeeVo;
 
         }).collect(Collectors.toList());
@@ -97,6 +107,7 @@ public class MemberService {
     public List<FeeTotalVo> branchAgentVoList(Integer branchId, Integer start, Integer end) {
         List<MemberPo> proxyList = getAllUnderProxy(branchId);
         final List<ClassifyPo> classifyPos = classifyMapper.selectAll();
+        UserPo userPo = userMapper.selectById(branchId);
         return proxyList.stream().map(
                 memberPo -> {
                     FeeTotalVo branchAgentVo = new FeeTotalVo();
@@ -108,21 +119,28 @@ public class MemberService {
                     }).collect(Collectors.toList());
                     BigDecimal totalBet = new BigDecimal(0);
                     if (!CollectionUtils.isEmpty(memberIds)) {
-                        totalBet = gameRecordMapper.getTotalValidBet(memberIds,Lists.newArrayList(), start, end);
+                        totalBet = gameRecordMapper.getTotalValidBet(memberIds, Lists.newArrayList(), start, end);
                     }
 
                     BigDecimal reAmountMoney = new BigDecimal(0);
                     if (!CollectionUtils.isEmpty(memberIds)) {
-                        reAmountMoney = gameRecordMapper.getReAmountTotal(memberIds,Lists.newArrayList(), start, end);
-                    }
-
-                    BigDecimal feeTotal = new BigDecimal(0);
-                    if (!CollectionUtils.isEmpty(memberIds)) {
-                        feeTotal =   feeService.getTotalFee(memberPo.getId(), 1, memberIds, classifyPos, start, end);
+                        reAmountMoney = gameRecordMapper.getReAmountTotal(memberIds, Lists.newArrayList(), start, end);
+                        reAmountMoney = reAmountMoney.multiply(new BigDecimal(-1));
                     }
                     branchAgentVo.setReAmount(reAmountMoney);
+                    BigDecimal feeTotal = new BigDecimal(0);
+                    if (!CollectionUtils.isEmpty(memberIds)) {
+                        feeTotal = feeService.getTotalFee(memberPo.getId(), 1, memberIds, classifyPos, start, end);
+                        feeTotal = feeTotal.multiply(new BigDecimal(-1));
+                    }
+
                     branchAgentVo.setTotalBet(totalBet);
-                    branchAgentVo.setRealAmount(reAmountMoney.add(feeTotal));
+                    if (userPo.getProportion() == null) {
+                        userPo.setProportion(0);
+                    }
+                    branchAgentVo.setRealAmount(reAmountMoney.add(feeTotal).
+                            multiply(new BigDecimal(userPo.getProportion())).
+                            divide(new BigDecimal(100)));
                     return branchAgentVo;
                 }
         ).collect(Collectors.toList());

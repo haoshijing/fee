@@ -10,4 +10,6 @@ public interface UserMapper {
     UserPo findByName(String name);
 
     List<UserPo> getAllBranch();
+
+    UserPo selectById(Integer branchId);
 }

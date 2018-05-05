@@ -20,6 +20,6 @@ public class UserPo {
     private String qq = "";
     private Integer superVal = 0;
     private String wechat = "";
-    private String proportion = "";
+    private Integer proportion = 0;
     private String lines = "";
 }

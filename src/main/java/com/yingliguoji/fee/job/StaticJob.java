@@ -24,11 +24,6 @@ public class StaticJob {
     @Autowired
     private FeeService feeService;
 
-    @PostConstruct
-    public void init(){
-        work();
-    }
-
     @Scheduled(cron = "0 30 * * * ?")
     public void execute() {
         try {

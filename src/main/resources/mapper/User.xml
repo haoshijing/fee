@@ -51,7 +51,11 @@
     <select id = "findByName" resultType="com.yingliguoji.fee.po.UserPo">
         select name from <include refid="tableName"/>
         where name = #{name}
+    </select>
 
+    <select id="selectById" resultType="com.yingliguoji.fee.po.UserPo">
+        select * from  <include refid="tableName"/>
+        where id = #{id}
     </select>
 
 </mapper>
