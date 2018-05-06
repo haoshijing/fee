@@ -2,10 +2,7 @@ package com.yingliguoji.fee.controller;
 
 import com.yingliguoji.fee.ApiResponse;
 import com.yingliguoji.fee.dao.MemberMapper;
-import com.yingliguoji.fee.dao.RebateMapper;
 import com.yingliguoji.fee.po.MemberPo;
-import com.yingliguoji.fee.po.RebatePo;
-import com.yingliguoji.fee.service.FeeService;
 import com.yingliguoji.fee.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +22,16 @@ public class MemberController {
     private UserService userService;
 
     @Autowired
-    private FeeService feeService;
+    private MemberMapper memberMapper;
 
+    @RequestMapping("/getFee")
+    public ApiResponse<String> getFee(String name ) {
+        MemberPo memberPo = memberMapper.findByName(name);
+        if(memberPo != null){
+            return new ApiResponse<>(String.valueOf(memberPo.getTie()));
+        }
+        return new ApiResponse<>("0");
+    }
     @RequestMapping("/upgrade")
     public ApiResponse<Boolean> upgrade(Integer memberId){
         try {

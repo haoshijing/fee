@@ -17,4 +17,5 @@ public class MemberPo {
     private Integer top_id;
     private Integer is_daili;
     private Integer branch_id;
+    private BigDecimal tie;
 }
