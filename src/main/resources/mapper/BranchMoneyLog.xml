@@ -13,7 +13,7 @@
         insert into <include refid="tableName"/>
         (
         branchId,
-        money
+        money,
         classifyId,
         createTime
         )
