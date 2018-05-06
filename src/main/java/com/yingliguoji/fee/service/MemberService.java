@@ -82,7 +82,7 @@ public class MemberService {
             branchFeeVo.setTotalBet(totalBet);
             BigDecimal reAmountMoney = new BigDecimal(0);
             if (!CollectionUtils.isEmpty(memberIds)) {
-                reAmountMoney = gameRecordMapper.getReAmountTotal(memberIds, Lists.newArrayList(), start, end).multiply(new BigDecimal(-1));
+                reAmountMoney = gameRecordMapper.getReAmountTotal(memberIds, Lists.newArrayList(), start, end);
             }
             branchFeeVo.setReAmount(reAmountMoney);
             BigDecimal realAmountMoney = new BigDecimal(0);
@@ -93,7 +93,7 @@ public class MemberService {
                 BigDecimal feeTotal = feeService.getTotalFee(userPo.getId(), 2, memberIds, classifyPos, start, end);
                 branchFeeVo.setRealAmount(reAmountMoney);
                 branchFeeVo.setTotalBet(totalBet);
-                realAmountMoney = reAmountMoney.add(feeTotal.multiply(new BigDecimal(-1))).multiply(new BigDecimal(userPo.getProportion()))
+                realAmountMoney = reAmountMoney.multiply(new BigDecimal(-1)).add(feeTotal.multiply(new BigDecimal(-1))).multiply(new BigDecimal(userPo.getProportion()))
                         .divide(new BigDecimal(100));
             }
             branchFeeVo.setProportion(userPo.getProportion());
@@ -126,7 +126,6 @@ public class MemberService {
                     BigDecimal reAmountMoney = new BigDecimal(0);
                     if (!CollectionUtils.isEmpty(memberIds)) {
                         reAmountMoney = gameRecordMapper.getReAmountTotal(memberIds, Lists.newArrayList(), start, end);
-                        reAmountMoney = reAmountMoney.multiply(new BigDecimal(-1));
                     }
                     branchAgentVo.setReAmount(reAmountMoney);
                     BigDecimal feeTotal = new BigDecimal(0);
@@ -140,7 +139,7 @@ public class MemberService {
                         userPo.setProportion(0);
                     }
                     branchAgentVo.setProportion(userPo.getProportion());
-                    branchAgentVo.setRealAmount(reAmountMoney.add(feeTotal).
+                    branchAgentVo.setRealAmount(reAmountMoney.multiply(new BigDecimal(-1)).add(feeTotal).
                             multiply(new BigDecimal(userPo.getProportion())).
                             divide(new BigDecimal(100)));
                     return branchAgentVo;
