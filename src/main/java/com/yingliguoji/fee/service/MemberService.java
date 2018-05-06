@@ -57,6 +57,7 @@ public class MemberService {
         MemberPo queryPo = new MemberPo();
         queryPo.setBranch_id(branchId);
         queryPo.setIs_daili(1);
+        queryPo.setTop_id(0);
         return memberMapper.selectList(queryPo);
     }
 
