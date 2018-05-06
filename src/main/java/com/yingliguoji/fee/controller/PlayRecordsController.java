@@ -5,7 +5,9 @@ import com.yingliguoji.fee.ApiResponse;
 import com.yingliguoji.fee.controller.response.PlayerRecordRequest;
 import com.yingliguoji.fee.controller.response.PlayerRecordTotalVo;
 import com.yingliguoji.fee.dao.ClassifyMapper;
+import com.yingliguoji.fee.dao.MemberMapper;
 import com.yingliguoji.fee.po.ClassifyPo;
+import com.yingliguoji.fee.po.MemberPo;
 import com.yingliguoji.fee.service.GameRecordService;
 import com.yingliguoji.fee.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +31,9 @@ public class PlayRecordsController {
     @Autowired
     private MemberService memberService;
 
+    @Autowired
+    private MemberMapper memberMapper;
+
     @RequestMapping("/getPlayerRecordTotal")
     public ApiResponse<List<PlayerRecordTotalVo>> getPlayerRecordTotal(@RequestBody PlayerRecordRequest recordRequest) {
 
@@ -47,6 +52,11 @@ public class PlayRecordsController {
         List<PlayerRecordTotalVo> recordTotalVos = memberIds.stream().map(
                 memberId -> {
                     PlayerRecordTotalVo recordTotalVo = new PlayerRecordTotalVo();
+                    MemberPo memberPo = memberMapper.findById(memberId);
+                    if(memberPo != null){
+                        recordTotalVo.setName(memberPo.getName());
+                        recordTotalVo.setRealName(memberPo.getReal_name());
+                    }
                     List<PlayerRecordTotalVo.ClassiFyItem> items =
                             classifyPos.stream().map(classifyPo -> {
                                 PlayerRecordTotalVo.ClassiFyItem item = new PlayerRecordTotalVo.ClassiFyItem();

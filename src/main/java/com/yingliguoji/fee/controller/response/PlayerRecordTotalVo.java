@@ -7,6 +7,8 @@ import java.util.List;
 @Data
 public class PlayerRecordTotalVo {
     private Integer memberId;
+    private String name;
+    private String realName;
     private List<ClassiFyItem> classiFyItemList;
 
 
