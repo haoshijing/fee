@@ -33,12 +33,13 @@ public class SyncRecordService {
         gameRecordPo.setBillNo(playRecordRequest.getTradeNo());
         gameRecordPo.setMemberId(memberPo.getId());
         gameRecordPo.setName(memberPo.getName());
-        gameRecordPo.setPlayType(20000);
+        gameRecordPo.setGameType(20000);
         Timestamp timestamp = new Timestamp(playRecordRequest.getBetTime());
         gameRecordPo.setBetTime(timestamp);
         gameRecordPo.setReAmount(new BigDecimal(playRecordRequest.getReAmount()));
         gameRecordPo.setBetAmount(new BigDecimal(playRecordRequest.getBetAmount()));
-
+        gameRecordPo.setCreated_at(new Timestamp(System.currentTimeMillis()).toString());
+        gameRecordPo.setUpdated_at(new Timestamp(System.currentTimeMillis()).toString());
         return gameRecordMapper.insert(gameRecordPo);
 
     }

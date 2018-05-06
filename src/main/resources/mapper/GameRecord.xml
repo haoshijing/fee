@@ -117,7 +117,7 @@
         #{betTime},
         #{gameType},
         #{betAmount},
-        #{validBetAmount},
+        #{betAmount},
         #{reAmount}
         )
     </insert>
