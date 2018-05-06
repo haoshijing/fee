@@ -27,6 +27,7 @@ public class StaticJob {
     @Scheduled(cron = "0 30 * * * ?")
     public void execute() {
         try {
+            feeService.updateReAmount();
             log.info("start work");
             work();
             log.info(" end work");

@@ -69,6 +69,11 @@ public class GameRecordService {
         queryDataVo.setMemberIds(memberIds);
         return queryDataVo;
     }
+
+    public void updateReAmount() {
+        gameRecordMapper.updateReAmount();
+    }
+
     @Data
     private class QueryDataVo{
         private List<Integer> memberIds;

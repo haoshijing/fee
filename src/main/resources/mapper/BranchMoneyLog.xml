@@ -1,37 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.yingliguoji.fee.dao.MemberMoneyLogMapper">
+<mapper namespace="com.yingliguoji.fee.dao.BranchMoneyLogDao">
 
     <sql id="tableName">
         members
     </sql>
     <!-- 插入一条记录 -->
 
-    <insert id="insert" parameterType="com.yingliguoji.fee.po.MemberMoneyLogPo">
+    <insert id="insert" parameterType="com.yingliguoji.fee.po.BranchMoneyLogPo">
 
         insert into <include refid="tableName"/>
         (
-        memberId,
+        branchId,
         money
-        `type`,
-        memo,
-        beforeMoney,
-        afterMoney,
+        classifyId,
         createTime
         )
 
         VALUES (
 
-        #{memberId},
+        #{branchId},
         #{money},
-        #{type},
-        #{memo},
-        #{beforeMoney},
-        #{afterMoney},
+        #{classifyId},
         #{createTime}
         )
 
     </insert>
+
+
 
 </mapper>

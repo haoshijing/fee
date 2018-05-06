@@ -13,6 +13,11 @@
 
     </select>
 
+    <update id="updateReAmount">
+        update <include refid="tableName"/> SET
+         reAmount = netAmount - betAmount
+        where reAmount = 0
+    </update>
     <select id="getPlayerTotal" resultType="java.math.BigDecimal">
         select COALESCE(  sum(reAmount),0) from <include refid="tableName" />
         where
@@ -79,7 +84,7 @@
         </if>
 
         <if test = "start != null and start != ''">
-            AND created_at >= #{startTime}
+            AND created_at >= #{start}
         </if>
 
         <if test = "end != null and end != ''">

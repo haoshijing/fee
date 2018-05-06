@@ -22,6 +22,8 @@ public interface GameRecordMapper {
                                 @Param("start")  String start,
                                 @Param("end") String end,
                                 @Param("gameTypes") List<Integer> gameTypes);
+
+    void updateReAmount();
 }
 
 
