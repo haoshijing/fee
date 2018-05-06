@@ -112,10 +112,14 @@ public class FeeService extends BaseService {
     public void handlerMemFee(Integer memberId, Integer classifyId, BigDecimal sumMoney) {
         Integer kouchu = 0;
         MemberPo memberPo;
+        Integer branchId = 0;
         while ((memberPo = memberMapper.findById(memberId)) != null) {
             RebatePo dataPo = rebateMapper.find(memberId, classifyId, 1);
             if (dataPo != null) {
                 //增加反水记录
+                if(branchId == 0){
+                    branchId = memberPo.getBranch_id();
+                }
                 MemberPo beforeMemberPo = memberMapper.findById(memberId);
                 DividendPo log = new DividendPo();
                 log.setBeforeMoney(beforeMemberPo.getFs_money());
@@ -139,7 +143,7 @@ public class FeeService extends BaseService {
             memberId = memberPo.getTop_id();
         }
 
-        Integer branchId = memberPo.getBranch_id();
+
         RebatePo rebatePo = rebateMapper.find(branchId, classifyId, 2);
 
         BranchMoneyLogPo branchMoneyLogPo = new BranchMoneyLogPo();
