@@ -103,7 +103,9 @@
         gameType,
         betAmount,
         validBetAmount,
-        reAmount
+        reAmount,
+        created_at,
+        updated_at
         )
         VALUES
         (
@@ -118,7 +120,9 @@
         #{gameType},
         #{betAmount},
         #{betAmount},
-        #{reAmount}
+        #{reAmount},
+        #{created_at},
+        #{updated_at}
         )
     </insert>
 </mapper>
