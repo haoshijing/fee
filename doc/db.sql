@@ -10,6 +10,17 @@ money DECIMAL (16,2) comment '钱数',
 createTime bigint comment '创建时间',
 feeTime bigint comment '返水的时间'
 );
+
+drop table if EXISTS branch_money_log;
+create table branch_money_log
+(
+id int primary key auto_increment,
+money DECIMAL (16,2) comment '钱数',
+branchId int comment '会员id',
+classifyId int comment '1-统计,2-扣除',
+createTime bigint comment '创建时间'
+);
+
 drop table if EXISTS member_money_log;
 create table member_money_log
 (
