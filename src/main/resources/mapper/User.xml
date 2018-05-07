@@ -23,7 +23,8 @@
         qq,
         super,
         wechat,
-        proportion
+        proportion,
+        tie
         )
         VALUES
         (
@@ -40,7 +41,8 @@
         #{qq},
         #{superVal},
         #{wechat},
-        #{proportion}
+        #{proportion},
+        0
         )
     </insert>
 
