@@ -41,7 +41,7 @@ public class GameRecordService {
             startTime =  startTimestamp.toString();
         }
         if(end != null) {
-            startTime =  new Timestamp(end*1000L).toString();
+            endTime =  new Timestamp(end*1000L).toString();
         }
         BigDecimal money = gameRecordMapper.getValidBetTotal(memberIds,startTime,endTime,gameTypes);
         if(money == null){
@@ -61,7 +61,7 @@ public class GameRecordService {
         }
         if(end != null) {
             Long endTimeMill = (end*1000L);
-            startTime =  new Timestamp(endTimeMill).toString();
+            endTime =  new Timestamp(endTimeMill).toString();
         }
         queryDataVo.setEndTime(endTime);
         queryDataVo.setStartTime(startTime);
