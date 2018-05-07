@@ -4,7 +4,7 @@
 <mapper namespace="com.yingliguoji.fee.dao.BranchMoneyLogDao">
 
     <sql id="tableName">
-        members
+        branch_money_log
     </sql>
     <!-- 插入一条记录 -->
 
