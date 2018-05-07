@@ -34,6 +34,18 @@ public class PlayRecordsController {
     @Autowired
     private MemberMapper memberMapper;
 
+
+    @RequestMapping("/underMember")
+    public ApiResponse<List<Integer>> getUnderList(Integer proxyId){
+        List<Integer> ids  = memberService.getMemberIds(proxyId).stream()
+                .filter(memberPo -> {
+                    return memberPo != null;
+                }).map(memberPo -> {
+                    return memberPo.getId();
+                }).collect(Collectors.toList());
+        return new ApiResponse<>(ids);
+    }
+
     @RequestMapping("/getPlayerRecordTotal")
     public ApiResponse<List<PlayerRecordTotalVo>> getPlayerRecordTotal(@RequestBody PlayerRecordRequest recordRequest) {
 
