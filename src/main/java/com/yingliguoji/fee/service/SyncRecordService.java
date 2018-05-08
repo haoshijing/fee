@@ -34,7 +34,7 @@ public class SyncRecordService {
         gameRecordPo.setMemberId(memberPo.getId());
         gameRecordPo.setName(memberPo.getName());
         gameRecordPo.setGameType(20000);
-        Timestamp timestamp = new Timestamp(playRecordRequest.getBetTime());
+        Timestamp timestamp = new Timestamp(playRecordRequest.getBetTime()*1000L);
         gameRecordPo.setBetTime(timestamp);
         gameRecordPo.setReAmount(new BigDecimal(playRecordRequest.getReAmount()));
         gameRecordPo.setBetAmount(new BigDecimal(playRecordRequest.getBetAmount()));
