@@ -32,7 +32,7 @@
     <select id="querySum" resultType="java.math.BigDecimal">
         select COALESCE(  sum(reAmount),0)
         from <include refid="tableName"/>
-        where
+        where 1 = 1
         <if test = "branchId != null">
             AND branchId = #{branchId}
         </if>

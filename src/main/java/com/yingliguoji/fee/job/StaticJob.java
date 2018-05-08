@@ -24,7 +24,7 @@ public class StaticJob {
     @Autowired
     private FeeService feeService;
 
-    @Scheduled(cron = "0 0/5 * * * ?")
+    @Scheduled(cron = "0 0/2 * * * ?")
     public void execute() {
         try {
             feeService.updateReAmount();
