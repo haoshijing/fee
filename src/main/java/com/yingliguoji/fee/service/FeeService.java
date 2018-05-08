@@ -68,14 +68,14 @@ public class FeeService extends BaseService {
                 gameTypes.add(Integer.valueOf(gameTypeStr));
             }
             sumMoney = gameRecordService.getTotalValidBet(memberIds, gameTypes, start, end);
-            if(type == 2) {
-                BigDecimal branchMoneyLog = gameRecordService.getBranchTotal(branchId,classifyPo.getId(),start,end);
-                sumMoney = sumMoney.add(branchMoneyLog);
-            }
             if (sumMoney.intValue() > 0) {
                 RebatePo rebatePo = rebateMapper.find(branchId, classifyPo.getId(), type);
                 if (rebatePo != null) {
                     BigDecimal sum = sumMoney.divide(new BigDecimal(fireData)).multiply(new BigDecimal(rebatePo.getQuota()));
+                    if(type == 2) {
+                        BigDecimal branchMoneyLog = gameRecordService.getBranchTotal(branchId,classifyPo.getId(),start,end);
+                        sum = sum.add(branchMoneyLog);
+                    }
                     list.add(sum);
                 }
             }
