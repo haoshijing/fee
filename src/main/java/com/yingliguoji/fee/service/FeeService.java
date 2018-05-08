@@ -72,6 +72,7 @@ public class FeeService extends BaseService {
             List<Integer> gameTypes = Lists.newArrayList();
             for (String gameTypeStr : smallTypeArr) {
                 gameTypes.add(Integer.valueOf(gameTypeStr));
+                BigDecimal branchMoneyLog = gameRecordService.getBranchTotal(branchId,classifyPo.getId(),start,end);
                 BigDecimal sumMoney = gameRecordService.getTotalValidBet(memberIds, gameTypes, start, end);
                 if (sumMoney.intValue() > 0) {
                     RebatePo rebatePo = rebateMapper.find(branchId, classifyPo.getId(), type);

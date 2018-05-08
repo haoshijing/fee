@@ -17,6 +17,10 @@ public class GameRecordService {
     private GameRecordMapper gameRecordMapper;
 
 
+    @Autowired
+    private BranchMoneyLogDao branchMoneyLogDao;
+
+
     @Value("${fireData}")
     private Integer fireData;
 
@@ -72,6 +76,19 @@ public class GameRecordService {
 
     public void updateReAmount() {
         gameRecordMapper.updateReAmount();
+    }
+
+
+    public BigDecimal getBranchTotal(Integer branchId, Integer classifyId, Integer start, Integer end) {
+        Long startTimestamp = null;
+        Long endTimestamp = null;
+        if(start != null){
+            startTimestamp = start*1000L;
+        }
+        if(end != null) {
+            endTimestamp =   end*1000L;
+        }
+        return branchMoneyLogDao.querySum(branchId,classifyId,startTimestamp,endTimestamp);
     }
 
     @Data

@@ -29,5 +29,24 @@
     </insert>
 
 
+    <select id="querySum" resultType="java.math.BigDecimal">
+        select COALESCE(  sum(reAmount),0)
+        from <include refid="tableName"/>
+
+        <if test = "branchId != null">
+            AND branchId = #{branchId}
+        </if>
+        <if test = "classifyId != null">
+          AND classifyId = #{classifyId}
+        </if>
+
+        <if test = "start != null">
+            AND createTime >= #{start}
+        </if>
+
+        <if test = "end != null">
+            AND createTime <![CDATA[ <= ]]> #{end}
+        </if>
+    </select>
 
 </mapper>
