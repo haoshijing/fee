@@ -6,6 +6,7 @@ import com.yingliguoji.fee.po.MemberPo;
 import com.yingliguoji.fee.service.FeeService;
 import lombok.extern.slf4j.Slf4j;
 import org.joda.time.DateTime;
+import org.joda.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Repository;
@@ -24,7 +25,7 @@ public class StaticJob {
     @Autowired
     private FeeService feeService;
 
-    @Scheduled(cron = "0 0/2 * * * ?")
+    @Scheduled(cron = "* 0/1 * * * ?")
     public void execute() {
         try {
             feeService.updateReAmount();
@@ -37,9 +38,11 @@ public class StaticJob {
     }
 
     private void work() {
+
         DateTime endDate = new DateTime().withTime(0, 0, 0, 0);
-        Long end = endDate.getMillis();
-        Long start = endDate.plusDays(-2).getMillis();
+        Long endDateMills = endDate.getMillis();
+        Integer end = new Long(endDateMills /1000l).intValue();
+        Integer start = new Long(endDate.plusDays(-2).getMillis()/1000).intValue();
 
         List<MemberPo> memberPoList = memberMapper.selectAll();
         memberPoList.forEach(memberPo -> {

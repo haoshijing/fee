@@ -39,7 +39,7 @@ public class FeeService extends BaseService {
     @Value("${fireData}")
     private Integer fireData;
 
-    public void backFeeToAgent(Integer memberId, Long start, Long end) {
+    public void backFeeToAgent(Integer memberId, Integer start, Integer end) {
         List<ClassifyPo> classifyPoList = classifyMapper.selectAll();
         classifyPoList.forEach(classifyPo -> {
             String type = classifyPo.getSmallType();
@@ -48,15 +48,8 @@ public class FeeService extends BaseService {
             for (String typeStr : typeArr) {
                 gameTypes.add(Integer.valueOf(typeStr));
             }
-            Integer startSec = null;
-            Integer endSec = null;
-            if (start != null) {
-                startSec = start.intValue() / 1000;
-            }
-            if (end != null) {
-                endSec = end.intValue() / 1000;
-            }
-            BigDecimal money = gameRecordService.getTotalValidBet(Lists.newArrayList(memberId), gameTypes, startSec, endSec);
+
+            BigDecimal money = gameRecordService.getTotalValidBet(Lists.newArrayList(memberId), gameTypes, start, end);
             if (money != null && money.intValue() > 0) {
                 beginToBack(classifyPo.getId(), memberId, end, money);
             }
@@ -91,18 +84,18 @@ public class FeeService extends BaseService {
     }
 
     @Transactional
-    public void beginToBack(Integer classifyId, Integer memberId, Long end, BigDecimal sumMoney) {
+    public void beginToBack(Integer classifyId, Integer memberId, Integer end, BigDecimal sumMoney) {
         MemberClassifyPo memberClassifyPo = new MemberClassifyPo();
         memberClassifyPo.setClassifyId(classifyId);
         memberClassifyPo.setMemberId(memberId);
-        memberClassifyPo.setFeeTime(end);
+        memberClassifyPo.setFeeTime(end*1000L);
         Integer count = memberClassifyMapper.queryCount(memberClassifyPo);
         if (count == 0) {
             handlerMemFee(memberId, classifyId, sumMoney);
             MemberClassifyPo insertPo = new MemberClassifyPo();
             insertPo.setClassifyId(classifyId);
             insertPo.setMemberId(memberId);
-            insertPo.setFeeTime(end);
+            insertPo.setFeeTime(end*1000L);
             insertPo.setMoney(sumMoney);
             insertPo.setCreateTime(System.currentTimeMillis());
             memberClassifyMapper.insert(insertPo);
