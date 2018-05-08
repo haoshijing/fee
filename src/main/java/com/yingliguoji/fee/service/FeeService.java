@@ -74,7 +74,7 @@ public class FeeService extends BaseService {
                     BigDecimal sum = sumMoney.divide(new BigDecimal(fireData)).multiply(new BigDecimal(rebatePo.getQuota()));
                     if(type == 2) {
                         BigDecimal branchMoneyLog = gameRecordService.getBranchTotal(branchId,classifyPo.getId(),start,end);
-                        sum = sum.add(branchMoneyLog);
+                        sum = sum.add(branchMoneyLog.multiply(new BigDecimal(-1)));
                     }
                     list.add(sum);
                 }
