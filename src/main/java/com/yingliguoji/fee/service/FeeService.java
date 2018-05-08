@@ -63,19 +63,20 @@ public class FeeService extends BaseService {
             String smallType = classifyPo.getSmallType();
             String[] smallTypeArr = smallType.split(",");
             List<Integer> gameTypes = Lists.newArrayList();
+            BigDecimal sumMoney = new BigDecimal(0);
             for (String gameTypeStr : smallTypeArr) {
                 gameTypes.add(Integer.valueOf(gameTypeStr));
-                BigDecimal sumMoney = gameRecordService.getTotalValidBet(memberIds, gameTypes, start, end);
-                if(type == 2) {
-                    BigDecimal branchMoneyLog = gameRecordService.getBranchTotal(branchId,classifyPo.getId(),start,end);
-                    sumMoney = sumMoney.add(branchMoneyLog);
-                }
-                if (sumMoney.intValue() > 0) {
-                    RebatePo rebatePo = rebateMapper.find(branchId, classifyPo.getId(), type);
-                    if (rebatePo != null) {
-                        BigDecimal sum = sumMoney.divide(new BigDecimal(fireData)).multiply(new BigDecimal(rebatePo.getQuota()));
-                        list.add(sum);
-                    }
+            }
+            sumMoney = gameRecordService.getTotalValidBet(memberIds, gameTypes, start, end);
+            if(type == 2) {
+                BigDecimal branchMoneyLog = gameRecordService.getBranchTotal(branchId,classifyPo.getId(),start,end);
+                sumMoney = sumMoney.add(branchMoneyLog);
+            }
+            if (sumMoney.intValue() > 0) {
+                RebatePo rebatePo = rebateMapper.find(branchId, classifyPo.getId(), type);
+                if (rebatePo != null) {
+                    BigDecimal sum = sumMoney.divide(new BigDecimal(fireData)).multiply(new BigDecimal(rebatePo.getQuota()));
+                    list.add(sum);
                 }
             }
         });
