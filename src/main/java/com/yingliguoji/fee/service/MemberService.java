@@ -110,7 +110,6 @@ public class MemberService {
                     BigDecimal feeTotal = new BigDecimal(0);
                     if (!CollectionUtils.isEmpty(memberIds)) {
                         feeTotal = feeService.getTotalFee(memberPo.getId(), 1, memberIds, classifyPos, start, end);
-                        feeTotal = feeTotal.multiply(new BigDecimal(-1));
                         reAmountMoney = reAmountMoney.add(feeTotal);
                     }
 
