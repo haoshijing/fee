@@ -72,6 +72,7 @@ public class MemberService {
             feeTotalVo.setTotalBet(new BigDecimal(0));
             feeTotalVo.setName(userPo.getEmail());
             feeTotalVo.setRealName(userPo.getName());
+            feeTotalVo.setProportion(userPo.getProportion());
             feeTotalVos1.forEach(feeTotalVo1 -> {
                 feeTotalVo.setReAmount(feeTotalVo1.getReAmount().add(feeTotalVo.getReAmount()));
                 feeTotalVo.setRealAmount(feeTotalVo1.getRealAmount().add(feeTotalVo.getRealAmount()));

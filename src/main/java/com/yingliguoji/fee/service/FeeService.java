@@ -141,7 +141,6 @@ public class FeeService extends BaseService {
             memberId = memberPo.getTop_id();
         }
 
-
         RebatePo rebatePo = rebateMapper.find(branchId, classifyId, 2);
         if(rebatePo == null){
             return;
