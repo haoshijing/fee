@@ -63,7 +63,7 @@ public class FeeService extends BaseService {
             String smallType = classifyPo.getSmallType();
             String[] smallTypeArr = smallType.split(",");
             List<Integer> gameTypes = Lists.newArrayList();
-            BigDecimal sumMoney = new BigDecimal(0);
+            BigDecimal sumMoney;
             for (String gameTypeStr : smallTypeArr) {
                 gameTypes.add(Integer.valueOf(gameTypeStr));
             }
