@@ -143,10 +143,13 @@ public class FeeService extends BaseService {
 
 
         RebatePo rebatePo = rebateMapper.find(branchId, classifyId, 2);
-
+        if(rebatePo == null){
+            return;
+        }
         BranchMoneyLogPo branchMoneyLogPo = new BranchMoneyLogPo();
         branchMoneyLogPo.setCreateTime(System.currentTimeMillis());
         branchMoneyLogPo.setClassifyId(classifyId);
+
         branchMoneyLogPo.setMoney(sumMoney.divide(new BigDecimal(fireData)).multiply(new BigDecimal(rebatePo.getQuota() - kouchu)));
         branchMoneyLogPo.setBranchId(branchId);
         branchMoneyLogDao.insert(branchMoneyLogPo);
