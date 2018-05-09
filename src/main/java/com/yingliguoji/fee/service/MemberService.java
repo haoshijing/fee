@@ -106,13 +106,13 @@ public class MemberService {
                     if (!CollectionUtils.isEmpty(memberIds)) {
                         reAmountMoney = gameRecordMapper.getReAmountTotal(memberIds, Lists.newArrayList(), start, end);
                     }
-                    branchAgentVo.setReAmount(reAmountMoney);
+
                     BigDecimal feeTotal = new BigDecimal(0);
                     if (!CollectionUtils.isEmpty(memberIds)) {
                         feeTotal = feeService.getTotalFee(memberPo.getId(), 1, memberIds, classifyPos, start, end);
                         reAmountMoney = reAmountMoney.add(feeTotal);
                     }
-
+                    branchAgentVo.setReAmount(reAmountMoney);
                     branchAgentVo.setTotalBet(totalBet);
                     if (userPo.getProportion() == null) {
                         userPo.setProportion(0);
