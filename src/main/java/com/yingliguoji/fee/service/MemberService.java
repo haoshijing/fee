@@ -75,7 +75,7 @@ public class MemberService {
             feeTotalVos1.forEach(feeTotalVo1 -> {
                 feeTotalVo.setReAmount(feeTotalVo1.getReAmount().add(feeTotalVo.getReAmount()));
                 feeTotalVo.setRealAmount(feeTotalVo1.getRealAmount().add(feeTotalVo.getRealAmount()));
-                feeTotalVo.setTotalBet(feeTotalVo1.getReAmount().add(feeTotalVo.getTotalBet()));
+                feeTotalVo.setTotalBet(feeTotalVo1.getTotalBet().add(feeTotalVo.getTotalBet()));
             });
             return feeTotalVo;
 
