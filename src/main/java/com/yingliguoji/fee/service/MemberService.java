@@ -111,6 +111,7 @@ public class MemberService {
                     if (!CollectionUtils.isEmpty(memberIds)) {
                         feeTotal = feeService.getTotalFee(memberPo.getId(), 1, memberIds, classifyPos, start, end);
                         feeTotal = feeTotal.multiply(new BigDecimal(-1));
+                        reAmountMoney = reAmountMoney.add(feeTotal);
                     }
 
                     branchAgentVo.setTotalBet(totalBet);
@@ -118,7 +119,7 @@ public class MemberService {
                         userPo.setProportion(0);
                     }
                     branchAgentVo.setProportion(userPo.getProportion());
-                    branchAgentVo.setRealAmount(reAmountMoney.multiply(new BigDecimal(-1)).add(feeTotal).
+                    branchAgentVo.setRealAmount(reAmountMoney.multiply(new BigDecimal(-1)).
                             multiply(new BigDecimal(userPo.getProportion())).
                             divide(new BigDecimal(100)));
                     return branchAgentVo;
