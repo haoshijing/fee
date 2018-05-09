@@ -12,4 +12,8 @@ public class FeeTotalVo {
     private BigDecimal reAmount;
     private BigDecimal realAmount;
     private Integer proportion;
+    /**
+     * 下属个数
+     */
+    private Integer underCount;
 }

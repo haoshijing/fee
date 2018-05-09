@@ -33,6 +33,8 @@ public class MemberService {
     private UserMapper userMapper;
 
     @Autowired
+    private MemberService memberService;
+    @Autowired
     private FeeService feeService;
 
     public MemberService() {
@@ -107,7 +109,8 @@ public class MemberService {
                     if (!CollectionUtils.isEmpty(memberIds)) {
                         reAmountMoney = gameRecordMapper.getReAmountTotal(memberIds, Lists.newArrayList(), start, end);
                     }
-
+                    branchAgentVo.setUnderCount(memberIds.size());
+                    branchAgentVo.setReAmount(reAmountMoney);
                     BigDecimal feeTotal = new BigDecimal(0);
                     if (!CollectionUtils.isEmpty(memberIds)) {
                         feeTotal = feeService.getTotalFee(memberPo.getId(), 1, memberIds, classifyPos, start, end);
