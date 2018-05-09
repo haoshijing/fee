@@ -64,42 +64,20 @@ public class MemberService {
 
     public List<FeeTotalVo> getBranchFeeList(Integer start, Integer end) {
         List<UserPo> userPos = userMapper.getAllBranch();
-        final List<ClassifyPo> classifyPos = classifyMapper.selectAll();
         List<FeeTotalVo> feeTotalVos = userPos.stream().map(userPo -> {
-            FeeTotalVo branchFeeVo = new FeeTotalVo();
-            Integer branchId = userPo.getId();
-            MemberPo queryPo = new MemberPo();
-            queryPo.setBranch_id(branchId);
-            List<MemberPo> memberPos = memberMapper.selectList(queryPo);
-            List<Integer> memberIds = memberPos.stream().map(memberPo1 -> {
-                return memberPo1.getId();
-            }).collect(Collectors.toList());
-            branchFeeVo.setName(userPo.getEmail());
-            branchFeeVo.setRealName(userPo.getName());
-            BigDecimal totalBet = new BigDecimal(0);
-            if (!CollectionUtils.isEmpty(memberIds)) {
-                totalBet = gameRecordMapper.getTotalValidBet(memberIds, Lists.newArrayList(), start, end);
-            }
-            branchFeeVo.setTotalBet(totalBet);
-            BigDecimal reAmountMoney = new BigDecimal(0);
-            if (!CollectionUtils.isEmpty(memberIds)) {
-                reAmountMoney = gameRecordMapper.getReAmountTotal(memberIds, Lists.newArrayList(), start, end);
-            }
-            branchFeeVo.setReAmount(reAmountMoney);
-            BigDecimal realAmountMoney = new BigDecimal(0);
-            if (userPo.getProportion() == null) {
-                userPo.setProportion(0);
-            }
-            if (!CollectionUtils.isEmpty(memberIds)) {
-                BigDecimal feeTotal = feeService.getTotalFee(userPo.getId(), 2, memberIds, classifyPos, start, end);
-                branchFeeVo.setRealAmount(reAmountMoney);
-                branchFeeVo.setTotalBet(totalBet);
-                realAmountMoney = reAmountMoney.multiply(new BigDecimal(-1)).add(feeTotal.multiply(new BigDecimal(-1))).multiply(new BigDecimal(userPo.getProportion()))
-                        .divide(new BigDecimal(100));
-            }
-            branchFeeVo.setProportion(userPo.getProportion());
-            branchFeeVo.setRealAmount(realAmountMoney);
-            return branchFeeVo;
+            List<FeeTotalVo> feeTotalVos1 = branchAgentVoList(userPo.getId(),start,end);
+            FeeTotalVo feeTotalVo = new FeeTotalVo();
+            feeTotalVo.setReAmount(new BigDecimal(0));
+            feeTotalVo.setRealAmount(new BigDecimal(0));
+            feeTotalVo.setTotalBet(new BigDecimal(0));
+            feeTotalVo.setName(userPo.getEmail());
+            feeTotalVo.setRealName(userPo.getName());
+            feeTotalVos1.forEach(feeTotalVo1 -> {
+                feeTotalVo.setReAmount(feeTotalVo1.getReAmount().add(feeTotalVo.getReAmount()));
+                feeTotalVo.setRealAmount(feeTotalVo1.getReAmount().add(feeTotalVo.getRealAmount()));
+                feeTotalVo.setTotalBet(feeTotalVo1.getReAmount().add(feeTotalVo.getTotalBet()));
+            });
+            return feeTotalVo;
 
         }).collect(Collectors.toList());
         return feeTotalVos;
