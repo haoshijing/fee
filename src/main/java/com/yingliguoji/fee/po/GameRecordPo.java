@@ -13,6 +13,7 @@ public class GameRecordPo {
     private String name;
     private Integer playType;
     private BigDecimal reAmount;
+    private BigDecimal netAmount;
     private BigDecimal betAmount;
     private Timestamp betTime;
     private BigDecimal validBetAmount;

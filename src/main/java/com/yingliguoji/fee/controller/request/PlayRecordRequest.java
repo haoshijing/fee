@@ -9,4 +9,5 @@ public class PlayRecordRequest {
     private String betAmount;
     private String userName;
     private Long betTime;
+    private String netAmount;
 }

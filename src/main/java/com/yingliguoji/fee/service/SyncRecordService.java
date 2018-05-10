@@ -5,6 +5,7 @@ import com.yingliguoji.fee.dao.GameRecordMapper;
 import com.yingliguoji.fee.dao.MemberMapper;
 import com.yingliguoji.fee.po.GameRecordPo;
 import com.yingliguoji.fee.po.MemberPo;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -36,6 +37,11 @@ public class SyncRecordService {
         gameRecordPo.setGameType(20000);
         Timestamp timestamp = new Timestamp(playRecordRequest.getBetTime()*1000L);
         gameRecordPo.setBetTime(timestamp);
+        if(StringUtils.isNotEmpty(playRecordRequest.getNetAmount())) {
+            gameRecordPo.setNetAmount(new BigDecimal(playRecordRequest.getNetAmount()));
+        }else{
+            gameRecordPo.setNetAmount(new BigDecimal(0));
+        }
         gameRecordPo.setReAmount(new BigDecimal(playRecordRequest.getReAmount()));
         gameRecordPo.setBetAmount(new BigDecimal(playRecordRequest.getBetAmount()));
         gameRecordPo.setCreated_at(new Timestamp(System.currentTimeMillis()).toString());
