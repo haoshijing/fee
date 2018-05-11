@@ -126,7 +126,7 @@ public class MemberService {
                             multiply(new BigDecimal(userPo.getProportion())).
                             divide(new BigDecimal(100)));
                     branchAgentVo.setRealAmount(new BigDecimal(branchAgentVo.getRealAmount().longValue()));
-                    branchAgentVo.setReAmount(new BigDecimal(branchAgentVo.getRealAmount().longValue()));
+                    branchAgentVo.setReAmount(new BigDecimal(branchAgentVo.getReAmount().longValue()));
                     return branchAgentVo;
                 }
         ).collect(Collectors.toList());
