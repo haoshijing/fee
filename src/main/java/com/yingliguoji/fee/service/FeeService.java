@@ -122,8 +122,13 @@ public class FeeService extends BaseService {
                 DividendPo log = new DividendPo();
                 log.setBeforeMoney(beforeMemberPo.getFs_money());
                 Integer getMoney = dataPo.getQuota() - kouchu;
+                ClassifyPo classifyPo = classifyMapper.getById(classifyId);
+                String classifyName = "";
+                if(classifyPo != null){
+                    classifyName = classifyPo.getName();
+                }
                 BigDecimal money = sumMoney.divide(new BigDecimal(fireData)).multiply(new BigDecimal(getMoney));
-                log.setDescribe("返水-类别:" + classifyId + "金钱:" + getMoney);
+                log.setDescribe("返水-类别:" + classifyName + "金钱:" + getMoney);
                 log.setMoney(money);
                 log.setType(3);
                 log.setMemberId(memberId);

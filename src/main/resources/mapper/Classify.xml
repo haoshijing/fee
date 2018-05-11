@@ -13,4 +13,9 @@
 
     </select>
 
+    <select id="getById" resultType="com.yingliguoji.fee.po.ClassifyPo">
+        select * from  <include refid="tableName"/>
+        where id = #{id}
+    </select>
+
 </mapper>

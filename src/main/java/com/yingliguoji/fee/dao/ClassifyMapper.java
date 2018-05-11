@@ -8,4 +8,6 @@ import java.util.List;
 public interface ClassifyMapper {
 
     List<ClassifyPo> selectAll();
+
+    ClassifyPo getById(Integer id);
 }
