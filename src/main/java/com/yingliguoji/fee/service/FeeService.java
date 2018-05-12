@@ -33,9 +33,6 @@ public class FeeService extends BaseService {
     @Autowired
     private DividendMapper dividendMapper;
 
-    @Autowired
-    private BranchMoneyLogDao branchMoneyLogDao;
-
     @Value("${fireData}")
     private Integer fireData;
 
@@ -145,18 +142,6 @@ public class FeeService extends BaseService {
             }
             memberId = memberPo.getTop_id();
         }
-
-        RebatePo rebatePo = rebateMapper.find(branchId, classifyId, 2);
-        if(rebatePo == null){
-            return;
-        }
-        BranchMoneyLogPo branchMoneyLogPo = new BranchMoneyLogPo();
-        branchMoneyLogPo.setCreateTime(System.currentTimeMillis());
-        branchMoneyLogPo.setClassifyId(classifyId);
-
-        branchMoneyLogPo.setMoney(sumMoney.divide(new BigDecimal(fireData)).multiply(new BigDecimal(rebatePo.getQuota() - kouchu)));
-        branchMoneyLogPo.setBranchId(branchId);
-        branchMoneyLogDao.insert(branchMoneyLogPo);
 
     }
 

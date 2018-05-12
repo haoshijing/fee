@@ -33,3 +33,15 @@ afterMoney DECIMAL (16,2) comment '后值',
 memo varchar(500) comment '说明',
 createTime bigint comment '创建时间'
 );
+
+drop table if EXISTS admin_money_log;
+create table admin_money_log
+(
+id int primary key auto_increment,
+type int comment '类型',
+name varchar(255) comment '',
+realName varchar(255) comment '',
+money DECIMAL (16,2) comment '钱数',
+createTime bigint comment '创建时间'
+);
+
