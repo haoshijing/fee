@@ -27,6 +27,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.net.URI;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -62,11 +63,13 @@ public class PlayRecordsController {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("MerchantId",cpMerchantId);
         jsonObject.put("UserName",name);
+        String point = new DecimalFormat("0.00").format(Double.valueOf(tie));
+        jsonObject.put("Point",point);
         jsonObject.put("Time",new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()));
 
-        String signKeyStr =cpMerchantId+"&"+name+"&"+tie+"&"+jsonObject.getString("Time")+"&"+cpSafeCode;
-        String signKey = MD5Util.md5(signKeyStr);
-        jsonObject.put("signKey",signKey);
+        String signKeyStr =cpMerchantId+"&"+name+"&"+point+"&"+jsonObject.getString("Time")+"&"+cpSafeCode;
+        String signKey = MD5Util.md5(signKeyStr.toLowerCase());
+        jsonObject.put("SignKey",signKey);
         try {
             HttpPost httpPost = new HttpPost();
             httpPost.setURI(new URI(cpHost));
