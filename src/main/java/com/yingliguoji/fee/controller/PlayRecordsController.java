@@ -1,5 +1,6 @@
 package com.yingliguoji.fee.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import com.yingliguoji.fee.ApiResponse;
 import com.yingliguoji.fee.controller.response.PlayerRecordRequest;
@@ -10,16 +11,31 @@ import com.yingliguoji.fee.po.ClassifyPo;
 import com.yingliguoji.fee.po.MemberPo;
 import com.yingliguoji.fee.service.GameRecordService;
 import com.yingliguoji.fee.service.MemberService;
+import com.yingliguoji.fee.util.HttpTool;
+import com.yingliguoji.fee.util.MD5Util;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.http.HttpEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.HttpClients;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.math.BigDecimal;
+import java.net.URI;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
+@Slf4j
 public class PlayRecordsController {
 
     @Autowired
@@ -33,6 +49,47 @@ public class PlayRecordsController {
 
     @Autowired
     private MemberMapper memberMapper;
+
+    @Value("${cpHost}")
+    private String cpHost;
+
+    @Value("${cpMerchantId}")
+    private String cpMerchantId;
+
+    @Value("${cpSafeCode}")
+    private String cpSafeCode;
+
+    @RequestMapping("/updateTie")
+    public ApiResponse<Boolean> updateTie(String name,String tie){
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("MerchantId",cpMerchantId);
+        jsonObject.put("UserName",name);
+        jsonObject.put("Time",new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()));
+
+        String signKeyStr =cpMerchantId+"&"+name+"&"+tie+"&"+jsonObject.getString("Time")+"&"+cpSafeCode;
+        String signKey = MD5Util.md5(signKeyStr);
+        jsonObject.put("signKey",signKey);
+        try {
+            HttpPost httpPost = new HttpPost();
+            httpPost.setURI(new URI(cpHost));
+            httpPost.addHeader("Content-Type","application/json");
+            httpPost.setEntity(new StringEntity(jsonObject.toJSONString()));
+            CloseableHttpResponse response = HttpClients.createDefault().execute(httpPost);
+            BufferedReader rd = new BufferedReader(
+                    new InputStreamReader(response.getEntity().getContent()));
+
+            StringBuilder result = new StringBuilder();
+            String line = "";
+            while ((line = rd.readLine()) != null) {
+                result.append(line);
+            }
+
+            log.info("result = {}",result);
+        }catch (Exception e){
+            log.error("",e);
+        }
+        return new ApiResponse<>(true);
+    }
 
 
     @RequestMapping("/underMember")
