@@ -61,6 +61,7 @@ public class PlayRecordsController {
     @RequestMapping("/updateTie")
     public ApiResponse<Boolean> updateTie(String name,String tie){
         JSONObject jsonObject = new JSONObject();
+        log.info("name= {},tie = {}",name,tie);
         jsonObject.put("MerchantId",cpMerchantId);
         jsonObject.put("UserName",name);
         String point = new DecimalFormat("0.00").format(Double.valueOf(tie));
