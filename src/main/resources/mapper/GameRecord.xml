@@ -47,7 +47,7 @@
     </select>
 
     <select id="getValidBetTotal" resultType="java.math.BigDecimal">
-        select COALESCE( sum(validBetAmount) ,0) from <include refid="tableName" />
+        select COALESCE( sum(betAmount) ,0) from <include refid="tableName" />
         where member_id in
         <foreach collection="memberIds" item="memberId" separator="," open="(" close=")">
             #{memberId}
