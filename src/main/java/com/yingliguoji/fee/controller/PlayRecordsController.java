@@ -137,7 +137,10 @@ public class PlayRecordsController {
                                 List<Integer> queryMembers = Lists.newArrayList(memberId);
                                 BigDecimal bigDecimal = gameRecordService.getReAmountTotal(queryMembers, gameTypes,
                                         recordRequest.getStart(), recordRequest.getEnd());
+                                BigDecimal totalMoney = gameRecordService.getTotalValidBet(queryMembers, gameTypes,
+                                        recordRequest.getStart(), recordRequest.getEnd());
                                 item.setMoney(bigDecimal.doubleValue());
+                                item.setBetMoney(totalMoney.doubleValue());
                                 return item;
                             }).collect(Collectors.toList());
                     recordTotalVo.setMemberId(memberId);

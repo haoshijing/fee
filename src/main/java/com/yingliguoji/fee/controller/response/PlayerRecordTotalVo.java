@@ -16,6 +16,7 @@ public class PlayerRecordTotalVo {
     public static class ClassiFyItem{
         private Integer classiFyId;
         private Double money;
+        private Double betMoney;
         private String name;
     }
 }
