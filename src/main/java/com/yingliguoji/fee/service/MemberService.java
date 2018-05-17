@@ -100,6 +100,7 @@ public class MemberService {
                     List<Integer> memberIds = memberPos.stream().map(memberPo1 -> {
                         return memberPo1.getId();
                     }).collect(Collectors.toList());
+                    memberIds.add(memberPo.getId());
                     BigDecimal totalBet = new BigDecimal(0);
                     if (!CollectionUtils.isEmpty(memberIds)) {
                         totalBet = gameRecordMapper.getTotalValidBet(memberIds, Lists.newArrayList(), start, end);
