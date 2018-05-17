@@ -8,6 +8,8 @@ import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -41,11 +43,12 @@ public class GameRecordService {
         String startTime = null;
         String endTime = null;
         if(start != null){
-            Timestamp startTimestamp = new Timestamp(start*1000L);
-            startTime =  startTimestamp.toString();
+            Date startTimeDate = new Date(start*1000L);
+            startTime =  new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(startTimeDate);
         }
         if(end != null) {
-            endTime =  new Timestamp(end*1000L).toString();
+            Date endDate = new Date(end*1000L);
+            endTime =  new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(endDate);
         }
         BigDecimal money = gameRecordMapper.getValidBetTotal(memberIds,startTime,endTime,gameTypes);
         if(money == null){
@@ -60,12 +63,13 @@ public class GameRecordService {
         String endTime = null;
         if(start != null){
             Long startTimeMill = (start*1000L);
-            Timestamp startTimestamp = new Timestamp(startTimeMill);
-            startTime =  startTimestamp.toString();
+            Date startTimeDate = new Date(startTimeMill);
+            startTime =  new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(startTimeDate);
         }
         if(end != null) {
-            Long endTimeMill = (end*1000L);
-            endTime =  new Timestamp(endTimeMill).toString();
+            Long endTimeDiff = (end*1000L);
+            Date endTimeDate = new Date(endTimeDiff);
+            endTime =  new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(endTimeDate);
         }
         queryDataVo.setEndTime(endTime);
         queryDataVo.setStartTime(startTime);
