@@ -77,7 +77,7 @@ public class UserService {
                 MemberPo memberPo2 = new MemberPo();
                 memberPo2.setId(memberPo1.getId());
                 memberPo2.setTop_id(0);
-                memberMapper.updateById(updatePo);
+                memberMapper.updateById(memberPo2);
             });
             return true;
         }
