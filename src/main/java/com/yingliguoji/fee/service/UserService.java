@@ -41,6 +41,16 @@ public class UserService {
             if(!name.contains("@")){
                 newUserName+="@qq.com";
             }
+            MemberPo underPo = new MemberPo();
+            underPo.setTop_id(memberId);
+            underPo.setIs_daili(1);
+            List<MemberPo> underDaiList = memberMapper.selectList(underPo);
+            underDaiList.forEach(memberPo1 -> {
+                MemberPo updatePo = new MemberPo();
+                updatePo.setId(memberPo1.getId());
+                updatePo.setTop_id(0);
+                memberMapper.updateById(updatePo);
+            });
             UserPo userPo = new UserPo();
             userPo.setIsSuperAdmin(2);
             userPo.setEmail(newUserName);
