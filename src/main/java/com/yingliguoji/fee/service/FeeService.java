@@ -117,6 +117,9 @@ public class FeeService extends BaseService {
                 }
                 MemberPo beforeMemberPo = memberMapper.findById(memberId);
                 DividendPo log = new DividendPo();
+                if(beforeMemberPo.getFs_money() == null){
+                    beforeMemberPo.setFs_money(new BigDecimal(0));
+                }
                 log.setBeforeMoney(beforeMemberPo.getFs_money());
                 Integer getMoney = dataPo.getQuota() - kouchu;
                 ClassifyPo classifyPo = classifyMapper.getById(classifyId);
