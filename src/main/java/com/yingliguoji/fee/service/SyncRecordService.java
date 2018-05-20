@@ -89,33 +89,36 @@ public class SyncRecordService {
         }
 
         private void getTotalFee(Integer memberId, PlayRecordRequest playRecordRequest) {
-            BigDecimal kouchu = new BigDecimal(0);
-            MemberPo memberPo;
-            BigDecimal betMoney = new BigDecimal(playRecordRequest.getBetAmount());
-            BigDecimal feeMoney = new BigDecimal(playRecordRequest.getMaxOdd()).add(new BigDecimal(playRecordRequest.getMinOdd()).multiply(new BigDecimal(-1)));
-            if(feeMoney.doubleValue() > 0) {
-                while ((memberPo = memberMapper.findById(memberId)) != null) {
-                    BigDecimal tie = memberPo.getTie().add(kouchu.multiply(new BigDecimal(-1)));
-                    MemberPo beforeMemberPo = memberMapper.findById(memberId);
-                    DividendPo log = new DividendPo();
-                    log.setBeforeMoney(beforeMemberPo.getFs_money());
-                    BigDecimal money = betMoney.multiply(feeMoney.divide(new BigDecimal(1000)).multiply(tie).divide(new BigDecimal(13)));
-                    log.setDescribe("返水-类别:彩票拉杆返水" + "金钱:" + money.doubleValue());
-                    log.setType(3);
-                    log.setMemberId(memberId);
-                    Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-                    log.setCreatedAt(timestamp);
-                    MemberPo updatePo = new MemberPo();
-                    updatePo.setId(memberId);
-                    updatePo.setFs_money(log.getMoney());
-                    memberMapper.update(updatePo);
-                    MemberPo afterPo = memberMapper.findById(memberId);
-                    log.setAfterMoney(afterPo.getFs_money());
-                    dividendMapper.insert(log);
-                    kouchu = tie;
-                    memberId = memberPo.getTop_id();
-                }
+
+            MemberPo memberPo = memberMapper.findById(memberId);
+            if(memberPo == null){
+                return;
             }
+            BigDecimal kouchu = memberPo.getTie();
+            BigDecimal betMoney = new BigDecimal(playRecordRequest.getBetAmount());
+
+            while ((memberPo = memberMapper.findById(memberPo.getTop_id())) != null) {
+                BigDecimal tie = memberPo.getTie().add(kouchu.multiply(new BigDecimal(-1)));
+                MemberPo beforeMemberPo = memberMapper.findById(memberId);
+                DividendPo log = new DividendPo();
+                log.setBeforeMoney(beforeMemberPo.getFs_money());
+                BigDecimal money = betMoney.multiply(betMoney.divide(new BigDecimal(100)).multiply(tie).divide(new BigDecimal(13)));
+                log.setDescribe("返水-类别:彩票拉杆返水" + "金钱:" + money.doubleValue());
+                log.setType(3);
+                log.setMemberId(memberId);
+                Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+                log.setCreatedAt(timestamp);
+                MemberPo updatePo = new MemberPo();
+                updatePo.setId(memberId);
+                updatePo.setFs_money(log.getMoney());
+                memberMapper.update(updatePo);
+                MemberPo afterPo = memberMapper.findById(memberId);
+                log.setAfterMoney(afterPo.getFs_money());
+                dividendMapper.insert(log);
+                kouchu = tie;
+                memberId = memberPo.getTop_id();
+            }
+
         }
     }
 }
