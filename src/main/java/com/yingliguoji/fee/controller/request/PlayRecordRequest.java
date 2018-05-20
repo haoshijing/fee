@@ -1,8 +1,10 @@
 package com.yingliguoji.fee.controller.request;
 
 import lombok.Data;
+import lombok.ToString;
 
 @Data
+@ToString
 public class PlayRecordRequest {
     private String tradeNo;
     private String reAmount;

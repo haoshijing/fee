@@ -19,7 +19,7 @@ public class SyncRecordController {
     private SyncRecordService syncRecordService;
     @RequestMapping("/syncData")
     public ApiResponse<Integer> syncData(@RequestBody PlayRecordRequest playRecordRequest){
-        log.info("tradeNo = {}",playRecordRequest.getTradeNo());
+        log.info("playRecordRequest = {}",playRecordRequest);
         int ret = syncRecordService.syncData(playRecordRequest);
         return new ApiResponse<>(ret);
     }
