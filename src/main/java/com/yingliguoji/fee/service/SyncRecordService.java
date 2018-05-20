@@ -31,7 +31,7 @@ public class SyncRecordService {
     private GameRecordMapper gameRecordMapper;
 
 
-    private DefaultEventExecutorGroup defaultEventExecutor = new DefaultEventExecutorGroup(8,new DefaultThreadFactory("LotteryThread"));
+    private DefaultEventExecutorGroup defaultEventExecutor = new DefaultEventExecutorGroup(8, new DefaultThreadFactory("LotteryThread"));
 
     @Autowired
     private MemberMapper memberMapper;
@@ -69,7 +69,7 @@ public class SyncRecordService {
         gameRecordPo.setNetAmount(gameRecordPo.getBetAmount().add(gameRecordPo.getReAmount()));
         gameRecordPo.setCreated_at(new Timestamp(System.currentTimeMillis()).toString());
         gameRecordPo.setUpdated_at(new Timestamp(System.currentTimeMillis()).toString());
-        defaultEventExecutor.submit(new YlLotteryFeeJob(memberPo.getId(), playRecordRequest));
+        getTotalFee(memberPo.getId(), playRecordRequest);
         return gameRecordMapper.insert(gameRecordPo);
 
     }
@@ -79,45 +79,35 @@ public class SyncRecordService {
         return count > 0;
     }
 
-    @AllArgsConstructor
-    @NoArgsConstructor
-    private class YlLotteryFeeJob implements Callable<Integer> {
-        private Integer memberId;
-        private PlayRecordRequest playRecordRequest;
 
-        @Override
-        public Integer call() throws Exception {
-            getTotalFee(memberId, playRecordRequest);
-            return 0;
+    private void getTotalFee(Integer memberId, PlayRecordRequest playRecordRequest) {
+
+        BigDecimal kouchu = new BigDecimal(0);
+        BigDecimal betMoney = new BigDecimal(playRecordRequest.getBetAmount());
+        MemberPo memberPo;
+        while ((memberPo = memberMapper.findById(memberId)) != null) {
+            BigDecimal tie = memberPo.getTie().add(kouchu.multiply(new BigDecimal(-1)));
+            MemberPo beforeMemberPo = memberMapper.findById(memberId);
+            DividendPo dividendPo = new DividendPo();
+            dividendPo.setBeforeMoney(beforeMemberPo.getFs_money());
+            BigDecimal money = (betMoney.divide(new BigDecimal(1000))).multiply(tie);
+            dividendPo.setDescribe("返水-类别:彩票拉杆返水" + "金钱:" + money.doubleValue());
+            dividendPo.setType(3);
+            dividendPo.setMemberId(memberId);
+            Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+            dividendPo.setCreatedAt(timestamp);
+            MemberPo updatePo = new MemberPo();
+            updatePo.setId(memberId);
+            updatePo.setFs_money(dividendPo.getMoney());
+            memberMapper.update(updatePo);
+            MemberPo afterPo = memberMapper.findById(memberId);
+            dividendPo.setAfterMoney(afterPo.getFs_money());
+            int insertRet = dividendMapper.insert(dividendPo);
+            log.info("insertRet = {}", insertRet);
+            kouchu = tie;
+            memberId = memberPo.getTop_id();
         }
 
-        private void getTotalFee(Integer memberId, PlayRecordRequest playRecordRequest) {
-
-            BigDecimal kouchu =  new BigDecimal(0);
-            BigDecimal betMoney = new BigDecimal(playRecordRequest.getBetAmount());
-            MemberPo memberPo;
-            while ((memberPo = memberMapper.findById(memberId)) != null) {
-                BigDecimal tie = memberPo.getTie().add(kouchu.multiply(new BigDecimal(-1)));
-                MemberPo beforeMemberPo = memberMapper.findById(memberId);
-                DividendPo log = new DividendPo();
-                log.setBeforeMoney(beforeMemberPo.getFs_money());
-                BigDecimal money = (betMoney.divide(new BigDecimal(1000))).multiply(tie);
-                log.setDescribe("返水-类别:彩票拉杆返水" + "金钱:" + money.doubleValue());
-                log.setType(3);
-                log.setMemberId(memberId);
-                Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-                log.setCreatedAt(timestamp);
-                MemberPo updatePo = new MemberPo();
-                updatePo.setId(memberId);
-                updatePo.setFs_money(log.getMoney());
-                memberMapper.update(updatePo);
-                MemberPo afterPo = memberMapper.findById(memberId);
-                log.setAfterMoney(afterPo.getFs_money());
-                dividendMapper.insert(log);
-                kouchu = tie;
-                memberId = memberPo.getTop_id();
-            }
-
-        }
     }
+
 }
