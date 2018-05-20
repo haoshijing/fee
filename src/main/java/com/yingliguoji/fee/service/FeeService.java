@@ -3,6 +3,8 @@ package com.yingliguoji.fee.service;
 import com.google.common.collect.Lists;
 import com.yingliguoji.fee.dao.*;
 import com.yingliguoji.fee.po.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
@@ -15,6 +17,7 @@ import java.util.List;
 @Repository
 public class FeeService extends BaseService {
 
+    private Logger logger = LoggerFactory.getLogger(FeeService.class);
     @Autowired
     private ClassifyMapper classifyMapper;
 
@@ -122,7 +125,9 @@ public class FeeService extends BaseService {
                 }
                 log.setBeforeMoney(beforeMemberPo.getFs_money());
                 if(dataPo.getQuota() == null){
+                    logger.info("memberId = {}",memberId);
                     dataPo.setQuota(0);
+                    break;
                 }
                 Integer getMoney = dataPo.getQuota() - kouchu;
                 ClassifyPo classifyPo = classifyMapper.getById(classifyId);
