@@ -121,6 +121,9 @@ public class FeeService extends BaseService {
                     beforeMemberPo.setFs_money(new BigDecimal(0));
                 }
                 log.setBeforeMoney(beforeMemberPo.getFs_money());
+                if(dataPo.getQuota() == null){
+                    dataPo.setQuota(0);
+                }
                 Integer getMoney = dataPo.getQuota() - kouchu;
                 ClassifyPo classifyPo = classifyMapper.getById(classifyId);
                 String classifyName = "";
