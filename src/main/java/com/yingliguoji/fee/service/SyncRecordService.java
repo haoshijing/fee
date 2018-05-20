@@ -102,7 +102,7 @@ public class SyncRecordService {
                 MemberPo beforeMemberPo = memberMapper.findById(memberId);
                 DividendPo log = new DividendPo();
                 log.setBeforeMoney(beforeMemberPo.getFs_money());
-                BigDecimal money = betMoney.multiply(betMoney.divide(new BigDecimal(100)).multiply(tie).divide(new BigDecimal(13)));
+                BigDecimal money = (betMoney.divide(new BigDecimal(1000)).multiply(new BigDecimal(1.3))).multiply(tie);
                 log.setDescribe("返水-类别:彩票拉杆返水" + "金钱:" + money.doubleValue());
                 log.setType(3);
                 log.setMemberId(memberId);
