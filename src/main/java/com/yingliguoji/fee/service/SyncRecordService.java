@@ -93,6 +93,7 @@ public class SyncRecordService {
             BigDecimal money = (betMoney.divide(new BigDecimal(1000))).multiply(tie);
             dividendPo.setDescribe("返水-类别:彩票拉杆返水" + "金钱:" + money.doubleValue());
             dividendPo.setType(3);
+            dividendPo.setMoney(money);
             dividendPo.setMemberId(memberId);
             Timestamp timestamp = new Timestamp(System.currentTimeMillis());
             dividendPo.setCreatedAt(timestamp);
