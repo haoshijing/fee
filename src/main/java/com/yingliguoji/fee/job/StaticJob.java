@@ -25,7 +25,7 @@ public class StaticJob {
     @Autowired
     private FeeService feeService;
 
-    @Scheduled(cron = "0 0/10 * * * ?")
+    @Scheduled(cron = "0 0/20 * * * ?")
     public void execute() {
         try {
             feeService.updateReAmount();
@@ -42,7 +42,7 @@ public class StaticJob {
         DateTime endDate = new DateTime().withMillisOfSecond(0).withMinuteOfHour(0);
         Long endDateMills = endDate.getMillis();
         Integer end = new Long(endDateMills /1000l).intValue();
-        Integer start = new Long(endDate.plusHours(-2).getMillis()/1000).intValue();
+        Integer start = new Long(endDate.plusHours(-1).getMillis()/1000).intValue();
 
         List<MemberPo> memberPoList = memberMapper.selectAll();
         memberPoList.forEach(memberPo -> {

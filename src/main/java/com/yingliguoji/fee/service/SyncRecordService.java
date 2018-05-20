@@ -8,9 +8,11 @@ import com.yingliguoji.fee.dao.MemberMapper;
 import com.yingliguoji.fee.dao.RebateMapper;
 import com.yingliguoji.fee.po.*;
 import io.netty.util.concurrent.DefaultEventExecutor;
+import io.netty.util.concurrent.DefaultEventExecutorGroup;
 import io.netty.util.concurrent.DefaultThreadFactory;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,13 +24,14 @@ import java.util.List;
 import java.util.concurrent.Callable;
 
 @Repository
+@Slf4j
 public class SyncRecordService {
 
     @Autowired
     private GameRecordMapper gameRecordMapper;
 
 
-    private DefaultEventExecutor defaultEventExecutor = new DefaultEventExecutor(new DefaultThreadFactory("LotteryThread"));
+    private DefaultEventExecutorGroup defaultEventExecutor = new DefaultEventExecutorGroup(8,new DefaultThreadFactory("LotteryThread"));
 
     @Autowired
     private MemberMapper memberMapper;
@@ -90,14 +93,10 @@ public class SyncRecordService {
 
         private void getTotalFee(Integer memberId, PlayRecordRequest playRecordRequest) {
 
-            MemberPo memberPo = memberMapper.findById(memberId);
-            if(memberPo == null){
-                return;
-            }
-            BigDecimal kouchu = memberPo.getTie();
+            BigDecimal kouchu =  new BigDecimal(0);
             BigDecimal betMoney = new BigDecimal(playRecordRequest.getBetAmount());
-
-            while ((memberPo = memberMapper.findById(memberPo.getTop_id())) != null) {
+            MemberPo memberPo;
+            while ((memberPo = memberMapper.findById(memberId)) != null) {
                 BigDecimal tie = memberPo.getTie().add(kouchu.multiply(new BigDecimal(-1)));
                 MemberPo beforeMemberPo = memberMapper.findById(memberId);
                 DividendPo log = new DividendPo();
