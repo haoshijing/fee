@@ -6,7 +6,6 @@ import com.yingliguoji.fee.po.MemberPo;
 import com.yingliguoji.fee.service.FeeService;
 import lombok.extern.slf4j.Slf4j;
 import org.joda.time.DateTime;
-import org.joda.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Repository;
@@ -26,6 +25,7 @@ public class StaticJob {
     private FeeService feeService;
 
     @Scheduled(cron = "0 2/20 * * * ?")
+
     public void execute() {
         try {
             feeService.updateReAmount();
