@@ -10,4 +10,6 @@ public class PlayRecordRequest {
     private String userName;
     private Long betTime;
     private String netAmount;
+    private String maxOdd;
+    private String minOdd;
 }
