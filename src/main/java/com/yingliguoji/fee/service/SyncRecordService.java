@@ -5,15 +5,11 @@ import com.yingliguoji.fee.controller.request.PlayRecordRequest;
 import com.yingliguoji.fee.dao.DividendMapper;
 import com.yingliguoji.fee.dao.GameRecordMapper;
 import com.yingliguoji.fee.dao.MemberMapper;
-import com.yingliguoji.fee.dao.RebateMapper;
 import com.yingliguoji.fee.po.*;
-import io.netty.util.concurrent.DefaultEventExecutor;
 import io.netty.util.concurrent.DefaultEventExecutorGroup;
 import io.netty.util.concurrent.DefaultThreadFactory;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.StringUtils;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
@@ -22,8 +18,7 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
-import java.util.concurrent.Callable;
+
 
 @Repository
 @Slf4j
