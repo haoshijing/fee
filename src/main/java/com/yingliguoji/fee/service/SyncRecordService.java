@@ -40,7 +40,7 @@ public class SyncRecordService {
     @Value("${fireData}")
     private Integer fireData;
 
-    public Integer szxsyncData(PlayRecordRequest playRecordRequest) {
+    public Integer syncData(PlayRecordRequest playRecordRequest) {
 
         if (checkRecord(playRecordRequest.getTradeNo())) {
             return 2;
