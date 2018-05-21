@@ -20,6 +20,8 @@ import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.Callable;
 
@@ -42,7 +44,7 @@ public class SyncRecordService {
     @Value("${fireData}")
     private Integer fireData;
 
-    public Integer syncData(PlayRecordRequest playRecordRequest) {
+    public Integer szxsyncData(PlayRecordRequest playRecordRequest) {
 
         if (checkRecord(playRecordRequest.getTradeNo())) {
             return 2;
@@ -62,8 +64,15 @@ public class SyncRecordService {
         gameRecordPo.setMemberId(memberPo.getId());
         gameRecordPo.setName(memberPo.getName());
         gameRecordPo.setGameType(20000);
-        Timestamp timestamp = new Timestamp(playRecordRequest.getBetTime() * 1000L);
-        gameRecordPo.setBetTime(timestamp);
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        try {
+            Date date = format.parse(playRecordRequest.getBetTime());
+            Timestamp timestamp = new Timestamp(date.getTime());
+            gameRecordPo.setBetTime(timestamp);
+        }catch (Exception e){
+            log.error("",e);
+        }
+
         gameRecordPo.setReAmount(new BigDecimal(playRecordRequest.getReAmount()));
         gameRecordPo.setBetAmount(new BigDecimal(playRecordRequest.getBetAmount()));
         gameRecordPo.setNetAmount(gameRecordPo.getBetAmount().add(gameRecordPo.getReAmount()));
