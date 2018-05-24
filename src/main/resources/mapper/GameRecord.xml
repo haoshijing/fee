@@ -20,7 +20,7 @@
     </update>
     <select id="getPlayerTotal" resultType="java.math.BigDecimal">
         select COALESCE(  sum(reAmount),0) from <include refid="tableName" />
-        where
+        where flag = 0 and
         member_id =#{memberId}
         <if test = "gameTypes != null and gameTypes.size() > 0">
             AND gameType in
@@ -48,7 +48,7 @@
 
     <select id="getValidBetTotal" resultType="java.math.BigDecimal">
         select COALESCE( sum(betAmount) ,0) from <include refid="tableName" />
-        where member_id in
+        where flag = 0 and  member_id in
         <foreach collection="memberIds" item="memberId" separator="," open="(" close=")">
             #{memberId}
         </foreach>
@@ -72,7 +72,7 @@
 
     <select id="getReAmountTotal" resultType="java.math.BigDecimal">
         select COALESCE( sum(reAmount),0) from <include refid="tableName" />
-        where member_id in
+        where flag = 0 and member_id in
         <foreach collection="memberIds" item="memberId" separator="," open="(" close=")">
             #{memberId}
         </foreach>
