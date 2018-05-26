@@ -31,6 +31,7 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @RestController
@@ -60,35 +61,39 @@ public class PlayRecordsController {
 
     @RequestMapping("/updateTie")
     public ApiResponse<Boolean> updateTie(String name,String tie){
-        JSONObject jsonObject = new JSONObject();
-        log.info("name= {},tie = {}",name,tie);
-        jsonObject.put("MerchantId",cpMerchantId);
-        jsonObject.put("UserName",name);
-        String point = new DecimalFormat("0.00").format(Double.valueOf(tie));
-        jsonObject.put("Point",point);
-        jsonObject.put("Time",new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()));
+        for(int i = 0; i < 3;i++) {
+            JSONObject jsonObject = new JSONObject();
+            log.info("name= {},tie = {}", name, tie);
+            jsonObject.put("MerchantId", cpMerchantId);
+            jsonObject.put("UserName", name);
+            String point = new DecimalFormat("0.00").format(Double.valueOf(tie));
+            jsonObject.put("Point", point);
+            jsonObject.put("Time", new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()));
 
-        String signKeyStr =cpMerchantId+"&"+name+"&"+point+"&"+jsonObject.getString("Time")+"&"+cpSafeCode;
-        String signKey = MD5Util.md5(signKeyStr.toLowerCase());
-        jsonObject.put("SignKey",signKey);
-        try {
-            HttpPost httpPost = new HttpPost();
-            httpPost.setURI(new URI(cpHost));
-            httpPost.addHeader("Content-Type","application/json");
-            httpPost.setEntity(new StringEntity(jsonObject.toJSONString()));
-            CloseableHttpResponse response = HttpClients.createDefault().execute(httpPost);
-            BufferedReader rd = new BufferedReader(
-                    new InputStreamReader(response.getEntity().getContent()));
+            String signKeyStr = cpMerchantId + "&" + name + "&" + point + "&" + jsonObject.getString("Time") + "&" + cpSafeCode;
+            String signKey = MD5Util.md5(signKeyStr.toLowerCase());
+            jsonObject.put("SignKey", signKey);
+            try {
+                HttpPost httpPost = new HttpPost();
+                httpPost.setURI(new URI(cpHost));
+                httpPost.addHeader("Content-Type", "application/json");
+                httpPost.setEntity(new StringEntity(jsonObject.toJSONString()));
+                CloseableHttpResponse response = HttpClients.createDefault().execute(httpPost);
+                BufferedReader rd = new BufferedReader(
+                        new InputStreamReader(response.getEntity().getContent()));
 
-            StringBuilder result = new StringBuilder();
-            String line = "";
-            while ((line = rd.readLine()) != null) {
-                result.append(line);
+                StringBuilder result = new StringBuilder();
+                String line = "";
+                while ((line = rd.readLine()) != null) {
+                    result.append(line);
+                }
+
+                log.info("result = {}", result);
+
+                TimeUnit.MILLISECONDS.sleep(500);
+            } catch (Exception e) {
+                log.error("", e);
             }
-
-            log.info("result = {}",result);
-        }catch (Exception e){
-            log.error("",e);
         }
         return new ApiResponse<>(true);
     }
