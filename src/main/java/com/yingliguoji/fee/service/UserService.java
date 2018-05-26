@@ -66,6 +66,7 @@ public class UserService {
                        return memberPo1.getId();
                     }
             ).collect(Collectors.toList());
+            memberIds.add(memberId);
             if(!CollectionUtils.isEmpty(memberIds)) {
                 memberMapper.batchUpdateBranchId(branchId, memberIds);
             }
