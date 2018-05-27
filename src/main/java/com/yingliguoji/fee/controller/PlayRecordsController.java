@@ -1,5 +1,6 @@
 package com.yingliguoji.fee.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import com.yingliguoji.fee.ApiResponse;
@@ -13,6 +14,7 @@ import com.yingliguoji.fee.service.GameRecordService;
 import com.yingliguoji.fee.service.MemberService;
 import com.yingliguoji.fee.util.MD5Util;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
@@ -60,39 +62,13 @@ public class PlayRecordsController {
     private String cpSafeCode;
 
     @RequestMapping("/updateTie")
-    public ApiResponse<Boolean> updateTie(String name,String tie){
-        for(int i = 0; i < 3;i++) {
-            JSONObject jsonObject = new JSONObject();
-            log.info("name= {},tie = {}", name, tie);
-            jsonObject.put("MerchantId", cpMerchantId);
-            jsonObject.put("UserName", name);
-            String point = new DecimalFormat("0.00").format(Double.valueOf(tie));
-            jsonObject.put("Point", point);
-            jsonObject.put("Time", new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()));
-
-            String signKeyStr = cpMerchantId + "&" + name + "&" + point + "&" + jsonObject.getString("Time") + "&" + cpSafeCode;
-            String signKey = MD5Util.md5(signKeyStr.toLowerCase());
-            jsonObject.put("SignKey", signKey);
-            try {
-                HttpPost httpPost = new HttpPost();
-                httpPost.setURI(new URI(cpHost));
-                httpPost.addHeader("Content-Type", "application/json");
-                httpPost.setEntity(new StringEntity(jsonObject.toJSONString()));
-                CloseableHttpResponse response = HttpClients.createDefault().execute(httpPost);
-                BufferedReader rd = new BufferedReader(
-                        new InputStreamReader(response.getEntity().getContent()));
-
-                StringBuilder result = new StringBuilder();
-                String line = "";
-                while ((line = rd.readLine()) != null) {
-                    result.append(line);
-                }
-
-                log.info("result = {}", result);
-
-                TimeUnit.MILLISECONDS.sleep(500);
-            } catch (Exception e) {
-                log.error("", e);
+    public ApiResponse<Boolean> updateTie(String name, String tie) {
+        String result = doSend(name,tie);
+        JSONObject jsonObject = JSON.parseObject(result);
+        if(jsonObject != null){
+            String code = jsonObject.getString("code");
+            if(StringUtils.equals("200",code)){
+                doSend(name,tie);
             }
         }
         return new ApiResponse<>(true);
@@ -100,8 +76,8 @@ public class PlayRecordsController {
 
 
     @RequestMapping("/underMember")
-    public ApiResponse<List<Integer>> getUnderList(Integer proxyId){
-        List<Integer> ids  = memberService.getMemberIds(proxyId).stream()
+    public ApiResponse<List<Integer>> getUnderList(Integer proxyId) {
+        List<Integer> ids = memberService.getMemberIds(proxyId).stream()
                 .filter(memberPo -> {
                     return memberPo != null;
                 }).map(memberPo -> {
@@ -129,7 +105,7 @@ public class PlayRecordsController {
                 memberId -> {
                     PlayerRecordTotalVo recordTotalVo = new PlayerRecordTotalVo();
                     MemberPo memberPo = memberMapper.findById(memberId);
-                    if(memberPo != null){
+                    if (memberPo != null) {
                         recordTotalVo.setName(memberPo.getName());
                         recordTotalVo.setRealName(memberPo.getReal_name());
                     }
@@ -165,5 +141,39 @@ public class PlayRecordsController {
             gameTypes.add(Integer.valueOf(typeStr));
         }
         return gameTypes;
+    }
+
+    private String doSend(String name ,String tie){
+        JSONObject jsonObject = new JSONObject();
+        log.info("name= {},tie = {}", name, tie);
+        jsonObject.put("MerchantId", cpMerchantId);
+        jsonObject.put("UserName", name);
+        String point = new DecimalFormat("0.00").format(Double.valueOf(tie));
+        jsonObject.put("Point", point);
+        jsonObject.put("Time", new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()));
+
+        String signKeyStr = cpMerchantId + "&" + name + "&" + point + "&" + jsonObject.getString("Time") + "&" + cpSafeCode;
+        String signKey = MD5Util.md5(signKeyStr.toLowerCase());
+        jsonObject.put("SignKey", signKey);
+        try {
+            HttpPost httpPost = new HttpPost();
+            httpPost.setURI(new URI(cpHost));
+            httpPost.addHeader("Content-Type", "application/json");
+            httpPost.setEntity(new StringEntity(jsonObject.toJSONString()));
+            CloseableHttpResponse response = HttpClients.createDefault().execute(httpPost);
+            BufferedReader rd = new BufferedReader(
+                    new InputStreamReader(response.getEntity().getContent()));
+
+            StringBuilder result = new StringBuilder();
+            String line = "";
+            while ((line = rd.readLine()) != null) {
+                result.append(line);
+            }
+            log.info("result = {}", result);
+            return result.toString();
+        }catch (Exception e){
+            return "";
+        }
+
     }
 }
