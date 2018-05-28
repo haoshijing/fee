@@ -116,7 +116,11 @@ public class MemberService {
                     if (!CollectionUtils.isEmpty(memberIds)) {
                         feeTotal = feeService.getTotalFee(memberPo.getId(), 1, memberIds, classifyPos, start, end);
                         reAmountMoney = reAmountMoney.add(feeTotal);
+
+                        BigDecimal laganFeeTotal = feeService.getLaGanFee(memberPo.getId(),memberIds,start,end);
+                        reAmountMoney = reAmountMoney.add(laganFeeTotal);
                     }
+
                     branchAgentVo.setReAmount(reAmountMoney);
                     branchAgentVo.setTotalBet(totalBet);
                     if (userPo.getProportion() == null) {

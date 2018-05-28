@@ -72,10 +72,6 @@ public class FeeService extends BaseService {
                 RebatePo rebatePo = rebateMapper.find(branchId, classifyPo.getId(), type);
                 if (rebatePo != null) {
                     BigDecimal sum = sumMoney.divide(new BigDecimal(fireData)).multiply(new BigDecimal(rebatePo.getQuota()));
-                    if(type == 2) {
-                        BigDecimal branchMoneyLog = gameRecordService.getBranchTotal(branchId,classifyPo.getId(),start,end);
-                        sum = sum.add(branchMoneyLog.multiply(new BigDecimal(-1)));
-                    }
                     list.add(sum);
                 }
             }
@@ -158,5 +154,17 @@ public class FeeService extends BaseService {
 
     public void updateReAmount() {
         gameRecordService.updateReAmount();
+    }
+
+    public BigDecimal getLaGanFee(Integer memberId, List<Integer> memberIds, Integer start, Integer end) {
+        BigDecimal sumMoney;
+        List<Integer> gameTypes = Lists.newArrayList(20000);
+        sumMoney = gameRecordService.getTotalValidBet(memberIds, gameTypes, start, end);
+
+        MemberPo proxyPo = memberMapper.findById(memberId);
+        if(proxyPo != null){
+            return sumMoney.divide(new BigDecimal(1000)).multiply(proxyPo.getTie());
+        }
+        return new BigDecimal(0);
     }
 }
