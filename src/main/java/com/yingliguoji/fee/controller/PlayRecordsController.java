@@ -94,6 +94,7 @@ public class PlayRecordsController {
         ylclPo.setId(4);
         ylclPo.setSmallType("20000");
         ylclPo.setType(1);
+        ylclPo.setName("盈利彩票");
         classifyPos.add(ylclPo);
         Integer proxyId = recordRequest.getProxyId();
 
