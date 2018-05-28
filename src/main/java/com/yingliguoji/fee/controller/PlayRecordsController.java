@@ -90,6 +90,11 @@ public class PlayRecordsController {
     public ApiResponse<List<PlayerRecordTotalVo>> getPlayerRecordTotal(@RequestBody PlayerRecordRequest recordRequest) {
 
         List<ClassifyPo> classifyPos = classifyMapper.selectAll();
+        ClassifyPo ylclPo = new ClassifyPo();
+        ylclPo.setId(4);
+        ylclPo.setSmallType("20000");
+        ylclPo.setType(1);
+        classifyPos.add(ylclPo);
         Integer proxyId = recordRequest.getProxyId();
 
         if (proxyId == null) {
