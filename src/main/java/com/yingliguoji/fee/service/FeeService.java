@@ -51,7 +51,7 @@ public class FeeService extends BaseService {
 
             BigDecimal money = gameRecordService.getTotalValidBet(Lists.newArrayList(memberId), gameTypes, start, end);
             if (money != null && money.intValue() > 0) {
-                beginToBack(classifyPo.getId(), memberId, end, money);
+                beginToBack(classifyPo.getId(), memberId, end, money,false);
             }
         });
     }
@@ -83,13 +83,13 @@ public class FeeService extends BaseService {
     }
 
     @Transactional
-    public void beginToBack(Integer classifyId, Integer memberId, Integer end, BigDecimal sumMoney) {
+    public void beginToBack(Integer classifyId, Integer memberId, Integer end, BigDecimal sumMoney,boolean needReAdd) {
         MemberClassifyPo memberClassifyPo = new MemberClassifyPo();
         memberClassifyPo.setClassifyId(classifyId);
         memberClassifyPo.setMemberId(memberId);
         memberClassifyPo.setFeeTime(end*1000L);
         Integer count = memberClassifyMapper.queryCount(memberClassifyPo);
-        if (count == 0) {
+        if (count == 0 || needReAdd) {
             handlerMemFee(memberId, classifyId, sumMoney);
             MemberClassifyPo insertPo = new MemberClassifyPo();
             insertPo.setClassifyId(classifyId);
@@ -107,8 +107,14 @@ public class FeeService extends BaseService {
         Integer kouchu = 0;
         MemberPo memberPo;
         Integer branchId = 0;
+        MemberPo currentPo = memberMapper.findById(memberId);
+        if(currentPo == null || currentPo.getTop_id() == null || currentPo.getTop_id() == 0){
+            return;
+        }
+        memberId = currentPo.getTop_id();
         while ((memberPo = memberMapper.findById(memberId)) != null) {
             RebatePo dataPo = rebateMapper.find(memberId, classifyId, 1);
+            logger.info("memberId = {}",memberId);
             if (dataPo != null) {
                 //增加反水记录
                 if(branchId == 0){
@@ -121,9 +127,9 @@ public class FeeService extends BaseService {
                 }
                 log.setBeforeMoney(beforeMemberPo.getFs_money());
                 if(dataPo.getQuota() == null){
-                    logger.info("memberId = {}",memberId);
+                    logger.warn("getQuota is null ,memberId = {}",memberId);
                     dataPo.setQuota(0);
-                    break;
+                    continue;
                 }
                 Integer getMoney = dataPo.getQuota() - kouchu;
                 ClassifyPo classifyPo = classifyMapper.getById(classifyId);
