@@ -142,7 +142,7 @@ public class FeeService extends BaseService {
                     classifyName = classifyPo.getName();
                 }
                 BigDecimal money = sumMoney.divide(new BigDecimal(fireData)).multiply(new BigDecimal(getMoney));
-                log.setDescribe("返水-类别:" + classifyName + "金钱:" + getMoney);
+                log.setDescribe("返水-类别:" + classifyName );
                 log.setMoney(money);
                 log.setType(3);
                 log.setMemberId(memberId);
