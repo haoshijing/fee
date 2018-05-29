@@ -26,6 +26,7 @@ public class StaticJob {
     private FeeService feeService;
 
     @Scheduled(cron = "0 2/20 * * * ?")
+    @PostConstruct
     public void execute() {
         try {
             feeService.updateReAmount();

@@ -51,6 +51,7 @@ public class FeeService extends BaseService {
 
             BigDecimal money = gameRecordService.getTotalValidBet(Lists.newArrayList(memberId), gameTypes, start, end);
             if (money != null && money.intValue() > 0) {
+                logger.info("memberId = {},cid = {},end = {},money = {}",memberId,classifyPo.getId(),end,money);
                 beginToBack(classifyPo.getId(), memberId, end, money,false);
             }
         });
