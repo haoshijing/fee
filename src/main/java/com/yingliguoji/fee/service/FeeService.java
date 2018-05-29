@@ -129,6 +129,7 @@ public class FeeService extends BaseService {
                 if(dataPo.getQuota() == null){
                     logger.warn("getQuota is null ,memberId = {}",memberId);
                     dataPo.setQuota(0);
+                    memberId = memberPo.getTop_id();
                     continue;
                 }
                 Integer getMoney = dataPo.getQuota() - kouchu;
