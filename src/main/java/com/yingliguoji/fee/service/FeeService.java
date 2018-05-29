@@ -111,7 +111,9 @@ public class FeeService extends BaseService {
         if(currentPo == null || currentPo.getTop_id() == null || currentPo.getTop_id() == 0){
             return;
         }
-        memberId = currentPo.getTop_id();
+        if(currentPo.getIs_daili() == 0) {
+            memberId = currentPo.getTop_id();
+        }
         while ((memberPo = memberMapper.findById(memberId)) != null) {
             RebatePo dataPo = rebateMapper.find(memberId, classifyId, 1);
             logger.info("memberId = {}",memberId);
