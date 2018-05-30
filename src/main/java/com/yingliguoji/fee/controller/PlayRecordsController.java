@@ -6,6 +6,7 @@ import com.google.common.collect.Lists;
 import com.yingliguoji.fee.ApiResponse;
 import com.yingliguoji.fee.controller.response.PlayerRecordRequest;
 import com.yingliguoji.fee.controller.response.PlayerRecordTotalVo;
+import com.yingliguoji.fee.controller.response.UnderPlayerRecordDataVo;
 import com.yingliguoji.fee.dao.ClassifyMapper;
 import com.yingliguoji.fee.dao.MemberMapper;
 import com.yingliguoji.fee.po.ClassifyPo;
@@ -87,8 +88,8 @@ public class PlayRecordsController {
     }
 
     @RequestMapping("/getPlayerRecordTotal")
-    public ApiResponse<List<PlayerRecordTotalVo>> getPlayerRecordTotal(@RequestBody PlayerRecordRequest recordRequest) {
-
+    public ApiResponse<UnderPlayerRecordDataVo> getPlayerRecordTotal(@RequestBody PlayerRecordRequest recordRequest) {
+        UnderPlayerRecordDataVo underPlayerRecordDataVo = new UnderPlayerRecordDataVo();
         List<ClassifyPo> classifyPos = classifyMapper.selectAll();
         ClassifyPo ylclPo = new ClassifyPo();
         ylclPo.setId(4);
@@ -99,7 +100,7 @@ public class PlayRecordsController {
         Integer proxyId = recordRequest.getProxyId();
 
         if (proxyId == null) {
-            return new ApiResponse<>(Lists.newArrayList());
+            return new ApiResponse<>(underPlayerRecordDataVo);
         }
         List<Integer> memberIds = memberService.getMemberIds(proxyId).stream()
                 .filter(memberPo -> {
@@ -136,7 +137,24 @@ public class PlayRecordsController {
                     return recordTotalVo;
                 }
         ).collect(Collectors.toList());
-        return new ApiResponse(recordTotalVos);
+        underPlayerRecordDataVo.setDetails(recordTotalVos);
+        PlayerRecordTotalVo totalVo = new PlayerRecordTotalVo();
+        PlayerRecordTotalVo.ClassiFyItem sportClassiFyItem = new PlayerRecordTotalVo.ClassiFyItem();
+        PlayerRecordTotalVo.ClassiFyItem zrClassiFyItem = new PlayerRecordTotalVo.ClassiFyItem();
+        PlayerRecordTotalVo.ClassiFyItem cpClassiFyItem = new PlayerRecordTotalVo.ClassiFyItem();
+        recordTotalVos.forEach(playerRecordTotalVo -> {
+            sportClassiFyItem.setMoney(playerRecordTotalVo.getClassiFyItemList().get(0).getMoney()+sportClassiFyItem.getMoney());
+            sportClassiFyItem.setBetMoney(playerRecordTotalVo.getClassiFyItemList().get(0).getBetMoney()+sportClassiFyItem.getBetMoney());
+
+            zrClassiFyItem.setMoney(playerRecordTotalVo.getClassiFyItemList().get(1).getMoney()+zrClassiFyItem.getMoney());
+            zrClassiFyItem.setBetMoney(playerRecordTotalVo.getClassiFyItemList().get(1).getBetMoney()+zrClassiFyItem.getBetMoney());
+
+            cpClassiFyItem.setMoney(playerRecordTotalVo.getClassiFyItemList().get(2).getMoney()+cpClassiFyItem.getMoney());
+            cpClassiFyItem.setBetMoney(playerRecordTotalVo.getClassiFyItemList().get(2).getBetMoney()+cpClassiFyItem.getBetMoney());
+        });
+        totalVo.setClassiFyItemList(Lists.newArrayList(sportClassiFyItem,zrClassiFyItem,cpClassiFyItem));
+        underPlayerRecordDataVo.setTotal(totalVo);
+        return new ApiResponse(underPlayerRecordDataVo);
     }
 
     private List<Integer> getGameTypes(ClassifyPo classifyPo) {
