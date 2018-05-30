@@ -96,7 +96,7 @@ public class SyncRecordService {
             DividendPo dividendPo = new DividendPo();
             dividendPo.setBeforeMoney(beforeMemberPo.getFs_money());
             BigDecimal money = (betMoney.divide(new BigDecimal(1000))).multiply(tie);
-            dividendPo.setDescribe("返水-类别:彩票拉杆返水" + "金钱:" + money.doubleValue());
+            dividendPo.setDescribe("返水-类别:彩票" + "" + money.doubleValue());
             dividendPo.setType(3);
             dividendPo.setMoney(money);
             dividendPo.setMemberId(memberId);
@@ -108,8 +108,11 @@ public class SyncRecordService {
             memberMapper.update(updatePo);
             MemberPo afterPo = memberMapper.findById(memberId);
             dividendPo.setAfterMoney(afterPo.getFs_money());
-            int insertRet = dividendMapper.insert(dividendPo);
-            log.info("insertRet = {}", insertRet);
+            if(dividendPo.getMoney().doubleValue() > 0.01) {
+                int insertRet = dividendMapper.insert(dividendPo);
+                log.info("memeberId = {},insertRet = {}",memberId, insertRet);
+            }
+
             kouchu = tie;
             memberId = memberPo.getTop_id();
         }
