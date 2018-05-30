@@ -96,7 +96,7 @@ public class SyncRecordService {
             DividendPo dividendPo = new DividendPo();
             dividendPo.setBeforeMoney(beforeMemberPo.getFs_money());
             BigDecimal money = (betMoney.divide(new BigDecimal(1000))).multiply(tie);
-            dividendPo.setDescribe("返水-类别:彩票" + "" + money.doubleValue());
+            dividendPo.setDescribe("返水-类别:彩票");
             dividendPo.setType(3);
             dividendPo.setMoney(money);
             dividendPo.setMemberId(memberId);
