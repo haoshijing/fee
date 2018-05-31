@@ -24,6 +24,8 @@ public interface GameRecordMapper {
                                 @Param("gameTypes") List<Integer> gameTypes);
 
     void updateReAmount();
+
+    void clearData(String date);
 }
 
 

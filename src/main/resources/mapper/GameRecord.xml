@@ -132,4 +132,9 @@
         #{updated_at}
         )
     </insert>
+
+    <update id = "clearDate" parameterType="java.lang.String">
+        update <include refid="tableName"/>
+        set flag = 1 where     created_at <![CDATA[ <= ]]> #{date}
+    </update>
 </mapper>
