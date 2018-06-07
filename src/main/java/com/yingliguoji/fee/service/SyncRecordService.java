@@ -74,7 +74,7 @@ public class SyncRecordService {
         gameRecordPo.setNetAmount(gameRecordPo.getBetAmount().add(gameRecordPo.getReAmount()));
         gameRecordPo.setCreated_at(new Timestamp(System.currentTimeMillis()).toString());
         gameRecordPo.setUpdated_at(new Timestamp(System.currentTimeMillis()).toString());
-        getTotalFee(memberPo.getId(), playRecordRequest);
+        //getTotalFee(memberPo.getId(), playRecordRequest);
         return gameRecordMapper.insert(gameRecordPo);
 
     }
