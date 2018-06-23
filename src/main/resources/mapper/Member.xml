@@ -50,7 +50,7 @@
         select * from
         <include refid="tableName"/>
         <where>
-            deleted_at is null and
+            deleted_at is null
 
             <if test="top_id != null">
                 and top_id = #{top_id}
