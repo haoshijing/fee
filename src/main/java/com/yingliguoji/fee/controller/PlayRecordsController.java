@@ -103,16 +103,13 @@ public class PlayRecordsController {
         if (proxyId == null && type == null) {
             return new ApiResponse<>(underPlayerRecordDataVo);
         }
-        if(type == 1){
-
-        }
         List<Integer> memberIds = memberService.getMemberIds(proxyId).stream()
                 .filter(memberPo -> {
                     return memberPo != null;
                 }).map(memberPo -> {
                     return memberPo.getId();
                 }).collect(Collectors.toList());
-        if(type == 1 && proxyId != null){
+        if(type != null  && proxyId != null){
             memberIds.add(proxyId);
         }
         List<PlayerRecordTotalVo> recordTotalVos = memberIds.stream().map(
