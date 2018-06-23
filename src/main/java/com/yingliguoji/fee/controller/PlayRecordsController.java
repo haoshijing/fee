@@ -97,10 +97,14 @@ public class PlayRecordsController {
         ylclPo.setType(1);
         ylclPo.setName("盈利彩票");
         classifyPos.add(ylclPo);
+        Integer type = recordRequest.getType();
         Integer proxyId = recordRequest.getProxyId();
 
-        if (proxyId == null) {
+        if (proxyId == null && type == null) {
             return new ApiResponse<>(underPlayerRecordDataVo);
+        }
+        if(type == 1){
+
         }
         List<Integer> memberIds = memberService.getMemberIds(proxyId).stream()
                 .filter(memberPo -> {
@@ -108,6 +112,9 @@ public class PlayRecordsController {
                 }).map(memberPo -> {
                     return memberPo.getId();
                 }).collect(Collectors.toList());
+        if(type == 1 && proxyId != null){
+            memberIds.add(proxyId);
+        }
         List<PlayerRecordTotalVo> recordTotalVos = memberIds.stream().map(
                 memberId -> {
                     PlayerRecordTotalVo recordTotalVo = new PlayerRecordTotalVo();
