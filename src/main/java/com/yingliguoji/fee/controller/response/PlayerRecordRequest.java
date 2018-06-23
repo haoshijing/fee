@@ -10,4 +10,5 @@ public class PlayerRecordRequest {
     private Integer start;
     private Integer end;
     private Integer type;
+    private Integer branchId;
 }

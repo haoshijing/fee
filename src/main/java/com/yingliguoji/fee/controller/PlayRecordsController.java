@@ -9,8 +9,10 @@ import com.yingliguoji.fee.controller.response.PlayerRecordTotalVo;
 import com.yingliguoji.fee.controller.response.UnderPlayerRecordDataVo;
 import com.yingliguoji.fee.dao.ClassifyMapper;
 import com.yingliguoji.fee.dao.MemberMapper;
+import com.yingliguoji.fee.dao.UserMapper;
 import com.yingliguoji.fee.po.ClassifyPo;
 import com.yingliguoji.fee.po.MemberPo;
+import com.yingliguoji.fee.po.UserPo;
 import com.yingliguoji.fee.service.GameRecordService;
 import com.yingliguoji.fee.service.MemberService;
 import com.yingliguoji.fee.util.MD5Util;
@@ -53,6 +55,9 @@ public class PlayRecordsController {
     @Autowired
     private MemberMapper memberMapper;
 
+    @Autowired
+    private UserMapper userMapper;
+
     @Value("${cpHost}")
     private String cpHost;
 
@@ -94,6 +99,8 @@ public class PlayRecordsController {
         Integer type = recordRequest.getType();
         Integer proxyId = recordRequest.getProxyId();
 
+        Integer branchId = recordRequest.getBranchId();
+
         if (proxyId == null && type == null) {
             return new ApiResponse<>(underPlayerRecordDataVo);
         }
@@ -106,7 +113,12 @@ public class PlayRecordsController {
                 return memberPo.getId();
             }).collect(Collectors.toList());
         }else{
-            memberIds = memberMapper.selectList(new MemberPo()).stream().filter(memberPo -> {
+            UserPo userPo = userMapper.selectById(branchId);
+            MemberPo queryPo = new MemberPo();
+            if(userPo != null && userPo.getIsSuperAdmin() ==2){
+                queryPo.setBranch_id(branchId);
+            }
+            memberIds = memberMapper.selectList(queryPo).stream().filter(memberPo -> {
                 return memberPo != null;
             }).map(memberPo -> {
                 return memberPo.getId();
