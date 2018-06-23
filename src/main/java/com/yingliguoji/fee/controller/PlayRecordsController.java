@@ -106,7 +106,7 @@ public class PlayRecordsController {
         }
 
         List<Integer> memberIds = null;
-        if(type == null) {
+        if(type == null || proxyId != null) {
             memberIds =  memberService.getMemberIds(proxyId).stream().filter(memberPo -> {
                 return memberPo != null;
             }).map(memberPo -> {
@@ -160,6 +160,7 @@ public class PlayRecordsController {
         PlayerRecordTotalVo totalVo = new PlayerRecordTotalVo();
         PlayerRecordTotalVo.ClassiFyItem sportClassiFyItem = new PlayerRecordTotalVo.ClassiFyItem();
         PlayerRecordTotalVo.ClassiFyItem zrClassiFyItem = new PlayerRecordTotalVo.ClassiFyItem();
+        PlayerRecordTotalVo.ClassiFyItem dzClassiFyItem = new PlayerRecordTotalVo.ClassiFyItem();
         PlayerRecordTotalVo.ClassiFyItem cpClassiFyItem = new PlayerRecordTotalVo.ClassiFyItem();
         recordTotalVos.forEach(playerRecordTotalVo -> {
             sportClassiFyItem.setMoney(playerRecordTotalVo.getClassiFyItemList().get(0).getMoney()+sportClassiFyItem.getMoney());
@@ -168,10 +169,14 @@ public class PlayRecordsController {
             zrClassiFyItem.setMoney(playerRecordTotalVo.getClassiFyItemList().get(1).getMoney()+zrClassiFyItem.getMoney());
             zrClassiFyItem.setBetMoney(playerRecordTotalVo.getClassiFyItemList().get(1).getBetMoney()+zrClassiFyItem.getBetMoney());
 
-            cpClassiFyItem.setMoney(playerRecordTotalVo.getClassiFyItemList().get(2).getMoney()+cpClassiFyItem.getMoney());
-            cpClassiFyItem.setBetMoney(playerRecordTotalVo.getClassiFyItemList().get(2).getBetMoney()+cpClassiFyItem.getBetMoney());
+            dzClassiFyItem.setMoney(playerRecordTotalVo.getClassiFyItemList().get(2).getMoney()+dzClassiFyItem.getMoney());
+            dzClassiFyItem.setBetMoney(playerRecordTotalVo.getClassiFyItemList().get(2).getBetMoney()+dzClassiFyItem.getBetMoney());
+
+
+            cpClassiFyItem.setMoney(playerRecordTotalVo.getClassiFyItemList().get(3).getMoney()+cpClassiFyItem.getMoney());
+            cpClassiFyItem.setBetMoney(playerRecordTotalVo.getClassiFyItemList().get(3).getBetMoney()+cpClassiFyItem.getBetMoney());
         });
-        totalVo.setClassiFyItemList(Lists.newArrayList(sportClassiFyItem,zrClassiFyItem,cpClassiFyItem));
+        totalVo.setClassiFyItemList(Lists.newArrayList(sportClassiFyItem,zrClassiFyItem,dzClassiFyItem,cpClassiFyItem));
         underPlayerRecordDataVo.setTotal(totalVo);
         return new ApiResponse(underPlayerRecordDataVo);
     }
