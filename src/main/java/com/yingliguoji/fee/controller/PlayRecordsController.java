@@ -115,7 +115,7 @@ public class PlayRecordsController {
         }else{
             UserPo userPo = userMapper.selectById(branchId);
             MemberPo queryPo = new MemberPo();
-            if(userPo != null && userPo.getIsSuperAdmin() ==2){
+            if(userPo != null && userPo.getIs_super_admin() ==2){
                 queryPo.setBranch_id(branchId);
             }
             memberIds = memberMapper.selectList(queryPo).stream().filter(memberPo -> {

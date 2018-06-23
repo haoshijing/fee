@@ -10,7 +10,7 @@ public class UserPo {
     private String name;
     private String email;
     private String password;
-    private Integer isSuperAdmin;
+    private Integer is_super_admin;
     private Integer roleId;
     private String rememberToken;
     private Timestamp createdAt;
