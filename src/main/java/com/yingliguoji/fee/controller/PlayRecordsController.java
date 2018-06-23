@@ -91,12 +91,6 @@ public class PlayRecordsController {
     public ApiResponse<UnderPlayerRecordDataVo> getPlayerRecordTotal(@RequestBody PlayerRecordRequest recordRequest) {
         UnderPlayerRecordDataVo underPlayerRecordDataVo = new UnderPlayerRecordDataVo();
         List<ClassifyPo> classifyPos = classifyMapper.selectAll();
-        ClassifyPo ylclPo = new ClassifyPo();
-        ylclPo.setId(4);
-        ylclPo.setSmallType("20000");
-        ylclPo.setType(1);
-        ylclPo.setName("盈利彩票");
-        classifyPos.add(ylclPo);
         Integer type = recordRequest.getType();
         Integer proxyId = recordRequest.getProxyId();
 

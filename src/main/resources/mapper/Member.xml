@@ -50,7 +50,8 @@
         select * from
         <include refid="tableName"/>
         <where>
-            1 = 1
+            deleted_at is null and
+
             <if test="top_id != null">
                 and top_id = #{top_id}
             </if>
