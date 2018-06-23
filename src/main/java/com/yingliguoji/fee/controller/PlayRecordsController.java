@@ -97,12 +97,21 @@ public class PlayRecordsController {
         if (proxyId == null && type == null) {
             return new ApiResponse<>(underPlayerRecordDataVo);
         }
-        List<Integer> memberIds = memberService.getMemberIds(proxyId).stream()
-                .filter(memberPo -> {
-                    return memberPo != null;
-                }).map(memberPo -> {
-                    return memberPo.getId();
-                }).collect(Collectors.toList());
+
+        List<Integer> memberIds = null;
+        if(type == null) {
+            memberIds =  memberService.getMemberIds(proxyId).stream().filter(memberPo -> {
+                return memberPo != null;
+            }).map(memberPo -> {
+                return memberPo.getId();
+            }).collect(Collectors.toList());
+        }else{
+            memberIds = memberMapper.selectList(new MemberPo()).stream().filter(memberPo -> {
+                return memberPo != null;
+            }).map(memberPo -> {
+                return memberPo.getId();
+            }).collect(Collectors.toList());
+        }
         if(type != null  && proxyId != null){
             memberIds.add(proxyId);
         }
