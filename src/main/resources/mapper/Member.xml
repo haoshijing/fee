@@ -58,6 +58,9 @@
             <if test="branch_id != null">
                 AND branch_id = #{branch_id}
             </if>
+            <if test="name != null and name != ''">
+                AND name = #{name}
+            </if>
             <if test="is_daili != null">
                 AND is_daili = #{is_daili}
             </if>

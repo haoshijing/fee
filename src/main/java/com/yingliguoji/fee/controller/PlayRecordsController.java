@@ -98,6 +98,7 @@ public class PlayRecordsController {
         List<ClassifyPo> classifyPos = classifyMapper.selectAll();
         Integer type = recordRequest.getType();
         Integer proxyId = recordRequest.getProxyId();
+        String playerName = recordRequest.getPlayerName();
 
         Integer branchId = recordRequest.getBranchId();
 
@@ -117,6 +118,9 @@ public class PlayRecordsController {
             MemberPo queryPo = new MemberPo();
             if(userPo != null && userPo.getIs_super_admin() ==2){
                 queryPo.setBranch_id(branchId);
+            }
+            if(StringUtils.isNotEmpty(playerName)){
+                queryPo.setName(playerName);
             }
             memberIds = memberMapper.selectList(queryPo).stream().filter(memberPo -> {
                 return memberPo != null;
