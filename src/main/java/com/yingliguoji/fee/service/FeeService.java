@@ -77,6 +77,8 @@ public class FeeService extends BaseService {
                         if(sum != null && sum.doubleValue() >0.0) {
                             list.add(sum);
                         }
+                    }else{
+                        list.add(new BigDecimal(0));
                     }
 
                 }
