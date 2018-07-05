@@ -72,8 +72,13 @@ public class FeeService extends BaseService {
             if (sumMoney.intValue() > 0) {
                 RebatePo rebatePo = rebateMapper.find(branchId, classifyPo.getId(), type);
                 if (rebatePo != null) {
-                    BigDecimal sum = sumMoney.divide(new BigDecimal(fireData)).multiply(new BigDecimal(rebatePo.getQuota()));
-                    list.add(sum);
+                    if(rebatePo.getQuota() != null) {
+                        BigDecimal sum = sumMoney.divide(new BigDecimal(fireData)).multiply(new BigDecimal(rebatePo.getQuota()));
+                        if(sum != null && sum.doubleValue() >0.0) {
+                            list.add(sum);
+                        }
+                    }
+
                 }
             }
         });
@@ -142,7 +147,7 @@ public class FeeService extends BaseService {
                     classifyName = classifyPo.getName();
                 }
                 BigDecimal money = sumMoney.divide(new BigDecimal(fireData)).multiply(new BigDecimal(getMoney));
-                log.setDescribe("返水-类别:" + classifyName );
+                log.setDescribe("返水-类别:" + classifyName);
                 log.setMoney(money);
                 log.setType(3);
                 log.setMemberId(memberId);
