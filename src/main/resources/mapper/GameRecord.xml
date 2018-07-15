@@ -140,12 +140,12 @@
     
     <select id="querySameBillNo" resultType="java.lang.String">
         SELECT billNo  FROM <include refid="tableName"/>
-        GROUP by billNo HAVING count(billNo) > 1 order by created_at desc
+        GROUP by billNo HAVING count(billNo) > 1
     </select>
 
     <select id = "selectByBillNo" resultType="java.lang.Integer">
       select id from  <include refid="tableName"/>
-        where billNo = #{billNo} limit 1;
+        where billNo = #{billNo} limit 1
     </select>
 
     <delete id="deleteById">

@@ -29,15 +29,15 @@ public class BillNoScanJob {
 
     private void work() {
         List<String> billNos = gameRecordMapper.querySameBillNo();
-        billNos.forEach(billNo -> {
+        for(String billNo : billNos){
             log.info("billNo = {}", billNo);
-            Integer id = gameRecordMapper.queryByTradeNo(billNo);
+            Integer id = gameRecordMapper.selectByBillNo(billNo);
             if(id != null){
                 Integer deleteRet = gameRecordMapper.deleteById(id);
                 log.info("id = {}, deleteRet = {}", id,deleteRet);
             }
+        }
 
-        });
 
     }
 }
