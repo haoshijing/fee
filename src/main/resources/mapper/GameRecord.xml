@@ -137,4 +137,19 @@
         update <include refid="tableName"/>
         set flag = 1 where     created_at <![CDATA[ <= ]]> #{date}
     </update>
+    
+    <select id="querySameBillNo" resultType="java.lang.String">
+        SELECT billNo  FROM <include refid="tableName"/>
+        GROUP by billNo HAVING count(billNo) > 1 order by created_at desc
+    </select>
+
+    <select id = "selectByBillNo" resultType="java.lang.Integer">
+      select id from  <include refid="tableName"/>
+        where billNo = #{billNo} limit 1;
+    </select>
+
+    <delete id="deleteById">
+        delete from <include refid="tableName"/>
+        where id = #{id}
+    </delete>
 </mapper>
