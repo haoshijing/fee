@@ -184,4 +184,12 @@ public class FeeService extends BaseService {
         }
         return new BigDecimal(0);
     }
+
+    public Long getMinTimeForMember(Integer memberId) {
+        Long min = memberClassifyMapper.seletcMinFee(memberId);
+        if(min == null){
+            return 0L;
+        }
+        return min;
+    }
 }

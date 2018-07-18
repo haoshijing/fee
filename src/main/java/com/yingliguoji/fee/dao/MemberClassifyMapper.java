@@ -15,4 +15,6 @@ public interface MemberClassifyMapper {
     Integer update(MemberClassifyPo memberClassifyPo);
 
     BigDecimal sumMoney(@Param("memberId") Integer memberId, @Param("cid") Integer classifyId);
+
+    Long seletcMinFee(Integer memberId);
 }

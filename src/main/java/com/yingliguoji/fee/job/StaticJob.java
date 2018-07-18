@@ -24,7 +24,7 @@ public class StaticJob {
     @Autowired
     private FeeService feeService;
 
-    @Scheduled(cron = "0 2/20 * * * ?")
+    @Scheduled(cron = "0 03 * * * ?")
 
     public void execute() {
         try {
@@ -42,11 +42,12 @@ public class StaticJob {
         DateTime endDate = new DateTime().withMillisOfSecond(0).withMinuteOfHour(0);
         Long endDateMills = endDate.getMillis();
         Integer end = new Long(endDateMills /1000l).intValue();
-        Integer start = new Long(endDate.plusHours(-1).getMillis()/1000).intValue();
 
         List<MemberPo> memberPoList = memberMapper.selectAll();
         memberPoList.forEach(memberPo -> {
             Integer memberId = memberPo.getId();
+            Long startTime= feeService.getMinTimeForMember(memberId);
+            Integer start = new Long(startTime /1000l).intValue();
             feeService.backFeeToAgent(memberId, start, end);
         });
     }

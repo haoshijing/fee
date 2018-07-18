@@ -55,4 +55,7 @@
         where memberId = #{memberId}
         and classifyId = #{cid}
     </select>
+    <select id="seletcMinFee" resultType="java.lang.Long">
+        select max(feeTime) from <include refid="tableName"/>
+    </select>
 </mapper>
