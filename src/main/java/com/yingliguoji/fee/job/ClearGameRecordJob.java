@@ -24,10 +24,8 @@ public class ClearGameRecordJob {
             String date =  new StringBuilder(dateTime.getYear()).append("-")
                     .append(dateTime.getMonthOfYear()).append("-")
                     .append(dateTime.getDayOfMonth()).toString();
-
-            log.info("start clear work");
             gameRecordMapper.clearData(date);
-            log.info(" end clear work");
+
         } catch (Throwable e) {
             log.error("", e);
         }
