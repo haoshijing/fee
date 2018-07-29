@@ -19,9 +19,7 @@ public class BillNoScanJob {
 
     public void execute() {
         try {
-            log.info("do can billNo start");
             work();
-            log.info(" do can billNo end");
         } catch (Throwable e) {
             log.error("", e);
         }

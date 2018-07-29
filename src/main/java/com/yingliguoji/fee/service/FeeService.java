@@ -116,7 +116,7 @@ public class FeeService extends BaseService {
         MemberPo memberPo;
         Integer branchId = 0;
         MemberPo currentPo = memberMapper.findById(memberId);
-        if(currentPo == null || currentPo.getTop_id() == null || currentPo.getTop_id() == 0){
+        if(currentPo == null || currentPo.getTop_id() == null){
             return;
         }
         if(currentPo.getIs_daili() == 0) {
