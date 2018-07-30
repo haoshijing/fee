@@ -19,9 +19,10 @@ public class SyncRecordController {
     private SyncRecordService syncRecordService;
     @RequestMapping("/syncData")
     public ApiResponse<Integer> syncData(@RequestBody PlayRecordRequest playRecordRequest){
-        log.info("playRecordRequest = {}",playRecordRequest);
-        int ret = syncRecordService.syncData(playRecordRequest);
-        return new ApiResponse<>(ret);
+//        log.info("playRecordRequest = {}",playRecordRequest);
+//        int ret = syncRecordService.syncData(playRecordRequest);
+//        return new ApiResponse<>(ret);
+        return new ApiResponse<>(200);
     }
 
     @RequestMapping("/checkTradeNo")
