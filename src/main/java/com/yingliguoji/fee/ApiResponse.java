@@ -16,4 +16,10 @@ public class ApiResponse<T> {
         this.msg = "succ";
         this.data = data;
     }
+
+    public ApiResponse(int code, String msg){
+        this.code = code;
+        this.msg = msg;
+
+    }
 }
