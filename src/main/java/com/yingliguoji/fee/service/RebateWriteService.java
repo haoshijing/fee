@@ -35,7 +35,9 @@ public class RebateWriteService {
         List<RebateSetDataRequestVo.RebateSettingVo> rebateSettingVos = requestVo.getDatas();
 
         MemberPo memberPo = memberMapper.findById(requestVo.getMemberId());
-
+        if(memberPo == null){
+            throw new RuntimeException("该会员不存在");
+        }
         boolean checkCanSet = true;
         if (memberPo.getTop_id() == 0) {
 
@@ -88,7 +90,7 @@ public class RebateWriteService {
                 rebatePo.setGameType(rebateSettingVo.getGameType());
                 rebatePo.setRebateType(rebateType);
                 rebatePo.setMemberId(memberId);
-                rebatePo.setLastUpdateTime(System.currentTimeMillis());
+                rebatePo.setInsertTime(System.currentTimeMillis());
                 rebatePo.setLastUpdateTime(System.currentTimeMillis());
                 rebateMapper.insert(rebatePo);
             }else{

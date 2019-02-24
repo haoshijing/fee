@@ -47,7 +47,7 @@
         (
         rebateType,
         gameType,
-        quato,
+        quota,
         memberId,
         insertTime,
         lastUpdateTime
@@ -56,7 +56,7 @@
         values(
         #{rebateType},
         #{gameType},
-        #{quato},
+        #{quota},
         #{memberId},
         #{insertTime},
         #{lastUpdateTime}
@@ -73,8 +73,8 @@
             </if>
 
 
-            <if test = "quato != null">
-                AND   quato = #{quato}
+            <if test = "quota != null">
+                AND   quota = #{quota}
             </if>
 
 
