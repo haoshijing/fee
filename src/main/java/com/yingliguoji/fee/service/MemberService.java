@@ -29,8 +29,6 @@ public class MemberService {
     private UserMapper userMapper;
 
     @Autowired
-    private MemberService memberService;
-    @Autowired
     private FeeService feeService;
 
     public MemberService() {
@@ -112,8 +110,6 @@ public class MemberService {
                         feeTotal = feeService.getTotalFee(memberPo.getId(), 1, memberIds, start, end);
                         reAmountMoney = reAmountMoney.add(feeTotal);
 
-                        BigDecimal laganFeeTotal = feeService.getLaGanFee(memberPo.getId(),memberIds,start,end);
-                        reAmountMoney = reAmountMoney.add(laganFeeTotal);
                     }
 
                     branchAgentVo.setReAmount(reAmountMoney);
