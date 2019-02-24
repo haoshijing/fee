@@ -8,7 +8,13 @@ import java.util.List;
 
 public interface RebateMapper {
 
-    RebatePo find(@Param("userId")Integer userId,@Param("cid")Integer classId,@Param("percentage")Integer percentage);
+    RebatePo findByRebateTypeAndMemberIdAndGameType(@Param("memberId") Integer memberId,
+                                                    @Param("rebateType") Integer rebateType,
+                                                    @Param("gameType")Integer gameType);
 
     List<RebatePo> queryList(@Param("memberId") Integer memberId, @Param("rebateType") Integer rebateType);
+
+    void insert(RebatePo rebatePo);
+
+    void updateById(RebatePo updatePo);
 }

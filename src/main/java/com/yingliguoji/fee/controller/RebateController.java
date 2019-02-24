@@ -6,18 +6,18 @@ import com.yingliguoji.fee.controller.request.RebateRequestVo;
 import com.yingliguoji.fee.controller.request.RebateSetDataRequestVo;
 import com.yingliguoji.fee.controller.response.RebateVo;
 import com.yingliguoji.fee.service.RebateQueryService;
-import com.yingliguoji.fee.service.RebateQueryService;
 import com.yingliguoji.fee.service.RebateWriteService;
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
 @RequestMapping("/rebate")
+@RestController
 public class RebateController {
 
     @Autowired

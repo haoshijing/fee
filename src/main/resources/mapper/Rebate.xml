@@ -8,12 +8,80 @@
     </sql>
     <!-- 插入一条记录 -->
 
-    <select id = "find" resultType="com.yingliguoji.fee.po.RebatePo">
+    <select id="findByRebateTypeAndMemberIdAndGameType" resultType="com.yingliguoji.fee.po.RebatePo">
         select * from <include refid="tableName"/>
-        where user_id =#{userId}  and class_id = #{cid}
-        and percentage = #{percentage}
-        limit 1
+        <where>
+
+            <if test = "memberId != null">
+                memberId = #{memberId}
+            </if>
+
+
+            <if test = "gameType != null">
+              AND   gameType = #{gameType}
+            </if>
+
+
+            <if test = "rebateType != null">
+                AND  rebateType = #{rebateType}
+            </if>
+        </where>
     </select>
 
+    <select id="queryList" resultType="com.yingliguoji.fee.po.RebatePo">
+        select * from <include refid="tableName"/>
+        <where>
+            <if test = "memberId != null">
+                memberId = #{memberId}
+            </if>
+
+            <if test = "rebateType != null">
+                AND  rebateType = #{rebateType}
+            </if>
+        </where>
+    </select>
+
+    <insert id="insert" parameterType="com.yingliguoji.fee.po.RebatePo">
+        INSERT INTO <include refid="tableName"/>
+
+        (
+        rebateType,
+        gameType,
+        quato,
+        memberId,
+        insertTime,
+        lastUpdateTime
+        )
+
+        values(
+        #{rebateType},
+        #{gameType},
+        #{quato},
+        #{memberId},
+        #{insertTime},
+        #{lastUpdateTime}
+        )
+    </insert>
+
+    <update id="updateById" parameterType="com.yingliguoji.fee.po.RebatePo">
+        update  <include refid="tableName"/>
+
+        <set>
+
+            <if test = "lastUpdateTime != null">
+                lastUpdateTime = #{lastUpdateTime},
+            </if>
+
+
+            <if test = "quato != null">
+                AND   quato = #{quato}
+            </if>
+
+
+
+        </set>
+
+        where id = #{id}
+    </update>
 
 </mapper>

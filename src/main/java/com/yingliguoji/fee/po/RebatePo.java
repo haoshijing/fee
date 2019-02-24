@@ -13,7 +13,7 @@ public class RebatePo {
     /**
      * 代理id
      */
-    private Integer userId;
+    private Integer memberId;
 
     /**
      * 数额

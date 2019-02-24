@@ -2,10 +2,8 @@ package com.yingliguoji.fee.service;
 
 import com.google.common.collect.Lists;
 import com.yingliguoji.fee.controller.response.FeeTotalVo;
-import com.yingliguoji.fee.dao.ClassifyMapper;
 import com.yingliguoji.fee.dao.MemberMapper;
 import com.yingliguoji.fee.dao.UserMapper;
-import com.yingliguoji.fee.po.ClassifyPo;
 import com.yingliguoji.fee.po.MemberPo;
 
 import com.yingliguoji.fee.po.UserPo;
@@ -26,8 +24,6 @@ public class MemberService {
     @Autowired
     private GameRecordService gameRecordMapper;
 
-    @Autowired
-    private ClassifyMapper classifyMapper;
 
     @Autowired
     private UserMapper userMapper;
@@ -89,7 +85,6 @@ public class MemberService {
 
     public List<FeeTotalVo> branchAgentVoList(Integer branchId, Integer start, Integer end) {
         List<MemberPo> proxyList = getAllUnderProxy(branchId);
-        final List<ClassifyPo> classifyPos = classifyMapper.selectAll();
         UserPo userPo = userMapper.selectById(branchId);
         return proxyList.stream().map(
                 memberPo -> {
@@ -114,7 +109,7 @@ public class MemberService {
                     branchAgentVo.setReAmount(reAmountMoney);
                     BigDecimal feeTotal = new BigDecimal(0);
                     if (!CollectionUtils.isEmpty(memberIds)) {
-                        feeTotal = feeService.getTotalFee(memberPo.getId(), 1, memberIds, classifyPos, start, end);
+                        feeTotal = feeService.getTotalFee(memberPo.getId(), 1, memberIds, start, end);
                         reAmountMoney = reAmountMoney.add(feeTotal);
 
                         BigDecimal laganFeeTotal = feeService.getLaGanFee(memberPo.getId(),memberIds,start,end);
