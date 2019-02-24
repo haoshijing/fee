@@ -169,7 +169,7 @@
     </dependencies>
 
     <build>
-        <finalName>pcapp</finalName>
+        <finalName>feeapp</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
