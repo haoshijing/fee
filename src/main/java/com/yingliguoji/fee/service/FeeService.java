@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -88,7 +87,6 @@ public class FeeService {
         return total;
     }
 
-    @Transactional
     public void beginToBack(Integer classifyId, Integer memberId, Integer end, BigDecimal sumMoney,boolean needReAdd) {
 //        MemberClassifyPo memberClassifyPo = new MemberClassifyPo();
 //        memberClassifyPo.setClassifyId(classifyId);
