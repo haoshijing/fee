@@ -25,6 +25,8 @@ public interface GameRecordMapper {
     Integer selectByBillNo(String billNo);
 
     Integer deleteById(Integer id);
+
+    List<Integer> queryBetClient();
 }
 
 

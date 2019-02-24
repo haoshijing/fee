@@ -1,6 +1,7 @@
 package com.yingliguoji.fee.job;
 
 
+import com.yingliguoji.fee.dao.GameRecordMapper;
 import com.yingliguoji.fee.dao.MemberMapper;
 import com.yingliguoji.fee.po.MemberPo;
 import com.yingliguoji.fee.service.FeeService;
@@ -18,7 +19,7 @@ import java.util.List;
 public class StaticJob {
 
     @Autowired
-    private MemberMapper memberMapper;
+    private GameRecordMapper gameRecordMapper;
 
 
     @Autowired
@@ -44,11 +45,7 @@ public class StaticJob {
         Integer end = new Long(endDateMills /1000l).intValue();
         Integer start = new Long(endDate.plusDays(-1).getMillis()/1000).intValue();
 
-        List<MemberPo> memberPoList = memberMapper.selectAll();
-        memberPoList.forEach(memberPo -> {
-            Integer memberId = memberPo.getId();
-            feeService.backFeeToAgent(memberId, start, end);
-        });
+        List<Integer> memberIds = gameRecordMapper.queryBetClient();
     }
 
 }
