@@ -74,7 +74,7 @@
 
 
             <if test = "quota != null">
-                AND   quota = #{quota}
+                 quota = #{quota},
             </if>
 
 

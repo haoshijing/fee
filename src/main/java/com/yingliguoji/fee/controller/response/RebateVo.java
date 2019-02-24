@@ -16,7 +16,7 @@ public class RebateVo {
     /**
      * 数额
      */
-    private Integer quato;
+    private Integer quota;
 
     /**
      * 游戏类别

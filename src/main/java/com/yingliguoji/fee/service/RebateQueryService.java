@@ -32,6 +32,7 @@ public class RebateQueryService {
     static Map<Integer, String> maps = Maps.newConcurrentMap();
 
     static {
+        maps.put(0, "占成");
         maps.put(GameType.ZR, "真人");
         maps.put(GameType.DZ, "电子");
         maps.put(GameType.CP, "彩票");
@@ -71,7 +72,7 @@ public class RebateQueryService {
                 csQuato = 150;
             }
             if (rebateType == RebateType.ZC) {
-                rebateVos.add(new RebateVo(zcQuato,0,"占成"));
+                rebateVos.add(new RebateVo(zcQuato, 0, "占成"));
             } else {
                 rebateVos.add(new RebateVo(csQuato, GameType.ZR, "真人"));
                 rebateVos.add(new RebateVo(csQuato, GameType.DZ, "电子"));
@@ -84,12 +85,9 @@ public class RebateQueryService {
         } else {
             rebateVos = rebatePos.stream().map(rebatePo -> {
                 RebateVo rebateVo = new RebateVo();
-                if(rebateType == RebateType.CS){
-                    rebateVo.setGameType(rebatePo.getGameType());
-                    rebateVo.setGameName(maps.get(rebatePo.getGameType()));
-                }
-
-                rebatePo.setQuota(rebatePo.getQuota());
+                rebateVo.setGameType(rebatePo.getGameType());
+                rebateVo.setGameName(maps.get(rebatePo.getGameType()));
+                rebateVo.setQuota(rebatePo.getQuota());
 
                 return rebateVo;
             }).collect(Collectors.toList());
