@@ -36,73 +36,16 @@ public class FeeService {
     private Integer fireData;
 
     public void backFeeToAgent(Integer memberId, Integer start, Integer end) {
-//        List<ClassifyPo> classifyPoList = classifyMapper.selectAll();
-//        classifyPoList.forEach(classifyPo -> {
-//            String type = classifyPo.getSmallType();
-//            String[] typeArr = type.split(",");
-//            List<Integer> gameTypes = Lists.newArrayList();
-//            for (String typeStr : typeArr) {
-//                gameTypes.add(Integer.valueOf(typeStr));
-//            }
-//
-//            BigDecimal money = gameRecordService.getTotalValidBet(Lists.newArrayList(memberId), gameTypes, start, end);
-//            if (money != null && money.intValue() > 0) {
-//                logger.info("memberId = {},cid = {},end = {},money = {}",memberId,classifyPo.getId(),end,money);
-//                beginToBack(classifyPo.getId(), memberId, end, money,false);
-//            }
-//        });
+
     }
 
     public BigDecimal getTotalFee(Integer branchId, Integer type, List<Integer> memberIds, Integer start, Integer end) {
         BigDecimal total = new BigDecimal(0);
-//        List<BigDecimal> list = Lists.newArrayList();
-//        classifyPos.forEach(classifyPo -> {
-//            String smallType = classifyPo.getSmallType();
-//            String[] smallTypeArr = smallType.split(",");
-//            List<Integer> gameTypes = Lists.newArrayList();
-//            BigDecimal sumMoney;
-//            for (String gameTypeStr : smallTypeArr) {
-//                gameTypes.add(Integer.valueOf(gameTypeStr));
-//            }
-//            sumMoney = gameRecordService.getTotalValidBet(memberIds, gameTypes, start, end);
-//            if (sumMoney.intValue() > 0) {
-//                RebatePo rebatePo = rebateMapper.find(branchId, classifyPo.getId(), type);
-//                if (rebatePo != null) {
-//                    if(rebatePo.getQuota() != null) {
-//                        BigDecimal sum = sumMoney.divide(new BigDecimal(fireData)).multiply(new BigDecimal(rebatePo.getQuota()));
-//                        if(sum != null && sum.doubleValue() >0.0) {
-//                            list.add(sum);
-//                        }
-//                    }else{
-//                        list.add(new BigDecimal(0));
-//                    }
-//
-//                }
-//            }
-//        });
-//        for (BigDecimal sum : list) {
-//            total = total.add(sum);
-//        }
+
         return total;
     }
 
     public void beginToBack(Integer classifyId, Integer memberId, Integer end, BigDecimal sumMoney,boolean needReAdd) {
-//        MemberClassifyPo memberClassifyPo = new MemberClassifyPo();
-//        memberClassifyPo.setClassifyId(classifyId);
-//        memberClassifyPo.setMemberId(memberId);
-//        memberClassifyPo.setFeeTime(end*1000L);
-//        Integer count = memberClassifyMapper.queryCount(memberClassifyPo);
-//        if (count == 0 || needReAdd) {
-//            handlerMemFee(memberId, classifyId, sumMoney);
-//            MemberClassifyPo insertPo = new MemberClassifyPo();
-//            insertPo.setClassifyId(classifyId);
-//            insertPo.setMemberId(memberId);
-//            insertPo.setFeeTime(end*1000L);
-//            insertPo.setMoney(sumMoney);
-//            insertPo.setCreateTime(System.currentTimeMillis());
-//            memberClassifyMapper.insert(insertPo);
-//        }
-//        //写入到日志
 
     }
 
@@ -168,15 +111,4 @@ public class FeeService {
         gameRecordService.updateReAmount();
     }
 
-    public BigDecimal getLaGanFee(Integer memberId, List<Integer> memberIds, Integer start, Integer end) {
-        BigDecimal sumMoney;
-        List<Integer> gameTypes = Lists.newArrayList(20000);
-        sumMoney = gameRecordService.getTotalValidBet(memberIds, gameTypes, start, end);
-
-        MemberPo proxyPo = memberMapper.findById(memberId);
-        if(proxyPo != null){
-            return sumMoney.divide(new BigDecimal(1000)).multiply(proxyPo.getTie());
-        }
-        return new BigDecimal(0);
-    }
 }
