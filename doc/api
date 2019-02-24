@@ -18,7 +18,7 @@ msg:"",
 
 data:[
     {
-        quato,//数值
+        quota,//数值
         gameType,//游戏类别
         gameName://游戏名称
 
@@ -38,7 +38,7 @@ body:
     memberId://会员id,
     rebateType://类别 1-抽水,2-占成
     datas:[{
-            quato,//数值
+            quota,//数值
             gameType,//游戏类别
      }
     ]

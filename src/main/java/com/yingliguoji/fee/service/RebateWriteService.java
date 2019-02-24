@@ -42,11 +42,11 @@ public class RebateWriteService {
         if (memberPo.getTop_id() == 0) {
 
             if (rebateType == RebateType.ZC) {
-                if (rebateSettingVos.get(0).getQuato() > 70) {
+                if (rebateSettingVos.get(0).getQuota() > 70) {
                     checkCanSet = false;
                 }
             } else {
-                boolean find = rebateSettingVos.stream().anyMatch(rebateSettingVo -> rebateSettingVo.getQuato() > 150);
+                boolean find = rebateSettingVos.stream().anyMatch(rebateSettingVo -> rebateSettingVo.getQuota() > 150);
                 if (find) {
                     checkCanSet = false;
                 }
@@ -57,7 +57,7 @@ public class RebateWriteService {
                 if (CollectionUtils.isEmpty(rebatePos)) {
                     checkCanSet = false;
                 } else {
-                    if (rebateSettingVos.get(0).getQuato() > rebatePos.get(0).getQuota()) {
+                    if (rebateSettingVos.get(0).getQuota() > rebatePos.get(0).getQuota()) {
                         checkCanSet = false;
                     }
                 }
@@ -65,7 +65,7 @@ public class RebateWriteService {
                 boolean find = rebateSettingVos.stream().anyMatch(rebateSettingVo -> {
 
                     Optional<RebatePo> optional = rebatePos.stream().filter(rebatePo1 -> rebatePo1.getGameType().equals(rebateSettingVo.getGameType())).findFirst();
-                    return !optional.isPresent() || optional.get().getQuota().intValue() < rebateSettingVo.getQuato();
+                    return !optional.isPresent() || optional.get().getQuota().intValue() < rebateSettingVo.getQuota();
                 });
                 if (find) {
                     checkCanSet = false;
@@ -86,7 +86,7 @@ public class RebateWriteService {
             RebatePo rebatePo = rebateMapper.findByRebateTypeAndMemberIdAndGameType(memberId, rebateType,rebateSettingVo.getGameType());
             if(rebatePo == null){
                 rebatePo = new RebatePo();
-                rebatePo.setQuota(rebateSettingVos.get(0).getQuato());
+                rebatePo.setQuota(rebateSettingVos.get(0).getQuota());
                 rebatePo.setGameType(rebateSettingVo.getGameType());
                 rebatePo.setRebateType(rebateType);
                 rebatePo.setMemberId(memberId);
@@ -97,7 +97,7 @@ public class RebateWriteService {
                 RebatePo updatePo = new RebatePo();
                 updatePo.setId(rebatePo.getId());
                 updatePo.setLastUpdateTime(System.currentTimeMillis());
-                updatePo.setQuota(rebateSettingVos.get(0).getQuato());
+                updatePo.setQuota(rebateSettingVos.get(0).getQuota());
                 rebateMapper.updateById(updatePo);
             }
 

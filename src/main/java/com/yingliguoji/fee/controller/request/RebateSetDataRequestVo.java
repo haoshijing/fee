@@ -18,7 +18,7 @@ public class RebateSetDataRequestVo {
 
     @Data
     public static class RebateSettingVo{
-        private Integer quato;
+        private Integer quota;
         private Integer gameType;
     }
 }
