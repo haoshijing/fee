@@ -28,7 +28,7 @@ data:[
 
 2.设置当前用户的抽水值
 
-{hostApi}/rebate/setDataForUser
+{hostApi}/rebate/settingData
 POST
 
 Content-Type:application/json
