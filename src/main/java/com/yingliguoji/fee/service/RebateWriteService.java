@@ -86,7 +86,7 @@ public class RebateWriteService {
             RebatePo rebatePo = rebateMapper.findByRebateTypeAndMemberIdAndGameType(memberId, rebateType,rebateSettingVo.getGameType());
             if(rebatePo == null){
                 rebatePo = new RebatePo();
-                rebatePo.setQuota(rebateSettingVos.get(0).getQuota());
+                rebatePo.setQuota(rebateSettingVo.getQuota());
                 rebatePo.setGameType(rebateSettingVo.getGameType());
                 rebatePo.setRebateType(rebateType);
                 rebatePo.setMemberId(memberId);
@@ -97,7 +97,7 @@ public class RebateWriteService {
                 RebatePo updatePo = new RebatePo();
                 updatePo.setId(rebatePo.getId());
                 updatePo.setLastUpdateTime(System.currentTimeMillis());
-                updatePo.setQuota(rebateSettingVos.get(0).getQuota());
+                updatePo.setQuota(rebateSettingVo.getQuota());
                 rebateMapper.updateById(updatePo);
             }
 
