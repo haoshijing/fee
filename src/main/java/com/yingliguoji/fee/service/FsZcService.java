@@ -81,15 +81,69 @@ public class FsZcService {
 
         //计算反水总值
 
-        Integer kouchu = 0;
-        MemberPo memberPo;
+        BigDecimal sumFs = jsFs(memberId, gameType, gameSumPo.getTotalBetAmount());
+        if(sumFs != null){
+            jsZc(memberId,gameType, gameSumPo.getTotalNetAmount(), sumFs);
+        }
 
+
+
+    }
+
+    private void jsZc(Integer memberId, Integer gameType, BigDecimal totalNetAmount, BigDecimal sumFs) {
+
+        //占成值 = 总输赢 - 反水值
+
+        Integer jsZcMemberId = memberId;
+
+        BigDecimal zcMoney = totalNetAmount.add(sumFs.multiply(new BigDecimal(-1)));
+        MemberPo memberPo;
+        MemberPo currentPo = memberMapper.findById(jsZcMemberId);
+
+        if (currentPo.getIs_daili() == 0) {
+            memberId = currentPo.getTop_id();
+        }
+        while ((memberPo = memberMapper.findById(jsZcMemberId)) != null) {
+            RebatePo rebatePo = rebateMapper.findByRebateTypeAndMemberIdAndGameType(jsZcMemberId, RebateType.ZC, 0);
+            log.info("memberId = {} , zcRebatePo = {}", jsZcMemberId, rebatePo);
+            if (rebatePo != null) {
+                //增加占成日志
+
+                ProxyFsZcLogPo proxyFsZcLogPo = new ProxyFsZcLogPo();
+                Integer quota = rebatePo.getQuota();
+                if (quota == null || quota == 0) {
+                    continue;
+                }
+
+                BigDecimal money = zcMoney.multiply(new BigDecimal(quota)).divide(new BigDecimal(100));
+                proxyFsZcLogPo.setQuota(quota);
+                proxyFsZcLogPo.setMoney(money.doubleValue());
+                proxyFsZcLogPo.setGameType(gameType);
+                proxyFsZcLogPo.setMemberId(memberId);
+                proxyFsZcLogPo.setInsertTime(System.currentTimeMillis());
+                proxyFsZcLogPo.setStatTime(new DateTime().withTime(0, 0, 0, 0).plusDays(-1).getMillis());
+                proxyFsZcLogPo.setRebateType(RebateType.ZC);
+                proxyFsZcLogPo.setAgentId(jsZcMemberId);
+                try {
+                    proxyFsZcLogMapper.insert(proxyFsZcLogPo);
+                }catch (Exception e){
+                    log.error("proxyFsZcLogPo = {}",proxyFsZcLogPo,e);
+                }
+
+            }
+            jsZcMemberId = memberPo.getTop_id();
+        }
+    }
+
+    private  BigDecimal jsFs(Integer memberId, Integer gameType, BigDecimal betAmount){
+        MemberPo memberPo;
+        Integer detectQuota = 0;
         Integer jsMemberId = memberId;
 
         BigDecimal sumFs = new BigDecimal("0.0");
         MemberPo currentPo = memberMapper.findById(memberId);
         if (currentPo == null || currentPo.getTop_id() == null) {
-            return;
+           return  null;
         }
         if (currentPo.getIs_daili() == 0) {
             jsMemberId = currentPo.getTop_id();
@@ -111,9 +165,9 @@ public class FsZcService {
                     memberId = memberPo.getTop_id();
                     continue;
                 }
-                Integer getMoney = rebatePo.getQuota() - kouchu;
+                Integer getMoney = rebatePo.getQuota() - detectQuota;
 
-                BigDecimal money = gameSumPo.getTotalBetAmount().divide(new BigDecimal(fireData)).multiply(new BigDecimal(getMoney));
+                BigDecimal money = betAmount.divide(new BigDecimal(fireData)).multiply(new BigDecimal(getMoney));
                 dividendPo.setDescribe("返水-类别:" + maps.get(gameType));
                 dividendPo.setMoney(money);
                 dividendPo.setType(3);
@@ -127,51 +181,31 @@ public class FsZcService {
                 MemberPo afterPo = memberMapper.findById(jsMemberId);
                 dividendPo.setAfterMoney(afterPo.getFs_money());
                 dividendMapper.insert(dividendPo);
-                kouchu = rebatePo.getQuota();
-                sumFs = sumFs.add(money);
-            }
-            jsMemberId = memberPo.getTop_id();
-        }
-
-        //占成值 = 总输赢 - 反水值
-
-        Integer jsZcMemberId = memberId;
-
-        BigDecimal zcMoney = gameSumPo.getTotalNetAmount().add(sumFs.multiply(new BigDecimal(-1)));
-
-        currentPo = memberMapper.findById(jsZcMemberId);
-
-        if (currentPo.getIs_daili() == 0) {
-            memberId = currentPo.getTop_id();
-        }
-        while ((memberPo = memberMapper.findById(jsZcMemberId)) != null) {
-            RebatePo rebatePo = rebateMapper.findByRebateTypeAndMemberIdAndGameType(jsZcMemberId, RebateType.ZC, 0);
-            log.info("memberId = {} , zcRebatePo = {}", jsZcMemberId, rebatePo);
-            if (rebatePo != null) {
-                //增加占成日志
+                detectQuota = rebatePo.getQuota();
 
                 ProxyFsZcLogPo proxyFsZcLogPo = new ProxyFsZcLogPo();
-
                 Integer quota = rebatePo.getQuota();
                 if (quota == null || quota == 0) {
                     continue;
                 }
 
-                BigDecimal money = zcMoney.multiply(new BigDecimal(quota)).divide(new BigDecimal(100));
                 proxyFsZcLogPo.setQuota(quota);
                 proxyFsZcLogPo.setMoney(money.doubleValue());
                 proxyFsZcLogPo.setGameType(gameType);
                 proxyFsZcLogPo.setMemberId(memberId);
                 proxyFsZcLogPo.setInsertTime(System.currentTimeMillis());
                 proxyFsZcLogPo.setStatTime(new DateTime().withTime(0, 0, 0, 0).plusDays(-1).getMillis());
-                proxyFsZcLogPo.setRebateType(RebateType.ZC);
+                proxyFsZcLogPo.setRebateType(RebateType.CS);
                 proxyFsZcLogPo.setAgentId(jsMemberId);
-
-                proxyFsZcLogMapper.insert(proxyFsZcLogPo);
-
+                try {
+                    proxyFsZcLogMapper.insert(proxyFsZcLogPo);
+                }catch (Exception e){
+                    log.error("proxyFsZcLogPo = {}",proxyFsZcLogPo,e);
+                }
+                sumFs = sumFs.add(money);
             }
             jsMemberId = memberPo.getTop_id();
         }
-
+        return sumFs;
     }
 }
