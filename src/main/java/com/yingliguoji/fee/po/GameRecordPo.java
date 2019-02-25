@@ -17,6 +17,7 @@ public class GameRecordPo {
     private BigDecimal betAmount;
     private Timestamp betTime;
     private BigDecimal validBetAmount;
-    private String created_at;
-    private String updated_at;
+    private String start;
+    private String end;
+
 }

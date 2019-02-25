@@ -20,8 +20,6 @@ public class FeeService {
     @Autowired
     private GameRecordService gameRecordService;
 
-    @Autowired
-    private MemberClassifyMapper memberClassifyMapper;
 
     @Autowired
     private MemberMapper memberMapper;

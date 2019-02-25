@@ -13,131 +13,39 @@
 
     </select>
 
-    <update id="updateReAmount">
-        update <include refid="tableName"/> SET
-         reAmount = netAmount - betAmount
-        where reAmount = 0
-    </update>
-    <select id="getPlayerTotal" resultType="java.math.BigDecimal">
-        select COALESCE(  sum(reAmount),0) from <include refid="tableName" />
-        where flag = 0 and
-        member_id =#{memberId}
-        <if test = "gameTypes != null and gameTypes.size() > 0">
-            AND gameType in
-            <foreach collection="gameTypes" close=")" open="(" separator="," item="type">
-                #{type}
-            </foreach>
-
-        </if>
-
-        <if test = "start != null and start != ''">
-            AND created_at >= #{start}
-        </if>
-
-        <if test = "end != null and end != ''">
-            AND created_at <![CDATA[ <= ]]> #{end}
-        </if>
-        and reAmount <![CDATA[  <> 0]]>
+    <select id = "queryBetClient" resultType="com.yingliguoji.fee.po.GameTypePo">
+        select member_id,gameType from <include refid="tableName" />
+        where netAmount <![CDATA[  <> 0]]> and updated_at BETWEEN  #{start}
+        and #{end} group by member_id , gameType
     </select>
 
 
-    <select id="queryByTradeNo" parameterType="java.lang.String" resultType="java.lang.Integer">
-        select count(1) from <include refid="tableName" />
-        where billNo = #{tradeNo}
-    </select>
-
-    <select id="getValidBetTotal" resultType="java.math.BigDecimal">
-        select COALESCE( sum(betAmount) ,0) from <include refid="tableName" />
-        where flag = 0 and  member_id in
-        <foreach collection="memberIds" item="memberId" separator="," open="(" close=")">
-            #{memberId}
-        </foreach>
-        <if test = "gameTypes != null and gameTypes.size() > 0">
-            AND gameType in
-            <foreach collection="gameTypes" close=")" open="(" separator="," item="type">
-                #{type}
-            </foreach>
-
+    <select id="querySum" parameterType="com.yingliguoji.fee.po.GameRecordPo" resultType="com.yingliguoji.fee.po.js.GameSumPo">
+        select COALESCE(sum(netAmount), 0) as totalNetAmount,
+        COALESCE(sum(betAmount), 0) as totalBetAmount
+        from <include refid="tableName" />
+        where flag = 0
+        <if test = " memberId != null">
+           AND  member_id = #{memberId}
         </if>
 
         <if test = "start != null and start != ''">
-            AND created_at >= #{start}
+            AND updated_at >= #{start}
+        </if>
+
+        <if test = "gameType != null">
+            AND gameType = #{gameType}
         </if>
 
         <if test = "end != null and end != ''">
-            AND created_at <![CDATA[ <= ]]> #{end}
+            AND updated_at <![CDATA[ <= ]]> #{end}
         </if>
-        and reAmount <![CDATA[  <> 0]]>
+        and netAmount <![CDATA[  <> 0]]>
      </select>
 
-    <select id="getReAmountTotal" resultType="java.math.BigDecimal">
-        select COALESCE( sum(reAmount),0) from <include refid="tableName" />
-        where flag = 0 and member_id in
-        <foreach collection="memberIds" item="memberId" separator="," open="(" close=")">
-            #{memberId}
-        </foreach>
-        <if test = "gameTypes != null and gameTypes.size() > 0">
-            AND gameType in
-            <foreach collection="gameTypes" close=")" open="(" separator="," item="type">
-                #{type}
-            </foreach>
-        </if>
-
-        <if test = "start != null and start != ''">
-            AND created_at >= #{start}
-        </if>
-
-        <if test = "end != null and end != ''">
-            AND created_at <![CDATA[ <= ]]> #{end}
-        </if>
-        and reAmount <![CDATA[  <> 0]]>
-    </select>
 
 
-    <insert id="insert" parameterType="com.yingliguoji.fee.po.GameRecordPo">
-        INSERT INTO <include refid="tableName"/>
-        (
-        rowid,
-        api_type,
-        netAmount,
-        billNo,
-        playerName,
-        `name`,
-        member_id,
-        gameCode,
-        betTime,
-        gameType,
-        betAmount,
-        validBetAmount,
-        reAmount,
-        created_at,
-        updated_at
-        )
-        VALUES
-        (
-        0,
-        35,
-        #{netAmount},
-        #{billNo},
-        #{name},
-        #{name},
-        #{memberId},
-        'YLCP',
-        #{betTime},
-        #{gameType},
-        #{betAmount},
-        #{betAmount},
-        #{reAmount},
-        #{created_at},
-        #{updated_at}
-        )
-    </insert>
 
-    <update id = "clearData" parameterType="java.lang.String">
-        update <include refid="tableName"/>
-        set flag = 1 where     created_at <![CDATA[ <= ]]> #{date}
-    </update>
-    
     <select id="querySameBillNo" resultType="java.lang.String">
         SELECT billNo  FROM <include refid="tableName"/>
         GROUP by billNo HAVING count(billNo) > 1
@@ -148,8 +56,4 @@
         where billNo = #{billNo} limit 1
     </select>
 
-    <delete id="deleteById">
-        delete from <include refid="tableName"/>
-        where id = #{id}
-    </delete>
 </mapper>
