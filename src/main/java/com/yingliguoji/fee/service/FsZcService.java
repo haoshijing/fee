@@ -58,7 +58,6 @@ public class FsZcService {
         String start = startDate.toString("yyyy-MM-dd HH:mm:ss");
         String end = endDate.toString("yyyy-MM-dd HH:mm:ss");
 
-
         List<GameTypePo> gameTypePos = gameRecordMapper.queryBetClient(start, end);
         gameTypePos.forEach(gameTypePo -> {
             GameRecordPo gameRecordPo = new GameRecordPo();
@@ -68,7 +67,6 @@ public class FsZcService {
             gameRecordPo.setMemberId(gameTypePo.getMemberId());
             GameSumPo gameSumPo = gameRecordMapper.querySum(gameRecordPo);
             if (gameSumPo.getTotalBetAmount().doubleValue() > 0) {
-
                 handleJs(gameTypePo.getMemberId(), gameTypePo.getGameType(), gameSumPo);
             }
 
@@ -85,8 +83,6 @@ public class FsZcService {
         if(sumFs != null){
             jsZc(memberId,gameType, gameSumPo.getTotalNetAmount(), sumFs);
         }
-
-
 
     }
 
