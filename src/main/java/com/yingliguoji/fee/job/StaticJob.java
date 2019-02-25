@@ -7,7 +7,6 @@ import com.yingliguoji.fee.enums.GameType;
 import com.yingliguoji.fee.enums.RebateType;
 import com.yingliguoji.fee.po.*;
 import com.yingliguoji.fee.po.js.GameSumPo;
-import com.yingliguoji.fee.service.FeeService;
 import io.netty.util.concurrent.DefaultEventExecutorGroup;
 import lombok.extern.slf4j.Slf4j;
 import org.joda.time.DateTime;
@@ -60,14 +59,10 @@ public class StaticJob {
     }
 
 
-    @Autowired
-    private FeeService feeService;
-
     @Scheduled(cron = "0 0 1 * * ?")
 
     public void execute() {
         try {
-            feeService.updateReAmount();
             log.info("start work");
             work();
             log.info(" end work");
@@ -77,7 +72,6 @@ public class StaticJob {
     }
 
     private void work() {
-
         DateTime endDatetime = new DateTime().withHourOfDay(0).withMillisOfSecond(0).withMinuteOfHour(0);
         DateTime startDateTime = endDatetime.plusDays(-1);
 
