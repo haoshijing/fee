@@ -8,51 +8,55 @@
     </sql>
     <!-- 插入一条记录 -->
 
-    <select id = "selectAll" resultType="com.yingliguoji.fee.po.GameRecordPo" >
-        select * from  <include refid="tableName"/>
+    <select id="selectAll" resultType="com.yingliguoji.fee.po.GameRecordPo">
+        select * from
+        <include refid="tableName"/>
 
     </select>
 
-    <select id = "queryBetClient" resultType="com.yingliguoji.fee.po.GameTypePo">
-        select member_id,gameType from <include refid="tableName" />
-        where netAmount <![CDATA[  <> 0]]> and updated_at BETWEEN  #{start}
+    <select id="queryBetClient" resultType="com.yingliguoji.fee.po.GameTypePo">
+        select member_id,gameType from
+        <include refid="tableName"/>
+        where netAmount <![CDATA[  <> 0]]> and updated_at BETWEEN #{start}
         and #{end} group by member_id , gameType
     </select>
 
 
-    <select id="querySum" parameterType="com.yingliguoji.fee.po.GameRecordPo" resultType="com.yingliguoji.fee.po.js.GameSumPo">
+    <select id="querySum" parameterType="com.yingliguoji.fee.po.GameRecordPo"
+            resultType="com.yingliguoji.fee.po.js.GameSumPo">
         select COALESCE(sum(netAmount), 0) as totalNetAmount,
         COALESCE(sum(betAmount), 0) as totalBetAmount
-        from <include refid="tableName" />
-        where flag = 0
-        <if test = " memberId != null">
-           AND  member_id = #{memberId}
+        from
+        <include refid="tableName"/>
+        where 1 =1
+        <if test=" memberId != null">
+            AND member_id = #{memberId}
         </if>
 
-        <if test = "start != null and start != ''">
+        <if test="start != null and start != ''">
             AND updated_at >= #{start}
         </if>
 
-        <if test = "gameType != null">
+        <if test="gameType != null">
             AND gameType = #{gameType}
         </if>
 
-        <if test = "end != null and end != ''">
+        <if test="end != null and end != ''">
             AND updated_at <![CDATA[ <= ]]> #{end}
         </if>
         and netAmount <![CDATA[  <> 0]]>
-     </select>
-
-
+    </select>
 
 
     <select id="querySameBillNo" resultType="java.lang.String">
-        SELECT billNo  FROM <include refid="tableName"/>
+        SELECT billNo FROM
+        <include refid="tableName"/>
         GROUP by billNo HAVING count(billNo) > 1
     </select>
 
-    <select id = "selectByBillNo" resultType="java.lang.Integer">
-      select id from  <include refid="tableName"/>
+    <select id="selectByBillNo" resultType="java.lang.Integer">
+        select id from
+        <include refid="tableName"/>
         where billNo = #{billNo} limit 1
     </select>
 
