@@ -133,7 +133,7 @@ public class FsZcService {
                 try {
                     proxyZcLogMapper.insert(proxyZcLogPo);
                 } catch (Exception e) {
-                    log.error("proxyFsZcLogPo = {}", proxyZcLogPo, e);
+                    log.error("proxyZcLogPo = {}", proxyZcLogPo, e);
 
                 }
 
@@ -209,7 +209,7 @@ public class FsZcService {
                 try {
                     proxyFsLogMapper.insert(proxyFsLogPo);
                 } catch (Exception e) {
-                    log.error("proxyFsZcLogPo = {}", proxyFsLogPo, e);
+                    log.error("proxyFsLogPo = {}", proxyFsLogPo, e);
                 }
                 sumFs = sumFs.add(money);
             }
