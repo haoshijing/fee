@@ -28,7 +28,7 @@ public class ZcResponseData {
 
     public ZcResponseData() {
         gameZcDataList = Lists.newArrayList();
-        setBackAmount(0.0);
+        setYkAmount(0.0);
         setBackAmount(0.0);
         gameZcDataList.add(new GameZcData(GameType.ZR, "真人", 0.0, 0.0));
         gameZcDataList.add(new GameZcData(GameType.DZ, "电子", 0.0, 0.0));
@@ -66,8 +66,8 @@ public class ZcResponseData {
                     .filter(gameZcData -> gameZcData.getGameType().equals(zcSumPo.getGameType()))
                     .findFirst();
             if (optional.isPresent()) {
-                optional.get().setGameYc(zcSumPo.getYcAmount().doubleValue());
-                optional.get().setGameYc(zcSumPo.getBackAmount().doubleValue());
+                optional.get().setGameYk(zcSumPo.getYcAmount().doubleValue());
+                optional.get().setGameBack(zcSumPo.getBackAmount().doubleValue());
                 setBackAmount(getBackAmount() + zcSumPo.getBackAmount().doubleValue());
                 setYkAmount(getYkAmount() + zcSumPo.getYcAmount().doubleValue());
             }
@@ -80,7 +80,7 @@ public class ZcResponseData {
                         findFirst();
         if (optional.isPresent()) {
             GameZcData gameZcData = optional.get();
-            gameZcData.setGameYc(gameZcData.getGameYc() + zcSumPo.getYcAmount().doubleValue());
+            gameZcData.setGameYk(gameZcData.getGameYk() + zcSumPo.getYcAmount().doubleValue());
             gameZcData.setGameBack(gameZcData.getGameBack() + zcSumPo.getBackAmount().doubleValue());
             setBackAmount(getBackAmount() + zcSumPo.getBackAmount().doubleValue());
             setYkAmount(getYkAmount() + zcSumPo.getYcAmount().doubleValue());
@@ -92,7 +92,7 @@ public class ZcResponseData {
     public static class GameZcData {
         private Integer gameType;
         private String gameName;
-        private Double gameYc;
+        private Double gameYk;
         private Double gameBack;
     }
 }

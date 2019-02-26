@@ -20,6 +20,7 @@ import com.yingliguoji.fee.po.js.ZcSumPo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -60,6 +61,7 @@ public class ZcQueryService {
                 zcResponseListData.setName("unknow");
                 zcResponseListData.setName("unknow");
             }
+            zcResponseListData.setMemberId(agentId);
             return zcResponseListData;
         }).collect(Collectors.toList());
         responseData.setZcResponseListData(list);
@@ -77,6 +79,21 @@ public class ZcQueryService {
                 zcResponseListDataOptional.get().resetData(zcSumPo);
             }
             responseData.addGamePo(zcSumPo);
+        });
+        responseData.setBackAmount(Double.valueOf(new DecimalFormat("0.00").format(responseData.getBackAmount())));
+        responseData.setYkAmount(Double.valueOf(new DecimalFormat("0.00").format(responseData.getYkAmount())));
+
+        responseData.getGameZcDataList().forEach(gameZcData -> {
+            gameZcData.setGameBack(Double.valueOf(new DecimalFormat("0.00").format(gameZcData.getGameBack())));
+            gameZcData.setGameYk(Double.valueOf(new DecimalFormat("0.00").format(gameZcData.getGameYk())));
+        });
+        responseData.getZcResponseListData().forEach(zcResponseListData -> {
+            zcResponseListData.setBackAmount(Double.valueOf(new DecimalFormat("0.00").format(responseData.getBackAmount())));
+            zcResponseListData.setYkAmount(Double.valueOf(new DecimalFormat("0.00").format(responseData.getYkAmount())));
+            zcResponseListData.getGameZcDataList().forEach(gameZcData -> {
+                gameZcData.setGameBack(Double.valueOf(new DecimalFormat("0.00").format(gameZcData.getGameBack())));
+                gameZcData.setGameYk(Double.valueOf(new DecimalFormat("0.00").format(gameZcData.getGameYk())));
+            });
         });
         return responseData;
     }

@@ -73,7 +73,7 @@
     <select id="queryZcMember" resultType="java.lang.Integer">
         select id from
         <include refid="tableName"/>
-        where is_daili = 0
+        where is_daili = 1
         and top_id = #{topId}
         <if test="name != null">
             AND name LIKE CONCAT(CONCAT('%',#{name}),'%')
