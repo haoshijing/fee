@@ -3,8 +3,6 @@ package com.yingliguoji.fee.po;
 
 import lombok.Data;
 
-import java.math.BigDecimal;
-
 @Data
 public class ProxyFsZcLogPo {
 
@@ -27,6 +25,7 @@ public class ProxyFsZcLogPo {
      */
     private Integer gameType;
 
+    private Double jsMoney;
 
     /**
      * 单位到分
@@ -37,6 +36,8 @@ public class ProxyFsZcLogPo {
      * 类别 1-反水 2-返现
      */
     private Integer rebateType;
+
+    private String name;
 
     private Long statTime;
 

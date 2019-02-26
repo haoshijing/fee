@@ -15,7 +15,7 @@
     </select>
 
     <select id="queryBetClient" resultType="com.yingliguoji.fee.po.GameTypePo">
-        select member_id,gameType from
+        select member_id as memberId,gameType from
         <include refid="tableName"/>
         where netAmount <![CDATA[  <> 0]]> and updated_at BETWEEN #{start}
         and #{end} group by member_id , gameType

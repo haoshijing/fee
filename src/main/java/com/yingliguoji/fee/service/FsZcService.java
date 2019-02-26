@@ -1,10 +1,20 @@
 package com.yingliguoji.fee.service;
 
 import com.google.common.collect.Maps;
-import com.yingliguoji.fee.dao.*;
+import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
+import com.yingliguoji.fee.dao.DividendMapper;
+import com.yingliguoji.fee.dao.GameRecordMapper;
+import com.yingliguoji.fee.dao.MemberMapper;
+import com.yingliguoji.fee.dao.ProxyFsZcLogMapper;
+import com.yingliguoji.fee.dao.RebateMapper;
 import com.yingliguoji.fee.enums.GameType;
 import com.yingliguoji.fee.enums.RebateType;
-import com.yingliguoji.fee.po.*;
+import com.yingliguoji.fee.po.DividendPo;
+import com.yingliguoji.fee.po.GameRecordPo;
+import com.yingliguoji.fee.po.GameTypePo;
+import com.yingliguoji.fee.po.MemberPo;
+import com.yingliguoji.fee.po.ProxyFsZcLogPo;
+import com.yingliguoji.fee.po.RebatePo;
 import com.yingliguoji.fee.po.js.GameSumPo;
 import lombok.extern.slf4j.Slf4j;
 import org.joda.time.DateTime;
@@ -76,22 +86,16 @@ public class FsZcService {
 
 
     private void handleJs(Integer memberId, Integer gameType, GameSumPo gameSumPo) {
-
         //计算反水总值
-
         BigDecimal sumFs = jsFs(memberId, gameType, gameSumPo.getTotalBetAmount());
-        if(sumFs != null){
-            jsZc(memberId,gameType, gameSumPo.getTotalNetAmount(), sumFs);
+        if (sumFs != null) {
+            jsZc(memberId, gameType, gameSumPo.getTotalNetAmount(), sumFs);
         }
-
     }
 
     private void jsZc(Integer memberId, Integer gameType, BigDecimal totalNetAmount, BigDecimal sumFs) {
-
         //占成值 = 总输赢 - 反水值
-
         Integer jsZcMemberId = memberId;
-
         BigDecimal zcMoney = totalNetAmount.add(sumFs.multiply(new BigDecimal(-1)));
         MemberPo memberPo;
         MemberPo currentPo = memberMapper.findById(jsZcMemberId);
@@ -104,7 +108,6 @@ public class FsZcService {
             log.info("memberId = {} , zcRebatePo = {}", jsZcMemberId, rebatePo);
             if (rebatePo != null) {
                 //增加占成日志
-
                 ProxyFsZcLogPo proxyFsZcLogPo = new ProxyFsZcLogPo();
                 Integer quota = rebatePo.getQuota();
                 if (quota == null || quota == 0) {
@@ -116,14 +119,18 @@ public class FsZcService {
                 proxyFsZcLogPo.setMoney(money.doubleValue());
                 proxyFsZcLogPo.setGameType(gameType);
                 proxyFsZcLogPo.setMemberId(memberId);
+                proxyFsZcLogPo.setJsMoney(zcMoney.doubleValue());
+                proxyFsZcLogPo.setName(memberPo.getName());
                 proxyFsZcLogPo.setInsertTime(System.currentTimeMillis());
                 proxyFsZcLogPo.setStatTime(new DateTime().withTime(0, 0, 0, 0).plusDays(-1).getMillis());
                 proxyFsZcLogPo.setRebateType(RebateType.ZC);
                 proxyFsZcLogPo.setAgentId(jsZcMemberId);
                 try {
                     proxyFsZcLogMapper.insert(proxyFsZcLogPo);
-                }catch (Exception e){
-                    log.error("proxyFsZcLogPo = {}",proxyFsZcLogPo,e);
+                } catch (Exception e) {
+                    if (!(e instanceof MySQLIntegrityConstraintViolationException)) {
+                        log.error("proxyFsZcLogPo = {}", proxyFsZcLogPo, e);
+                    }
                 }
 
             }
@@ -131,7 +138,7 @@ public class FsZcService {
         }
     }
 
-    private  BigDecimal jsFs(Integer memberId, Integer gameType, BigDecimal betAmount){
+    private BigDecimal jsFs(Integer memberId, Integer gameType, BigDecimal betAmount) {
         MemberPo memberPo;
         Integer detectQuota = 0;
         Integer jsMemberId = memberId;
@@ -139,7 +146,7 @@ public class FsZcService {
         BigDecimal sumFs = new BigDecimal("0.0");
         MemberPo currentPo = memberMapper.findById(memberId);
         if (currentPo == null || currentPo.getTop_id() == null) {
-           return  null;
+            return null;
         }
         if (currentPo.getIs_daili() == 0) {
             jsMemberId = currentPo.getTop_id();
@@ -158,7 +165,7 @@ public class FsZcService {
                 if (rebatePo.getQuota() == null) {
                     log.warn("getQuota is null ,memberId = {}", jsMemberId);
                     rebatePo.setQuota(0);
-                    memberId = memberPo.getTop_id();
+                    jsMemberId = memberPo.getTop_id();
                     continue;
                 }
                 Integer getMoney = rebatePo.getQuota() - detectQuota;
@@ -189,14 +196,18 @@ public class FsZcService {
                 proxyFsZcLogPo.setMoney(money.doubleValue());
                 proxyFsZcLogPo.setGameType(gameType);
                 proxyFsZcLogPo.setMemberId(memberId);
+                proxyFsZcLogPo.setName(memberPo.getName());
+                proxyFsZcLogPo.setJsMoney(betAmount.doubleValue());
                 proxyFsZcLogPo.setInsertTime(System.currentTimeMillis());
                 proxyFsZcLogPo.setStatTime(new DateTime().withTime(0, 0, 0, 0).plusDays(-1).getMillis());
                 proxyFsZcLogPo.setRebateType(RebateType.CS);
                 proxyFsZcLogPo.setAgentId(jsMemberId);
                 try {
                     proxyFsZcLogMapper.insert(proxyFsZcLogPo);
-                }catch (Exception e){
-                    log.error("proxyFsZcLogPo = {}",proxyFsZcLogPo,e);
+                } catch (Exception e) {
+                    if (!(e instanceof MySQLIntegrityConstraintViolationException)) {
+                        log.error("proxyFsZcLogPo = {}", proxyFsZcLogPo, e);
+                    }
                 }
                 sumFs = sumFs.add(money);
             }
