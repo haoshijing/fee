@@ -1,11 +1,11 @@
 package com.yingliguoji.fee.service;
 
 import com.google.common.collect.Maps;
-import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
 import com.yingliguoji.fee.dao.DividendMapper;
 import com.yingliguoji.fee.dao.GameRecordMapper;
 import com.yingliguoji.fee.dao.MemberMapper;
-import com.yingliguoji.fee.dao.ProxyFsZcLogMapper;
+import com.yingliguoji.fee.dao.ProxyFsLogMapper;
+import com.yingliguoji.fee.dao.ProxyZcLogMapper;
 import com.yingliguoji.fee.dao.RebateMapper;
 import com.yingliguoji.fee.enums.GameType;
 import com.yingliguoji.fee.enums.RebateType;
@@ -13,7 +13,8 @@ import com.yingliguoji.fee.po.DividendPo;
 import com.yingliguoji.fee.po.GameRecordPo;
 import com.yingliguoji.fee.po.GameTypePo;
 import com.yingliguoji.fee.po.MemberPo;
-import com.yingliguoji.fee.po.ProxyFsZcLogPo;
+import com.yingliguoji.fee.po.ProxyFsLogPo;
+import com.yingliguoji.fee.po.ProxyZcLogPo;
 import com.yingliguoji.fee.po.RebatePo;
 import com.yingliguoji.fee.po.js.GameSumPo;
 import lombok.extern.slf4j.Slf4j;
@@ -44,7 +45,10 @@ public class FsZcService {
     private DividendMapper dividendMapper;
 
     @Autowired
-    private ProxyFsZcLogMapper proxyFsZcLogMapper;
+    private ProxyZcLogMapper proxyZcLogMapper;
+
+    @Autowired
+    private ProxyFsLogMapper proxyFsLogMapper;
 
     @Value("${fireData}")
     private Integer fireData;
@@ -101,36 +105,36 @@ public class FsZcService {
         MemberPo currentPo = memberMapper.findById(jsZcMemberId);
 
         if (currentPo.getIs_daili() == 0) {
-            memberId = currentPo.getTop_id();
+            jsZcMemberId = currentPo.getTop_id();
         }
         while ((memberPo = memberMapper.findById(jsZcMemberId)) != null) {
             RebatePo rebatePo = rebateMapper.findByRebateTypeAndMemberIdAndGameType(jsZcMemberId, RebateType.ZC, 0);
             log.info("memberId = {} , zcRebatePo = {}", jsZcMemberId, rebatePo);
             if (rebatePo != null) {
                 //增加占成日志
-                ProxyFsZcLogPo proxyFsZcLogPo = new ProxyFsZcLogPo();
+                ProxyZcLogPo proxyZcLogPo = new ProxyZcLogPo();
                 Integer quota = rebatePo.getQuota();
                 if (quota == null || quota == 0) {
                     continue;
                 }
 
                 BigDecimal money = zcMoney.multiply(new BigDecimal(quota)).divide(new BigDecimal(100));
-                proxyFsZcLogPo.setQuota(quota);
-                proxyFsZcLogPo.setMoney(money.doubleValue());
-                proxyFsZcLogPo.setGameType(gameType);
-                proxyFsZcLogPo.setMemberId(memberId);
-                proxyFsZcLogPo.setJsMoney(zcMoney.doubleValue());
-                proxyFsZcLogPo.setName(memberPo.getName());
-                proxyFsZcLogPo.setInsertTime(System.currentTimeMillis());
-                proxyFsZcLogPo.setStatTime(new DateTime().withTime(0, 0, 0, 0).plusDays(-1).getMillis());
-                proxyFsZcLogPo.setRebateType(RebateType.ZC);
-                proxyFsZcLogPo.setAgentId(jsZcMemberId);
+                proxyZcLogPo.setQuota(quota);
+                proxyZcLogPo.setMoney(money.doubleValue());
+                proxyZcLogPo.setMemberId(memberId);
+                proxyZcLogPo.setFsAmount(sumFs.doubleValue());
+                proxyZcLogPo.setGameType(gameType);
+                proxyZcLogPo.setName(memberPo.getName());
+                proxyZcLogPo.setInsertTime(System.currentTimeMillis());
+                proxyZcLogPo.setStatTime(new DateTime().withTime(0, 0, 0, 0).plusDays(-1).getMillis());
+                proxyZcLogPo.setAgentId(jsZcMemberId);
+                proxyZcLogPo.setJsAmount(zcMoney.doubleValue());
+                proxyZcLogPo.setNetAmount(totalNetAmount.doubleValue());
                 try {
-                    proxyFsZcLogMapper.insert(proxyFsZcLogPo);
+                    proxyZcLogMapper.insert(proxyZcLogPo);
                 } catch (Exception e) {
-                    if (!(e instanceof MySQLIntegrityConstraintViolationException)) {
-                        log.error("proxyFsZcLogPo = {}", proxyFsZcLogPo, e);
-                    }
+                    log.error("proxyFsZcLogPo = {}", proxyZcLogPo, e);
+
                 }
 
             }
@@ -186,28 +190,26 @@ public class FsZcService {
                 dividendMapper.insert(dividendPo);
                 detectQuota = rebatePo.getQuota();
 
-                ProxyFsZcLogPo proxyFsZcLogPo = new ProxyFsZcLogPo();
+                ProxyFsLogPo proxyFsLogPo = new ProxyFsLogPo();
                 Integer quota = rebatePo.getQuota();
                 if (quota == null || quota == 0) {
                     continue;
                 }
 
-                proxyFsZcLogPo.setQuota(quota);
-                proxyFsZcLogPo.setMoney(money.doubleValue());
-                proxyFsZcLogPo.setGameType(gameType);
-                proxyFsZcLogPo.setMemberId(memberId);
-                proxyFsZcLogPo.setName(memberPo.getName());
-                proxyFsZcLogPo.setJsMoney(betAmount.doubleValue());
-                proxyFsZcLogPo.setInsertTime(System.currentTimeMillis());
-                proxyFsZcLogPo.setStatTime(new DateTime().withTime(0, 0, 0, 0).plusDays(-1).getMillis());
-                proxyFsZcLogPo.setRebateType(RebateType.CS);
-                proxyFsZcLogPo.setAgentId(jsMemberId);
+                proxyFsLogPo.setQuota(getMoney);
+                proxyFsLogPo.setMoney(money.doubleValue());
+                proxyFsLogPo.setGameType(gameType);
+                proxyFsLogPo.setMemberId(memberId);
+                proxyFsLogPo.setName(memberPo.getName());
+                proxyFsLogPo.setJsAmount(betAmount.doubleValue());
+                proxyFsLogPo.setInsertTime(System.currentTimeMillis());
+                proxyFsLogPo.setStatTime(new DateTime().withTime(0, 0, 0, 0).plusDays(-1).getMillis());
+
+                proxyFsLogPo.setAgentId(jsMemberId);
                 try {
-                    proxyFsZcLogMapper.insert(proxyFsZcLogPo);
+                    proxyFsLogMapper.insert(proxyFsLogPo);
                 } catch (Exception e) {
-                    if (!(e instanceof MySQLIntegrityConstraintViolationException)) {
-                        log.error("proxyFsZcLogPo = {}", proxyFsZcLogPo, e);
-                    }
+                    log.error("proxyFsZcLogPo = {}", proxyFsLogPo, e);
                 }
                 sumFs = sumFs.add(money);
             }

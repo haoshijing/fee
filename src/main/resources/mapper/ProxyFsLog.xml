@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.yingliguoji.fee.dao.ProxyFsZcLogMapper">
+<mapper namespace="com.yingliguoji.fee.dao.ProxyFsLogMapper">
 
     <sql id="tableName">
-        proxy_fszc_log
+        proxy_fs_log
     </sql>
     <!-- 插入一条记录 -->
 
-    <insert id="insert" parameterType="com.yingliguoji.fee.po.ProxyFsZcLogPo">
+    <insert id="insert" parameterType="com.yingliguoji.fee.po.ProxyFsLogPo">
 
         insert into
         <include refid="tableName"/>
@@ -19,8 +19,7 @@
         name,
         gameType,
         money,
-        jsMoney,
-        rebateType,
+        jsAmount,
         statTime,
         insertTime
         )
@@ -32,8 +31,7 @@
         #{name},
         #{gameType},
         #{money},
-        #{jsMoney},
-        #{rebateType},
+        #{jsAmount},
         #{statTime},
         #{insertTime}
         )
