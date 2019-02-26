@@ -54,3 +54,7 @@ msg:"",
 
 data:true,设置成功 否 请显示设置错误原因
 }
+
+3.占成查询,
+
+{hostApi}/rebate/queryZcList

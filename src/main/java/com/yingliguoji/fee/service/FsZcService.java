@@ -182,7 +182,7 @@ public class FsZcService {
                 Timestamp timestamp = new Timestamp(System.currentTimeMillis());
                 dividendPo.setCreatedAt(timestamp);
                 MemberPo updatePo = new MemberPo();
-                updatePo.setId(memberId);
+                updatePo.setId(jsMemberId);
                 updatePo.setFs_money(dividendPo.getMoney());
                 memberMapper.update(updatePo);
                 MemberPo afterPo = memberMapper.findById(jsMemberId);
