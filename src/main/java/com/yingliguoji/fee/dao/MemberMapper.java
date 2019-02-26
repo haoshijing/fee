@@ -18,5 +18,7 @@ public interface MemberMapper {
 
     List<MemberPo> selectList(MemberPo queryPo);
 
-    void batchUpdateBranchId(@Param("branchId") Integer branchId,@Param("memberIds") List<Integer> memberIds);
+    void batchUpdateBranchId(@Param("branchId") Integer branchId, @Param("memberIds") List<Integer> memberIds);
+
+    List<Integer> queryZcMember(@Param("topId") Integer topId, @Param("name") String name);
 }

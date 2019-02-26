@@ -28,8 +28,9 @@
     </select>
 
     <update id="updateById" parameterType="com.yingliguoji.fee.po.MemberPo">
-        UPDATE   <include refid="tableName"/>
-        set top_id = #{top_id}   where id = #{id}
+        UPDATE
+        <include refid="tableName"/>
+        set top_id = #{top_id} where id = #{id}
     </update>
 
     <update id="update" parameterType="com.yingliguoji.fee.po.MemberPo">
@@ -68,16 +69,15 @@
         </where>
     </select>
 
-    <update id="batchUpdateBranchId">
 
-        update <include refid="tableName"/>
-        set branch_id = #{branchId}
-        where id in
-        <foreach collection="memberIds" close=")" open="(" separator="," item="id">
-            #{id}
-        </foreach>
-
-
-    </update>
+    <select id="queryZcMember" resultType="java.lang.Integer">
+        select id from
+        <include refid="tableName"/>
+        where is_daili = 0
+        and top_id = #{topId}
+        <if test="name != null">
+            AND name LIKE CONCAT(CONCAT('%',#{name}),'%')
+        </if>
+    </select>
 
 </mapper>

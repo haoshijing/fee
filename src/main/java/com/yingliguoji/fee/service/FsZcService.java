@@ -126,7 +126,7 @@ public class FsZcService {
                 proxyZcLogPo.setGameType(gameType);
                 proxyZcLogPo.setName(memberPo.getName());
                 proxyZcLogPo.setInsertTime(System.currentTimeMillis());
-                proxyZcLogPo.setStatTime(new DateTime().withTime(0, 0, 0, 0).plusDays(-1).getMillis());
+                proxyZcLogPo.setStatTime(new DateTime().withTime(0, 0, 0, 0).getMillis());
                 proxyZcLogPo.setAgentId(jsZcMemberId);
                 proxyZcLogPo.setJsAmount(zcMoney.doubleValue());
                 proxyZcLogPo.setNetAmount(totalNetAmount.doubleValue());
@@ -203,7 +203,7 @@ public class FsZcService {
                 proxyFsLogPo.setName(memberPo.getName());
                 proxyFsLogPo.setJsAmount(betAmount.doubleValue());
                 proxyFsLogPo.setInsertTime(System.currentTimeMillis());
-                proxyFsLogPo.setStatTime(new DateTime().withTime(0, 0, 0, 0).plusDays(-1).getMillis());
+                proxyFsLogPo.setStatTime(new DateTime().withTime(0, 0, 0, 0).getMillis());
 
                 proxyFsLogPo.setAgentId(jsMemberId);
                 try {

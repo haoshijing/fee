@@ -39,7 +39,25 @@
         #{statTime},
         #{insertTime}
         )
-
     </insert>
+
+    <select id="queryZcData" parameterType="com.yingliguoji.fee.po.js.QueryProxyZcPo"
+            resultType="com.yingliguoji.fee.po.js.ZcSumPo">
+        select sum(jsAmount) as ycAmount , sum(money) as backAmount ,agentId, gameType from proxy_zc_log where memberId
+        = #{memberId}
+        <if test="startTime != null">
+            and statTime > #{startTime}
+        </if>
+        <if test="endTime != null">
+            and endTime &lt;eq; #{endTime}
+        </if>
+        <if test="agentIds != null and agentIds.size() > 0">
+            AND agentId IN
+            <foreach collection="agentIds" item="item" separator="," open="(" close=")">
+                #{item}
+            </foreach>
+        </if>
+        GROUP BY memberId , gameType
+    </select>
 
 </mapper>
