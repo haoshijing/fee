@@ -19,7 +19,6 @@ public interface GameRecordMapper {
 
     List<GameTypePo> queryBetClient(@Param("start") String start , @Param("end") String end);
 
-    List<GameRecordPo> queryList(GameRecordPo gameRecordPo);
 
     GameSumPo querySum(GameRecordPo gameRecordPo);
 }
