@@ -23,9 +23,13 @@ import java.util.Optional;
 public class ZcResponseData {
     private List<ZcResponseListData> zcResponseListData;
     private List<GameZcData> gameZcDataList;
+    private Double ykAmount;
+    private Double backAmount;
 
     public ZcResponseData() {
         gameZcDataList = Lists.newArrayList();
+        setBackAmount(0.0);
+        setBackAmount(0.0);
         gameZcDataList.add(new GameZcData(GameType.ZR, "真人", 0.0, 0.0));
         gameZcDataList.add(new GameZcData(GameType.DZ, "电子", 0.0, 0.0));
         gameZcDataList.add(new GameZcData(GameType.CP, "彩票", 0.0, 0.0));
@@ -40,11 +44,14 @@ public class ZcResponseData {
         private Integer quota;
         private String name;
         private String realName;
-        private Double yk;
+        private Double ykAmount;
+        private Double backAmount;
         private Integer memberId;
         private List<GameZcData> gameZcDataList = Lists.newArrayList();
 
         public ZcResponseListData() {
+            setYkAmount(0.0);
+            setBackAmount(0.0);
             gameZcDataList.add(new GameZcData(GameType.ZR, "真人", 0.0, 0.0));
             gameZcDataList.add(new GameZcData(GameType.DZ, "电子", 0.0, 0.0));
             gameZcDataList.add(new GameZcData(GameType.CP, "彩票", 0.0, 0.0));
@@ -61,6 +68,8 @@ public class ZcResponseData {
             if (optional.isPresent()) {
                 optional.get().setGameYc(zcSumPo.getYcAmount().doubleValue());
                 optional.get().setGameYc(zcSumPo.getBackAmount().doubleValue());
+                setBackAmount(getBackAmount() + zcSumPo.getBackAmount().doubleValue());
+                setYkAmount(getYkAmount() + zcSumPo.getYcAmount().doubleValue());
             }
         }
     }
@@ -73,6 +82,8 @@ public class ZcResponseData {
             GameZcData gameZcData = optional.get();
             gameZcData.setGameYc(gameZcData.getGameYc() + zcSumPo.getYcAmount().doubleValue());
             gameZcData.setGameBack(gameZcData.getGameBack() + zcSumPo.getBackAmount().doubleValue());
+            setBackAmount(getBackAmount() + zcSumPo.getBackAmount().doubleValue());
+            setYkAmount(getYkAmount() + zcSumPo.getYcAmount().doubleValue());
         }
     }
 

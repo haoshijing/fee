@@ -57,4 +57,56 @@ data:true,设置成功 否 请显示设置错误原因
 
 3.占成查询,
 
-{hostApi}/rebate/queryZcList
+{hostApi}/zc/queryZcList
+POST
+
+Content-Type:application/json
+
+body:
+{
+    currentAgentId://当前代理id ,管理员传0
+    name://查询的name
+    start://开始时间，时间戳
+    end ://截止时间 ，时间戳
+}
+
+
+
+response:json
+
+{
+code:200,
+msg:"",
+
+data:{
+
+  zcResponseListData:[
+    {
+         quota://占成数
+         name://用户名
+         realName://真是姓名
+         ykAmount://盈亏总额;
+          memberId://代理id
+          backAmount://承担总额
+          gameZcDataList:[
+            {  gameType,//游戏类别
+               gameName,//游戏名称
+               gameYc,//盈亏总额
+               gameBack,承担总额
+            }
+          ]
+    }
+  ]
+},
+gameZcDataList:
+[
+    {
+       gameType,//游戏类别
+       gameName,//游戏名称
+       gameYc,//盈亏总额
+       gameBack,承担总额
+    }
+],
+   ykAmount://盈亏总额;
+   backAmount://承担总额
+}
