@@ -35,7 +35,7 @@
         </if>
 
         <if test="start != null and start != ''">
-            AND created_at >= #{start}
+            AND betTime >= #{start}
         </if>
 
         <if test="gameType != null">
@@ -43,7 +43,7 @@
         </if>
 
         <if test="end != null and end != ''">
-            AND created_at <![CDATA[ <= ]]> #{end}
+            AND betTime <![CDATA[ <= ]]> #{end}
         </if>
     </select>
 
