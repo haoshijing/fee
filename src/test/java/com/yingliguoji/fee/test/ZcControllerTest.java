@@ -27,7 +27,7 @@ public class ZcControllerTest extends BaseApiTest {
     @Test
     public void testZcQuery() {
         ZcQueryRequest zcQueryRequest = new ZcQueryRequest();
-        zcQueryRequest.setCurrentAgentId(0);
+        zcQueryRequest.setCurrentAgentId(133);
         zcQueryRequest.setName("");
         zcQueryRequest.setStart(1551024000000L);
         zcQueryRequest.setEnd(new DateTime().withTime(0, 0, 0, 0).getMillis());

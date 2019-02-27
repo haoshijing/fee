@@ -80,13 +80,15 @@ public class ZcQueryService {
         }
         zcSumPos.forEach(zcSumPo -> {
             Optional<ZcResponseData.ZcResponseListData> zcResponseListDataOptional =
-                    list.stream().filter(zcResponseListData -> zcResponseListData.getMemberId().equals(zcSumPo.getAgentId())).
+                    list.stream().filter(zcResponseListData ->
+                            zcResponseListData.getMemberId().equals(zcSumPo.getAgentId())
+                                    && !zcSumPo.getAgentId().equals(zcQueryRequest.getCurrentAgentId())).
                             findFirst();
             if (zcResponseListDataOptional.isPresent()) {
                 ZcResponseData.ZcResponseListData data = zcResponseListDataOptional.get();
                 data.resetData(zcSumPo, queryType);
+                responseData.addGamePo(zcSumPo, queryType);
             }
-            responseData.addGamePo(zcSumPo, queryType);
         });
         responseData.setData(Double.valueOf(new DecimalFormat("0.00").format(responseData.getData())));
         responseData.getGameZcDataList().forEach(gameZcData -> {
