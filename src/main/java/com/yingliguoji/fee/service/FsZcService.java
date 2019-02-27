@@ -184,7 +184,7 @@ public class FsZcService {
                 dividendPo.setMoney(money);
                 dividendPo.setType(3);
                 dividendPo.setMemberId(jsMemberId);
-                Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+                Timestamp timestamp = new Timestamp(new DateTime().withTime(0, 0, 0, 0).getMillis());
                 dividendPo.setCreatedAt(timestamp);
                 MemberPo updatePo = new MemberPo();
                 updatePo.setId(jsMemberId);
