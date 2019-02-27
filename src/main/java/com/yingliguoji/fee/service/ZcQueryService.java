@@ -19,6 +19,7 @@ import com.yingliguoji.fee.po.js.QueryProxyZcPo;
 import com.yingliguoji.fee.po.js.ZcSumPo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import java.text.DecimalFormat;
 import java.util.List;
@@ -71,7 +72,10 @@ public class ZcQueryService {
         queryProxyZcPo.setEndTime(zcQueryRequest.getEnd());
         queryProxyZcPo.setAgentIds(Lists.newArrayList(agentIds));
 
-        List<ZcSumPo> zcSumPos = proxyZcLogMapper.queryZcList(queryProxyZcPo);
+        List<ZcSumPo> zcSumPos = Lists.newArrayList();
+        if (!CollectionUtils.isEmpty(agentIds)) {
+            zcSumPos = proxyZcLogMapper.queryZcList(queryProxyZcPo);
+        }
         zcSumPos.forEach(zcSumPo -> {
             Optional<ZcResponseData.ZcResponseListData> zcResponseListDataOptional =
                     list.stream().filter(zcResponseListData -> zcResponseListData.getMemberId().equals(zcSumPo.getAgentId())).
