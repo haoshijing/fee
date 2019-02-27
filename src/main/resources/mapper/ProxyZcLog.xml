@@ -68,7 +68,7 @@
                 #{item}
             </foreach>
         </if>
-        GROUP BY memberId , gameType
+        GROUP BY agentId , gameType
     </select>
 
 </mapper>
