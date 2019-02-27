@@ -108,7 +108,7 @@ public class ZcResponseData {
                     setData(tmpZcData.getData() + zcSumPo.getZcAmount().doubleValue());
                 } else if (queryType == 6) {
                     tmpZcData.setData(zcSumPo.getNetAmount().doubleValue());
-                    setData(tmpZcData.getData() + zcSumPo.getZcAmount().doubleValue());
+                    setData(tmpZcData.getData() + zcSumPo.getNetAmount().doubleValue());
                 }
             }
         }
