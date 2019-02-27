@@ -10,6 +10,7 @@ import com.yingliguoji.fee.ApiResponse;
 import com.yingliguoji.fee.controller.ZcController;
 import com.yingliguoji.fee.controller.request.ZcQueryRequest;
 import com.yingliguoji.fee.controller.request.ZcResponseData;
+import org.joda.time.DateTime;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,7 @@ public class ZcControllerTest extends BaseApiTest {
         zcQueryRequest.setCurrentAgentId(0);
         zcQueryRequest.setName("");
         zcQueryRequest.setStart(1551024000000L);
-        zcQueryRequest.setEnd(1551110400000L);
+        zcQueryRequest.setEnd(new DateTime().withTime(0, 0, 0, 0).getMillis());
         ApiResponse<ZcResponseData> apiResponse = zcController.queryZcList(zcQueryRequest);
         Assert.assertTrue(apiResponse.getCode() == 200);
     }

@@ -76,23 +76,27 @@ public class ZcQueryService {
                     list.stream().filter(zcResponseListData -> zcResponseListData.getMemberId().equals(zcSumPo.getAgentId())).
                             findFirst();
             if (zcResponseListDataOptional.isPresent()) {
-                zcResponseListDataOptional.get().resetData(zcSumPo);
+                ZcResponseData.ZcResponseListData data = zcResponseListDataOptional.get();
+                data.resetData(zcSumPo);
             }
             responseData.addGamePo(zcSumPo);
         });
         responseData.setBackAmount(Double.valueOf(new DecimalFormat("0.00").format(responseData.getBackAmount())));
         responseData.setYkAmount(Double.valueOf(new DecimalFormat("0.00").format(responseData.getYkAmount())));
-
+        responseData.setBetAmount(Double.valueOf(new DecimalFormat("0.00").format(responseData.getBetAmount())));
         responseData.getGameZcDataList().forEach(gameZcData -> {
             gameZcData.setGameBack(Double.valueOf(new DecimalFormat("0.00").format(gameZcData.getGameBack())));
             gameZcData.setGameYk(Double.valueOf(new DecimalFormat("0.00").format(gameZcData.getGameYk())));
+            gameZcData.setBetAmount(Double.valueOf(new DecimalFormat("0.00").format(gameZcData.getBetAmount())));
         });
-        responseData.getZcResponseListData().forEach(zcResponseListData -> {
-            zcResponseListData.setBackAmount(Double.valueOf(new DecimalFormat("0.00").format(responseData.getBackAmount())));
-            zcResponseListData.setYkAmount(Double.valueOf(new DecimalFormat("0.00").format(responseData.getYkAmount())));
-            zcResponseListData.getGameZcDataList().forEach(gameZcData -> {
-                gameZcData.setGameBack(Double.valueOf(new DecimalFormat("0.00").format(gameZcData.getGameBack())));
-                gameZcData.setGameYk(Double.valueOf(new DecimalFormat("0.00").format(gameZcData.getGameYk())));
+        responseData.getZcResponseListData().forEach(responseListData -> {
+            responseListData.setBackAmount(Double.valueOf(new DecimalFormat("0.00").format(responseListData.getBackAmount())));
+            responseListData.setYkAmount(Double.valueOf(new DecimalFormat("0.00").format(responseListData.getYkAmount())));
+            responseListData.setBetAmount(Double.valueOf(new DecimalFormat("0.00").format(responseListData.getBetAmount())));
+            responseListData.getGameZcDataList().forEach(gameZcData1 -> {
+                gameZcData1.setGameBack(Double.valueOf(new DecimalFormat("0.00").format(gameZcData1.getGameBack())));
+                gameZcData1.setGameYk(Double.valueOf(new DecimalFormat("0.00").format(gameZcData1.getGameYk())));
+                gameZcData1.setBetAmount(Double.valueOf(new DecimalFormat("0.00").format(gameZcData1.getBetAmount())));
             });
         });
         return responseData;

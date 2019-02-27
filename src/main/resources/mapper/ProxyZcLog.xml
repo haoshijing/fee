@@ -19,6 +19,7 @@
         name,
         gameType,
         money,
+        betAmount,
         netAmount,
         jsAmount,
         fsAmount,
@@ -33,6 +34,7 @@
         #{name},
         #{gameType},
         #{money},
+        #{betAmount},
         #{netAmount},
         #{jsAmount},
         #{fsAmount},
@@ -43,7 +45,8 @@
 
     <select id="queryZcList" parameterType="com.yingliguoji.fee.po.js.QueryProxyZcPo"
             resultType="com.yingliguoji.fee.po.js.ZcSumPo">
-        select sum(jsAmount) as ycAmount , sum(money) as backAmount ,agentId, gameType from proxy_zc_log where 1= 1
+        select sum(jsAmount) as ycAmount , sum(money) as backAmount , sum(betAmount) as betAmount,agentId, gameType from
+        proxy_zc_log where 1= 1
         <if test="startTime != null">
             and statTime > #{startTime}
         </if>

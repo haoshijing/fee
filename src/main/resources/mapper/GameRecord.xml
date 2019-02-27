@@ -17,7 +17,7 @@
     <select id="queryBetClient" resultType="com.yingliguoji.fee.po.GameTypePo">
         select member_id as memberId,gameType from
         <include refid="tableName"/>
-        where netAmount <![CDATA[  <> 0]]> and updated_at BETWEEN #{start}
+        where netAmount <![CDATA[  <> 0]]> and created_at BETWEEN #{start}
         and #{end} group by member_id , gameType
     </select>
 
@@ -34,7 +34,7 @@
         </if>
 
         <if test="start != null and start != ''">
-            AND updated_at >= #{start}
+            AND created_at >= #{start}
         </if>
 
         <if test="gameType != null">
@@ -42,7 +42,7 @@
         </if>
 
         <if test="end != null and end != ''">
-            AND updated_at <![CDATA[ <= ]]> #{end}
+            AND created_at <![CDATA[ <= ]]> #{end}
         </if>
         and netAmount <![CDATA[  <> 0]]>
     </select>
