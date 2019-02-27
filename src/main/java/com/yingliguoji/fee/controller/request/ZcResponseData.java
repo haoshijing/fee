@@ -44,21 +44,18 @@ public class ZcResponseData {
         if (optional.isPresent()) {
             GameZcData gameZcData = optional.get();
             if (queryType == 1) {
-                gameZcData.setData(gameZcData.getData() + zcSumPo.getYkAmount().doubleValue());
-                setData(getData() + zcSumPo.getYkAmount().doubleValue());
-            } else if (queryType == 2) {
-                gameZcData.setData(gameZcData.getData() + zcSumPo.getValidBetAmount().doubleValue());
-                setData(getData() + zcSumPo.getValidBetAmount().doubleValue());
-            } else if (queryType == 3) {
-                gameZcData.setData(gameZcData.getData() + zcSumPo.getBetAmount().doubleValue());
-                setData(getData() + zcSumPo.getBetAmount().doubleValue());
-            } else if (queryType == 4) {
-                gameZcData.setData(gameZcData.getData() + zcSumPo.getFsAmount().doubleValue());
-                setData(getData() + zcSumPo.getFsAmount().doubleValue());
-            } else if (queryType == 5) {
                 gameZcData.setData(gameZcData.getData() + zcSumPo.getZcAmount().doubleValue());
                 setData(getData() + zcSumPo.getZcAmount().doubleValue());
-            } else if (queryType == 6) {
+            } else if (queryType == 2) {
+                gameZcData.setData(gameZcData.getData() + zcSumPo.getYkAmount().doubleValue());
+                setData(getData() + zcSumPo.getYkAmount().doubleValue());
+            } else if (queryType == 3) {
+                gameZcData.setData(gameZcData.getData() + zcSumPo.getValidBetAmount().doubleValue());
+                setData(getData() + zcSumPo.getValidBetAmount().doubleValue());
+            } else if (queryType == 4) {
+                gameZcData.setData(gameZcData.getData() + zcSumPo.getBetAmount().doubleValue());
+                setData(getData() + zcSumPo.getBetAmount().doubleValue());
+            } else if (queryType == 5) {
                 gameZcData.setData(gameZcData.getData() + zcSumPo.getNetAmount().doubleValue());
                 setData(getData() + zcSumPo.getNetAmount().doubleValue());
             }
@@ -92,21 +89,18 @@ public class ZcResponseData {
             if (optional.isPresent()) {
                 GameZcData tmpZcData = optional.get();
                 if (queryType == 1) {
-                    tmpZcData.setData(zcSumPo.getYkAmount().doubleValue());
-                    setData(getData() + zcSumPo.getYkAmount().doubleValue());
-                } else if (queryType == 2) {
-                    tmpZcData.setData(zcSumPo.getValidBetAmount().doubleValue());
-                    setData(getData() + zcSumPo.getValidBetAmount().doubleValue());
-                } else if (queryType == 3) {
-                    tmpZcData.setData(zcSumPo.getBetAmount().doubleValue());
-                    setData(getData() + zcSumPo.getBetAmount().doubleValue());
-                } else if (queryType == 4) {
-                    tmpZcData.setData(zcSumPo.getFsAmount().doubleValue());
-                    setData(getData() + zcSumPo.getFsAmount().doubleValue());
-                } else if (queryType == 5) {
                     tmpZcData.setData(zcSumPo.getZcAmount().doubleValue());
                     setData(getData() + zcSumPo.getZcAmount().doubleValue());
-                } else if (queryType == 6) {
+                } else if (queryType == 2) {
+                    tmpZcData.setData(zcSumPo.getYkAmount().doubleValue());
+                    setData(getData() + zcSumPo.getYkAmount().doubleValue());
+                } else if (queryType == 3) {
+                    tmpZcData.setData(zcSumPo.getValidBetAmount().doubleValue());
+                    setData(getData() + zcSumPo.getValidBetAmount().doubleValue());
+                } else if (queryType == 4) {
+                    tmpZcData.setData(zcSumPo.getBetAmount().doubleValue());
+                    setData(getData() + zcSumPo.getBetAmount().doubleValue());
+                } else if (queryType == 5) {
                     tmpZcData.setData(zcSumPo.getNetAmount().doubleValue());
                     setData(getData() + zcSumPo.getNetAmount().doubleValue());
                 }
