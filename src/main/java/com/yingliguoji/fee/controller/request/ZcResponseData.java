@@ -23,36 +23,45 @@ import java.util.Optional;
 public class ZcResponseData {
     private List<ZcResponseListData> zcResponseListData;
     private List<GameZcData> gameZcDataList;
-    private Double ykAmount;
-    private Double backAmount;
-    private Double betAmount;
+    private Double data;
 
     public ZcResponseData() {
         gameZcDataList = Lists.newArrayList();
-        setYkAmount(0.0);
-        setBackAmount(0.0);
-        setBetAmount(0.0);
-        gameZcDataList.add(new GameZcData(GameType.ZR, "真人", 0.0, 0.0, 0.0));
-        gameZcDataList.add(new GameZcData(GameType.DZ, "电子", 0.0, 0.0, 0.0));
-        gameZcDataList.add(new GameZcData(GameType.CP, "彩票", 0.0, 0.0, 0.0));
-        gameZcDataList.add(new GameZcData(GameType.TY, "体育", 0.0, 0.0, 0.0));
-        gameZcDataList.add(new GameZcData(GameType.DJ, "电竞", 0.0, 0.0, 0.0));
-        gameZcDataList.add(new GameZcData(GameType.BY, "捕鱼", 0.0, 0.0, 0.0));
-        gameZcDataList.add(new GameZcData(GameType.QP, "棋牌", 0.0, 0.0, 0.0));
+        setData(0.0);
+        gameZcDataList.add(new GameZcData(GameType.ZR, "真人", 0.0));
+        gameZcDataList.add(new GameZcData(GameType.DZ, "电子", 0.0));
+        gameZcDataList.add(new GameZcData(GameType.CP, "彩票", 0.0));
+        gameZcDataList.add(new GameZcData(GameType.TY, "体育", 0.0));
+        gameZcDataList.add(new GameZcData(GameType.DJ, "电竞", 0.0));
+        gameZcDataList.add(new GameZcData(GameType.BY, "捕鱼", 0.0));
+        gameZcDataList.add(new GameZcData(GameType.QP, "棋牌", 0.0));
     }
 
-    public void addGamePo(ZcSumPo zcSumPo) {
+    public void addGamePo(ZcSumPo zcSumPo, int queryType) {
         Optional<GameZcData> optional = gameZcDataList.stream()
                 .filter(gameZcData -> gameZcData.getGameType().equals(zcSumPo.getGameType())).
                         findFirst();
         if (optional.isPresent()) {
             GameZcData gameZcData = optional.get();
-            gameZcData.setGameYk(gameZcData.getGameYk() + zcSumPo.getYcAmount().doubleValue());
-            gameZcData.setGameBack(gameZcData.getGameBack() + zcSumPo.getBackAmount().doubleValue());
-            gameZcData.setBetAmount(gameZcData.getBetAmount() + zcSumPo.getBetAmount().doubleValue());
-            setBackAmount(getBackAmount() + zcSumPo.getBackAmount().doubleValue());
-            setYkAmount(getYkAmount() + zcSumPo.getYcAmount().doubleValue());
-            setBetAmount(getBetAmount() + zcSumPo.getBetAmount().doubleValue());
+            if (queryType == 1) {
+                gameZcData.setData(gameZcData.getData() + zcSumPo.getYkAmount().doubleValue());
+                setData(gameZcData.getData() + zcSumPo.getYkAmount().doubleValue());
+            } else if (queryType == 2) {
+                gameZcData.setData(gameZcData.getData() + zcSumPo.getValidBetAmount().doubleValue());
+                setData(gameZcData.getData() + zcSumPo.getValidBetAmount().doubleValue());
+            } else if (queryType == 3) {
+                gameZcData.setData(gameZcData.getData() + zcSumPo.getBetAmount().doubleValue());
+                setData(gameZcData.getData() + zcSumPo.getBetAmount().doubleValue());
+            } else if (queryType == 4) {
+                gameZcData.setData(gameZcData.getData() + zcSumPo.getFsAmount().doubleValue());
+                setData(gameZcData.getData() + zcSumPo.getFsAmount().doubleValue());
+            } else if (queryType == 5) {
+                gameZcData.setData(gameZcData.getData() + zcSumPo.getZcAmount().doubleValue());
+                setData(gameZcData.getData() + zcSumPo.getZcAmount().doubleValue());
+            } else if (queryType == 6) {
+                gameZcData.setData(gameZcData.getData() + zcSumPo.getNetAmount().doubleValue());
+                setData(gameZcData.getData() + zcSumPo.getNetAmount().doubleValue());
+            }
         }
     }
 
@@ -61,36 +70,46 @@ public class ZcResponseData {
         private Integer quota;
         private String name;
         private String realName;
-        private Double ykAmount;
-        private Double backAmount;
-        private Double betAmount;
+        private Double data;
         private Integer memberId;
         private List<GameZcData> gameZcDataList = Lists.newArrayList();
 
         public ZcResponseListData() {
-            this.setYkAmount(0.0);
-            this.setBackAmount(0.0);
-            setBetAmount(0.0);
-            gameZcDataList.add(new GameZcData(GameType.ZR, "真人", 0.0, 0.0, 0.0));
-            gameZcDataList.add(new GameZcData(GameType.DZ, "电子", 0.0, 0.0, 0.0));
-            gameZcDataList.add(new GameZcData(GameType.CP, "彩票", 0.0, 0.0, 0.0));
-            gameZcDataList.add(new GameZcData(GameType.TY, "体育", 0.0, 0.0, 0.0));
-            gameZcDataList.add(new GameZcData(GameType.DJ, "电竞", 0.0, 0.0, 0.0));
-            gameZcDataList.add(new GameZcData(GameType.BY, "捕鱼", 0.0, 0.0, 0.0));
-            gameZcDataList.add(new GameZcData(GameType.QP, "棋牌", 0.0, 0.0, 0.0));
+            this.setData(0.0);
+            gameZcDataList.add(new GameZcData(GameType.ZR, "真人", 0.0));
+            gameZcDataList.add(new GameZcData(GameType.DZ, "电子", 0.0));
+            gameZcDataList.add(new GameZcData(GameType.CP, "彩票", 0.0));
+            gameZcDataList.add(new GameZcData(GameType.TY, "体育", 0.0));
+            gameZcDataList.add(new GameZcData(GameType.DJ, "电竞", 0.0));
+            gameZcDataList.add(new GameZcData(GameType.BY, "捕鱼", 0.0));
+            gameZcDataList.add(new GameZcData(GameType.QP, "棋牌", 0.0));
         }
 
-        public void resetData(ZcSumPo zcSumPo) {
+        public void resetData(ZcSumPo zcSumPo, Integer queryType) {
             Optional<GameZcData> optional = gameZcDataList.stream()
                     .filter(gameZcData -> gameZcData.getGameType().equals(zcSumPo.getGameType()))
                     .findFirst();
             if (optional.isPresent()) {
-                optional.get().setGameYk(zcSumPo.getYcAmount().doubleValue());
-                optional.get().setGameBack(zcSumPo.getBackAmount().doubleValue());
-                optional.get().setBetAmount(zcSumPo.getBetAmount().doubleValue());
-                this.setBackAmount(this.getBackAmount() + zcSumPo.getBackAmount().doubleValue());
-                this.setYkAmount(getYkAmount() + zcSumPo.getYcAmount().doubleValue());
-                this.setBetAmount(getBetAmount() + zcSumPo.getBetAmount().doubleValue());
+                GameZcData tmpZcData = optional.get();
+                if (queryType == 1) {
+                    tmpZcData.setData(zcSumPo.getYkAmount().doubleValue());
+                    setData(tmpZcData.getData() + zcSumPo.getYkAmount().doubleValue());
+                } else if (queryType == 2) {
+                    tmpZcData.setData(zcSumPo.getValidBetAmount().doubleValue());
+                    setData(tmpZcData.getData() + zcSumPo.getValidBetAmount().doubleValue());
+                } else if (queryType == 3) {
+                    tmpZcData.setData(zcSumPo.getBetAmount().doubleValue());
+                    setData(tmpZcData.getData() + zcSumPo.getBetAmount().doubleValue());
+                } else if (queryType == 4) {
+                    tmpZcData.setData(zcSumPo.getFsAmount().doubleValue());
+                    setData(tmpZcData.getData() + zcSumPo.getFsAmount().doubleValue());
+                } else if (queryType == 5) {
+                    tmpZcData.setData(zcSumPo.getZcAmount().doubleValue());
+                    setData(tmpZcData.getData() + zcSumPo.getZcAmount().doubleValue());
+                } else if (queryType == 6) {
+                    tmpZcData.setData(zcSumPo.getNetAmount().doubleValue());
+                    setData(tmpZcData.getData() + zcSumPo.getZcAmount().doubleValue());
+                }
             }
         }
     }
@@ -101,8 +120,6 @@ public class ZcResponseData {
     public static class GameZcData {
         private Integer gameType;
         private String gameName;
-        private Double gameYk;
-        private Double betAmount;
-        private Double gameBack;
+        private Double data;
     }
 }

@@ -32,6 +32,8 @@ public class ProxyZcLogPo {
 
     private Double betAmount;
 
+    private Double validBetAmount;
+
     /**
      * 实际钱
      */

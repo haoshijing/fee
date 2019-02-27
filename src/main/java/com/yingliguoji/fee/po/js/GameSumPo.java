@@ -8,5 +8,6 @@ import java.math.BigDecimal;
 public class GameSumPo {
 
     private BigDecimal totalNetAmount;
+    private BigDecimal totalValidBetAmount;
     private BigDecimal totalBetAmount;
 }

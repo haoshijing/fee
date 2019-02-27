@@ -93,13 +93,16 @@ public class FsZcService {
         //计算反水总值
         BigDecimal sumFs = jsFs(memberId, gameType, gameSumPo.getTotalBetAmount());
         if (sumFs != null) {
-            jsZc(memberId, gameType, gameSumPo.getTotalNetAmount(), gameSumPo.getTotalBetAmount(), sumFs);
+            jsZc(memberId, gameType, gameSumPo, sumFs);
         }
     }
 
-    private void jsZc(Integer memberId, Integer gameType, BigDecimal totalNetAmount, BigDecimal totalBetAmount, BigDecimal sumFs) {
+    private void jsZc(Integer memberId, Integer gameType, GameSumPo gameSumPo, BigDecimal sumFs) {
         //占成值 = 总输赢 - 反水值
         Integer jsZcMemberId = memberId;
+        BigDecimal totalNetAmount = gameSumPo.getTotalNetAmount();
+        BigDecimal totalBetAmount = gameSumPo.getTotalBetAmount();
+        BigDecimal totalValidBetAmount = gameSumPo.getTotalValidBetAmount();
         totalNetAmount = totalNetAmount.multiply(new BigDecimal(-1));
         BigDecimal zcMoney = totalNetAmount.add(sumFs.multiply(new BigDecimal(-1)));
         MemberPo memberPo;
@@ -125,6 +128,7 @@ public class FsZcService {
                 proxyZcLogPo.setFsAmount(sumFs.doubleValue());
                 proxyZcLogPo.setGameType(gameType);
                 proxyZcLogPo.setBetAmount(totalBetAmount.doubleValue());
+                proxyZcLogPo.setValidBetAmount(totalValidBetAmount.doubleValue());
                 proxyZcLogPo.setName(memberPo.getName());
                 proxyZcLogPo.setInsertTime(System.currentTimeMillis());
                 proxyZcLogPo.setStatTime(new DateTime().withTime(0, 0, 0, 0).getMillis());

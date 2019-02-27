@@ -16,9 +16,12 @@ import java.math.BigDecimal;
  */
 @Data
 public class ZcSumPo {
-    private BigDecimal ycAmount;
-    private BigDecimal backAmount;
+    private BigDecimal ykAmount;
+    private BigDecimal zcAmount;
     private BigDecimal betAmount;
+    private BigDecimal validBetAmount;
+    private BigDecimal fsAmount;
+    private BigDecimal netAmount;
     private Integer gameType;
     private Integer agentId;
 }

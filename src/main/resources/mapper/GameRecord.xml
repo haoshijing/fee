@@ -17,7 +17,7 @@
     <select id="queryBetClient" resultType="com.yingliguoji.fee.po.GameTypePo">
         select member_id as memberId,gameType from
         <include refid="tableName"/>
-        where validBetAmount <![CDATA[  <> 0]]> and created_at BETWEEN #{start}
+        where created_at BETWEEN #{start}
         and #{end} group by member_id , gameType
     </select>
 
@@ -25,7 +25,8 @@
     <select id="querySum" parameterType="com.yingliguoji.fee.po.GameRecordPo"
             resultType="com.yingliguoji.fee.po.js.GameSumPo">
         select COALESCE(sum(netAmount), 0) as totalNetAmount,
-        COALESCE(sum(validBetAmount), 0) as totalBetAmount
+        COALESCE(sum(validBetAmount), 0) as totalValidBetAmount,
+        COALESCE(sum(betAmount), 0) as totalBetAmount
         from
         <include refid="tableName"/>
         where 1 =1
@@ -44,7 +45,6 @@
         <if test="end != null and end != ''">
             AND created_at <![CDATA[ <= ]]> #{end}
         </if>
-        and validBetAmount <![CDATA[  <> 0]]>
     </select>
 
 

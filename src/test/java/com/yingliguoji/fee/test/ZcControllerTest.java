@@ -31,6 +31,7 @@ public class ZcControllerTest extends BaseApiTest {
         zcQueryRequest.setName("");
         zcQueryRequest.setStart(1551024000000L);
         zcQueryRequest.setEnd(new DateTime().withTime(0, 0, 0, 0).getMillis());
+        zcQueryRequest.setQueryType(6);
         ApiResponse<ZcResponseData> apiResponse = zcController.queryZcList(zcQueryRequest);
         Assert.assertTrue(apiResponse.getCode() == 200);
     }
