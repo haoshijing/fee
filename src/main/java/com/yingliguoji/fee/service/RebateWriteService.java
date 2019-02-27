@@ -35,7 +35,7 @@ public class RebateWriteService {
         List<RebateSetDataRequestVo.RebateSettingVo> rebateSettingVos = requestVo.getDatas();
 
         MemberPo memberPo = memberMapper.findById(requestVo.getMemberId());
-        if(memberPo == null){
+        if (memberPo == null) {
             throw new RuntimeException("该会员不存在");
         }
         boolean checkCanSet = true;
@@ -73,7 +73,7 @@ public class RebateWriteService {
             }
         }
         if (!checkCanSet) {
-            throw new RuntimeException("请检查设置的类型数值是否正确");
+            throw new RuntimeException("超出额度");
         }
 
         saveSetting(memberId, rebateType, rebateSettingVos);
@@ -83,8 +83,8 @@ public class RebateWriteService {
     private void saveSetting(Integer memberId, Integer rebateType, List<RebateSetDataRequestVo.RebateSettingVo> rebateSettingVos) {
 
         rebateSettingVos.forEach(rebateSettingVo -> {
-            RebatePo rebatePo = rebateMapper.findByRebateTypeAndMemberIdAndGameType(memberId, rebateType,rebateSettingVo.getGameType());
-            if(rebatePo == null){
+            RebatePo rebatePo = rebateMapper.findByRebateTypeAndMemberIdAndGameType(memberId, rebateType, rebateSettingVo.getGameType());
+            if (rebatePo == null) {
                 rebatePo = new RebatePo();
                 rebatePo.setQuota(rebateSettingVo.getQuota());
                 rebatePo.setGameType(rebateSettingVo.getGameType());
@@ -93,7 +93,7 @@ public class RebateWriteService {
                 rebatePo.setInsertTime(System.currentTimeMillis());
                 rebatePo.setLastUpdateTime(System.currentTimeMillis());
                 rebateMapper.insert(rebatePo);
-            }else{
+            } else {
                 RebatePo updatePo = new RebatePo();
                 updatePo.setId(rebatePo.getId());
                 updatePo.setLastUpdateTime(System.currentTimeMillis());
