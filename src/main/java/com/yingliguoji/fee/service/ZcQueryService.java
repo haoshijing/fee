@@ -47,7 +47,9 @@ public class ZcQueryService {
         Integer queryType = zcQueryRequest.getQueryType();
         ZcResponseData responseData = new ZcResponseData();
         List<Integer> agentIds = memberMapper.queryZcMember(zcQueryRequest.getCurrentAgentId(), zcQueryRequest.getName());
-
+        if (zcQueryRequest.getCurrentAgentId() != 0) {
+            agentIds.add(zcQueryRequest.getCurrentAgentId());
+        }
         List<ZcResponseData.ZcResponseListData> list = agentIds.stream().map(agentId -> {
             ZcResponseData.ZcResponseListData zcResponseListData = new ZcResponseData.ZcResponseListData();
             RebatePo rebatePo = rebateMapper.findByRebateTypeAndMemberIdAndGameType(agentId, RebateType.ZC, 0);
