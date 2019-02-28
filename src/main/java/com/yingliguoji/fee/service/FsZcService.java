@@ -141,7 +141,6 @@ public class FsZcService {
                     log.error("proxyZcLogPo = {}", proxyZcLogPo, e);
 
                 }
-
             }
             jsZcMemberId = memberPo.getTop_id();
         }
@@ -167,10 +166,10 @@ public class FsZcService {
                 //增加反水记录
                 MemberPo beforeMemberPo = memberMapper.findById(jsMemberId);
                 DividendPo dividendPo = new DividendPo();
-                if (beforeMemberPo.getFs_money() == null) {
-                    beforeMemberPo.setFs_money(new BigDecimal(0));
+                if (beforeMemberPo.getMoney() == null) {
+                    beforeMemberPo.setMoney(new BigDecimal(0));
                 }
-                dividendPo.setBeforeMoney(beforeMemberPo.getFs_money());
+                dividendPo.setBeforeMoney(beforeMemberPo.getMoney());
                 if (rebatePo.getQuota() == null) {
                     log.warn("getQuota is null ,memberId = {}", jsMemberId);
                     rebatePo.setQuota(0);
@@ -188,10 +187,10 @@ public class FsZcService {
                 dividendPo.setCreatedAt(timestamp);
                 MemberPo updatePo = new MemberPo();
                 updatePo.setId(jsMemberId);
-                updatePo.setFs_money(dividendPo.getMoney());
+                updatePo.setMoney(dividendPo.getMoney());
                 memberMapper.update(updatePo);
                 MemberPo afterPo = memberMapper.findById(jsMemberId);
-                dividendPo.setAfterMoney(afterPo.getFs_money());
+                dividendPo.setAfterMoney(afterPo.getMoney());
                 dividendMapper.insert(dividendPo);
                 detectQuota = rebatePo.getQuota();
 
