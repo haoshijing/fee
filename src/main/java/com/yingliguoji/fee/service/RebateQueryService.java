@@ -58,7 +58,7 @@ public class RebateQueryService {
         List<RebatePo> rebatePos = rebateMapper.queryList(memberId, rebateType);
         List<RebateVo> rebateVos = null;
         if (CollectionUtils.isEmpty(rebatePos) && !isTop) {
-            rebatePos = rebateMapper.queryList(memberPo.getTop_id(), rebateType);
+            // rebatePos = rebateMapper.queryList(memberPo.getTop_id(), rebateType);
 
         }
 
@@ -68,8 +68,8 @@ public class RebateQueryService {
 
             int csQuato = 0;
             if (isTop && isAdmin) {
-                zcQuato = 70;
-                csQuato = 150;
+                zcQuato = 0;
+                csQuato = 0;
             }
             if (rebateType == RebateType.ZC) {
                 rebateVos.add(new RebateVo(zcQuato, 0, "占成"));
