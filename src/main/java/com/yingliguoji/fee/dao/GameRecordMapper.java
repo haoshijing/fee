@@ -3,6 +3,7 @@ package com.yingliguoji.fee.dao;
 import com.yingliguoji.fee.po.GameRecordPo;
 import com.yingliguoji.fee.po.GameTypePo;
 import com.yingliguoji.fee.po.js.GameSumPo;
+import com.yingliguoji.fee.po.js.MemberGamePo;
 import org.apache.ibatis.annotations.Param;
 
 import java.math.BigDecimal;
@@ -21,6 +22,8 @@ public interface GameRecordMapper {
 
 
     GameSumPo querySum(GameRecordPo gameRecordPo);
+
+    List<MemberGamePo> queryMemberGamePos(GameRecordPo queryPo);
 }
 
 

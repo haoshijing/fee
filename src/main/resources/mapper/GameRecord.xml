@@ -21,6 +21,35 @@
         and #{end} group by member_id , gameType
     </select>
 
+    <select id="queryMemberGamePos" parameterType="com.yingliguoji.fee.po.GameRecordPo" resultType="com.yingliguoji.fee.po.js.MemberGamePo">
+        select COALESCE(sum(netAmount), 0) as totalNetAmount,
+        COALESCE(sum(validBetAmount), 0) as totalValidBetAmount,
+        COALESCE(sum(betAmount), 0) as totalBetAmount,
+        member_id as memberId,
+        gameType
+        from
+        <include refid="tableName"/>
+        where 1 =1
+        <if test = "memberIds != null and memberIds.size() >0">
+            AND member_id in
+            <foreach collection="memberIds" item="item" open="(" close=")" separator=",">
+                #{item}
+            </foreach>
+            <if test="start != null and start != ''">
+                AND betTime >= #{start}
+            </if>
+
+            <if test="gameType != null">
+                AND gameType = #{gameType}
+            </if>
+
+            <if test="end != null and end != ''">
+                AND betTime <![CDATA[ <= ]]> #{end}
+            </if>
+
+            GROUP  by member_id, gameType
+        </if>
+    </select>
 
     <select id="querySum" parameterType="com.yingliguoji.fee.po.GameRecordPo"
             resultType="com.yingliguoji.fee.po.js.GameSumPo">
