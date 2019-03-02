@@ -5,6 +5,7 @@ import com.yingliguoji.fee.controller.response.MemberBetResponse;
 import com.yingliguoji.fee.po.GameRecordPo;
 import com.yingliguoji.fee.po.MemberPo;
 import com.yingliguoji.fee.po.js.MemberGamePo;
+import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -62,8 +63,12 @@ public class MemberBetService {
                         detailVo.setName(optional.get().getName());
                     }
                     return detailVo;
-                }
-        ).collect(Collectors.toList());
+                }).filter(memberBetDetailVo -> {
+            if (StringUtils.isNotEmpty(request.getName())) {
+                return memberBetDetailVo.getName().contains(request.getName());
+            }
+            return false;
+        }).collect(Collectors.toList());
         Double totalBetAmount = 0.0;
         Double totalValidBetAmount = 0.0;
         Double totalNetAmount = 0.0;

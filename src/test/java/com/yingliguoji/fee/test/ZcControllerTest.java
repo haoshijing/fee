@@ -12,7 +12,6 @@ import com.yingliguoji.fee.controller.request.MemberBetRequest;
 import com.yingliguoji.fee.controller.request.ZcQueryRequest;
 import com.yingliguoji.fee.controller.request.ZcResponseData;
 import com.yingliguoji.fee.controller.response.MemberBetResponse;
-import com.yingliguoji.fee.enums.GameType;
 import org.joda.time.DateTime;
 import org.junit.Assert;
 import org.junit.Test;
@@ -43,7 +42,7 @@ public class ZcControllerTest extends BaseApiTest {
     public void testQueryMemberBetList(){
         MemberBetRequest request = new MemberBetRequest();
         request.setCurrentAgentId(133);
-        request.setGameType(GameType.ZR);
+        request.setName("wu55555");
         ApiResponse<MemberBetResponse> response = zcController.queryMemberBetTotal(request);
 
         System.out.println(response.getData().getMemberBetDetailVoList().size() > 0);
