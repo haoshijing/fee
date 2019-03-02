@@ -33,8 +33,12 @@ public class MemberBetService {
         ).collect(Collectors.toList());
 
         GameRecordPo queryPo = new GameRecordPo();
-        queryPo.setStart(new DateTime(request.getStartTime()).toString("yyyy-MM-dd HH:mm:ss"));
-        queryPo.setEnd(new DateTime(request.getEndTime()).toString("yyyy-MM-dd HH:mm:ss"));
+        if(request.getStartTime() != null) {
+            queryPo.setStart(new DateTime(request.getStartTime()).toString("yyyy-MM-dd HH:mm:ss"));
+        }
+        if(request.getEndTime() != null) {
+            queryPo.setEnd(new DateTime(request.getEndTime()).toString("yyyy-MM-dd HH:mm:ss"));
+        }
         queryPo.setMemberIds(memberIds);
 
         List<MemberGamePo> memberGamePos = gameRecordService.queryMemberGamePos(queryPo);
