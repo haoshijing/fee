@@ -67,7 +67,7 @@ public class MemberBetService {
             if (StringUtils.isNotEmpty(request.getName())) {
                 return memberBetDetailVo.getName().contains(request.getName());
             }
-            return false;
+            return true;
         }).collect(Collectors.toList());
         Double totalBetAmount = 0.0;
         Double totalValidBetAmount = 0.0;
