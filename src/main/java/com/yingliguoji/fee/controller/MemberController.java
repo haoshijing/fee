@@ -30,8 +30,8 @@ public class MemberController {
     private MemberService memberService;
 
     @GetMapping("/queryUnderMember")
-    public ApiResponse<List<Integer>> queryIds(Integer agentId) {
-        List<MemberPo> memberPos = memberService.getMemberIds(agentId);
+    public ApiResponse<List<Integer>> queryIds(Integer agentId,String name) {
+        List<MemberPo> memberPos = memberService.getMemberIds(agentId, name);
         List<Integer> ids = memberPos.stream().map(memberPo -> memberPo.getId()).collect(Collectors.toList());
         return new ApiResponse<>(ids);
     }

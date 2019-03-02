@@ -25,8 +25,8 @@ public class MemberControllerTest extends BaseApiTest {
 
     @Test
     public void testQueryIds() {
-        ApiResponse<List<Integer>> ids = memberController.queryIds(133);
+        ApiResponse<List<Integer>> ids = memberController.queryIds(133,"wu");
 
-        Assert.assertTrue(ids.getData().size() > 4);
+        Assert.assertTrue(ids.getData().size() > 0);
     }
 }

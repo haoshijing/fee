@@ -66,7 +66,7 @@
                 AND branch_id = #{branch_id}
             </if>
             <if test="name != null and name != ''">
-                AND name = #{name}
+                AND name LIKE CONCAT(CONCAT('%',#{name}),'%')
             </if>
             <if test="is_daili != null">
                 AND is_daili = #{is_daili}

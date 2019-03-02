@@ -7,8 +7,11 @@
 package com.yingliguoji.fee.controller;
 
 import com.yingliguoji.fee.ApiResponse;
+import com.yingliguoji.fee.controller.request.MemberBetRequest;
 import com.yingliguoji.fee.controller.request.ZcQueryRequest;
 import com.yingliguoji.fee.controller.request.ZcResponseData;
+import com.yingliguoji.fee.controller.response.MemberBetResponse;
+import com.yingliguoji.fee.service.MemberBetService;
 import com.yingliguoji.fee.service.ZcQueryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,9 +31,20 @@ public class ZcController {
     @Autowired
     private ZcQueryService zcQueryService;
 
+    @Autowired
+    private MemberBetService memberBetService;
+
     @PostMapping("/queryZcList")
     public ApiResponse<ZcResponseData> queryZcList(@RequestBody ZcQueryRequest zcQueryRequest) {
         ZcResponseData zcResponseData = zcQueryService.queryZcList(zcQueryRequest);
         return new ApiResponse<>(zcResponseData);
     }
+
+    @PostMapping("/queryMemberBetTotal")
+    public ApiResponse<MemberBetResponse> queryMemberBetTotal(@RequestBody MemberBetRequest request){
+        MemberBetResponse memberBetResponse = memberBetService.queryMemberBetTotal(request);
+        return new ApiResponse<>(memberBetResponse);
+    }
+
+
 }
