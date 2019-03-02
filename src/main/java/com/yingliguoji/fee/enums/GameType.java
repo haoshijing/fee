@@ -17,19 +17,27 @@ public interface GameType {
     Integer DZ = 2;
 
     /**
-     * 真人
+     * 彩票
      */
     Integer CP = 3;
 
     /**
-     * 电子
+     *
      */
     Integer TY = 4;
-
+    /**
+     * 电子
+     */
     Integer DJ = 5;
 
+    /**
+     * 捕鱼
+     */
     Integer BY = 6;
 
+    /**
+     * 棋牌
+     */
     Integer QP = 7;
 
 

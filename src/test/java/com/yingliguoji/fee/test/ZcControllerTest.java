@@ -11,6 +11,8 @@ import com.yingliguoji.fee.controller.ZcController;
 import com.yingliguoji.fee.controller.request.MemberBetRequest;
 import com.yingliguoji.fee.controller.request.ZcQueryRequest;
 import com.yingliguoji.fee.controller.request.ZcResponseData;
+import com.yingliguoji.fee.controller.response.MemberBetResponse;
+import com.yingliguoji.fee.enums.GameType;
 import org.joda.time.DateTime;
 import org.junit.Assert;
 import org.junit.Test;
@@ -40,9 +42,11 @@ public class ZcControllerTest extends BaseApiTest {
     @Test
     public void testQueryMemberBetList(){
         MemberBetRequest request = new MemberBetRequest();
-        request.setStartTime(1551024000000L);
-        request.setEndTime(System.currentTimeMillis());
         request.setCurrentAgentId(133);
-        zcController.queryMemberBetTotal(request);
+        request.setStartTime(1553097599000L);
+        request.setEndTime(1553097599000L);
+        ApiResponse<MemberBetResponse> response = zcController.queryMemberBetTotal(request);
+
+        System.out.println(response.getData().getMemberBetDetailVoList().size() > 0);
     }
 }
