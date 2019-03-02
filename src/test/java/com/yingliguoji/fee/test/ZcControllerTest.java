@@ -43,8 +43,7 @@ public class ZcControllerTest extends BaseApiTest {
     public void testQueryMemberBetList(){
         MemberBetRequest request = new MemberBetRequest();
         request.setCurrentAgentId(133);
-        request.setStartTime(1553097599000L);
-        request.setEndTime(1553097599000L);
+        request.setGameType(GameType.ZR);
         ApiResponse<MemberBetResponse> response = zcController.queryMemberBetTotal(request);
 
         System.out.println(response.getData().getMemberBetDetailVoList().size() > 0);

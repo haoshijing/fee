@@ -39,6 +39,9 @@ public class MemberBetService {
         if(request.getEndTime() != null) {
             queryPo.setEnd(new DateTime(request.getEndTime()).toString("yyyy-MM-dd HH:mm:ss"));
         }
+        if(request.getGameType() != null) {
+            queryPo.setGameType(request.getGameType());
+        }
         queryPo.setMemberIds(memberIds);
 
         List<MemberGamePo> memberGamePos = gameRecordService.queryMemberGamePos(queryPo);
