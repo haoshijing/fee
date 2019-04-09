@@ -1,21 +1,10 @@
 package com.yingliguoji.fee.service;
 
 import com.google.common.collect.Maps;
-import com.yingliguoji.fee.dao.DividendMapper;
-import com.yingliguoji.fee.dao.GameRecordMapper;
-import com.yingliguoji.fee.dao.MemberMapper;
-import com.yingliguoji.fee.dao.ProxyFsLogMapper;
-import com.yingliguoji.fee.dao.ProxyZcLogMapper;
-import com.yingliguoji.fee.dao.RebateMapper;
+import com.yingliguoji.fee.dao.*;
 import com.yingliguoji.fee.enums.GameType;
 import com.yingliguoji.fee.enums.RebateType;
-import com.yingliguoji.fee.po.DividendPo;
-import com.yingliguoji.fee.po.GameRecordPo;
-import com.yingliguoji.fee.po.GameTypePo;
-import com.yingliguoji.fee.po.MemberPo;
-import com.yingliguoji.fee.po.ProxyFsLogPo;
-import com.yingliguoji.fee.po.ProxyZcLogPo;
-import com.yingliguoji.fee.po.RebatePo;
+import com.yingliguoji.fee.po.*;
 import com.yingliguoji.fee.po.js.GameSumPo;
 import lombok.extern.slf4j.Slf4j;
 import org.joda.time.DateTime;
@@ -191,7 +180,9 @@ public class FsZcService {
                 memberMapper.update(updatePo);
                 MemberPo afterPo = memberMapper.findById(jsMemberId);
                 dividendPo.setAfterMoney(afterPo.getMoney());
-                dividendMapper.insert(dividendPo);
+                if (dividendPo.getMoney().doubleValue() > 0) {
+                    dividendMapper.insert(dividendPo);
+                }
                 detectQuota = rebatePo.getQuota();
 
                 ProxyFsLogPo proxyFsLogPo = new ProxyFsLogPo();

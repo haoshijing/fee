@@ -46,7 +46,7 @@ public class RebateWriteService {
                     checkCanSet = false;
                 }
             } else {
-                boolean find = rebateSettingVos.stream().anyMatch(rebateSettingVo -> rebateSettingVo.getQuota() > 150);
+                boolean find = rebateSettingVos.stream().anyMatch(rebateSettingVo -> rebateSettingVo.getQuota() > 200);
                 if (find) {
                     checkCanSet = false;
                 }
