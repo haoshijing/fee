@@ -15,6 +15,6 @@ import org.springframework.test.context.junit4.SpringRunner;
  * @version 2019-02-26
  */
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = com.yingliguoji.fee.ApplicationStarter.class, properties = "spring.profiles.active=test")
+@SpringBootTest(classes = com.yingliguoji.fee.ApplicationStarter.class, properties = "spring.profiles.active=dev")
 public class BaseApiTest {
 }

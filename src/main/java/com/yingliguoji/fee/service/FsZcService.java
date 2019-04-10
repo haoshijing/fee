@@ -159,7 +159,7 @@ public class FsZcService {
                     beforeMemberPo.setMoney(new BigDecimal(0));
                 }
                 dividendPo.setBeforeMoney(beforeMemberPo.getMoney());
-                if (rebatePo.getQuota() == null) {
+                if (rebatePo.getQuota() == null || rebatePo.getQuota() == 0) {
                     log.warn("getQuota is null ,memberId = {}", jsMemberId);
                     rebatePo.setQuota(0);
                     jsMemberId = memberPo.getTop_id();
