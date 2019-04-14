@@ -45,3 +45,11 @@ money DECIMAL (16,2) comment '钱数',
 createTime bigint comment '创建时间'
 );
 
+
+drop table if EXISTS back_log;
+create table back_log
+(
+id int primary key auto_increment,
+lastBackTime bigint comment '最后返现时间',
+insertTime bigint comment '写入时间'
+);

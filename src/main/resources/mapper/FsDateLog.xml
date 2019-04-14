@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yingliguoji.fee.dao.FsDateLogMapper">
+
+    <sql id="tableName">
+        back_log
+    </sql>
+    <!-- 插入一条记录 -->
+
+    <insert id="insertLog" parameterType="com.yingliguoji.fee.po.FsDateLogPo">
+        INSERT INTO
+        <include refid="tableName"/>
+        (
+        lastBackTime,
+        insertTime
+        )
+        VALUES
+        (
+        #{lastBackTime},
+        #{insertTime}
+        )
+    </insert>
+    <select id="queryLastLog" resultType="com.yingliguoji.fee.po.FsDateLogPo">
+        select * from
+        <include refid="tableName"/>
+        order by id desc limit 1
+    </select>
+</mapper>

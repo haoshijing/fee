@@ -7,14 +7,18 @@ import com.yingliguoji.fee.dao.RebateMapper;
 import com.yingliguoji.fee.enums.RebateType;
 import com.yingliguoji.fee.po.MemberPo;
 import com.yingliguoji.fee.po.RebatePo;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
+import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.Optional;
 
 @Component
+@Slf4j
 public class RebateWriteService {
     @Autowired
     private RebateMapper rebateMapper;
@@ -23,7 +27,14 @@ public class RebateWriteService {
     @Autowired
     private MemberMapper memberMapper;
 
+    @Value("${fsMax}")
+    private Integer fsMax;
 
+
+    @PostConstruct
+    public void init() {
+        log.info(" faxMax = {}", fsMax);
+    }
     public void settingData(RebateSetDataRequestVo requestVo) {
 
         Boolean isAdmin = requestVo.getIsAdmin();
@@ -46,7 +57,7 @@ public class RebateWriteService {
                     checkCanSet = false;
                 }
             } else {
-                boolean find = rebateSettingVos.stream().anyMatch(rebateSettingVo -> rebateSettingVo.getQuota() > 200);
+                boolean find = rebateSettingVos.stream().anyMatch(rebateSettingVo -> rebateSettingVo.getQuota() > fsMax);
                 if (find) {
                     checkCanSet = false;
                 }
