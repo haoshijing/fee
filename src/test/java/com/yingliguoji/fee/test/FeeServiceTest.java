@@ -23,8 +23,8 @@ public class FeeServiceTest extends BaseApiTest {
 
     @Test
     public void testFs() {
-        DateTime endDateTime = new DateTime().plusDays(-1).withTime(0, 0, 0, 0);
-        DateTime startDateTime = endDateTime.plusDays(-1);
+        DateTime endDateTime = new DateTime(1555171200000l);
+        DateTime startDateTime = new DateTime(1553788800000L);
 
         fsZcService.backMoney(startDateTime, endDateTime);
     }

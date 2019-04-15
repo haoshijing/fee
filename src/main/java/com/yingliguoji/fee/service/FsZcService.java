@@ -70,7 +70,7 @@ public class FsZcService {
             gameRecordPo.setMemberId(gameTypePo.getMemberId());
             GameSumPo gameSumPo = gameRecordMapper.querySum(gameRecordPo);
             if (gameSumPo.getTotalBetAmount().doubleValue() > 0) {
-                handleJs(gameTypePo.getMemberId(), gameTypePo.getGameType(), gameSumPo);
+                handleJs(gameTypePo.getMemberId(), gameTypePo.getGameType(), gameSumPo, endDate);
             }
 
         });
@@ -78,15 +78,15 @@ public class FsZcService {
     }
 
 
-    private void handleJs(Integer memberId, Integer gameType, GameSumPo gameSumPo) {
+    private void handleJs(Integer memberId, Integer gameType, GameSumPo gameSumPo, DateTime endDate) {
         //计算反水总值
-        BigDecimal sumFs = jsFs(memberId, gameType, gameSumPo.getTotalBetAmount());
+        BigDecimal sumFs = jsFs(memberId, gameType, gameSumPo.getTotalBetAmount(), endDate);
         if (sumFs != null) {
-            jsZc(memberId, gameType, gameSumPo, sumFs);
+            jsZc(memberId, gameType, gameSumPo, sumFs, endDate);
         }
     }
 
-    private void jsZc(Integer memberId, Integer gameType, GameSumPo gameSumPo, BigDecimal sumFs) {
+    private void jsZc(Integer memberId, Integer gameType, GameSumPo gameSumPo, BigDecimal sumFs, DateTime endDate) {
         //占成值 = 总输赢 - 反水值
         Integer jsZcMemberId = memberId;
         BigDecimal totalNetAmount = gameSumPo.getTotalNetAmount();
@@ -108,7 +108,9 @@ public class FsZcService {
                 ProxyZcLogPo proxyZcLogPo = new ProxyZcLogPo();
                 Integer quota = rebatePo.getQuota();
                 if (quota == null || quota == 0) {
-                    continue;
+                    log.warn("getQuota is null ,memberId = {}", jsZcMemberId);
+                    rebatePo.setQuota(0);
+                    jsZcMemberId = memberPo.getTop_id();
                 }
                 BigDecimal money = zcMoney.multiply(new BigDecimal(quota)).divide(new BigDecimal(100));
                 proxyZcLogPo.setQuota(quota);
@@ -120,7 +122,7 @@ public class FsZcService {
                 proxyZcLogPo.setValidBetAmount(totalValidBetAmount.doubleValue());
                 proxyZcLogPo.setName(memberPo.getName());
                 proxyZcLogPo.setInsertTime(System.currentTimeMillis());
-                proxyZcLogPo.setStatTime(new DateTime().withTime(0, 0, 0, 0).getMillis());
+                proxyZcLogPo.setStatTime(endDate.getMillis());
                 proxyZcLogPo.setAgentId(jsZcMemberId);
                 proxyZcLogPo.setJsAmount(zcMoney.doubleValue());
                 proxyZcLogPo.setNetAmount(totalNetAmount.doubleValue());
@@ -135,7 +137,7 @@ public class FsZcService {
         }
     }
 
-    private BigDecimal jsFs(Integer memberId, Integer gameType, BigDecimal betAmount) {
+    private BigDecimal jsFs(Integer memberId, Integer gameType, BigDecimal betAmount, DateTime endDate) {
         MemberPo memberPo;
         Integer detectQuota = 0;
         Integer jsMemberId = memberId;
@@ -172,7 +174,7 @@ public class FsZcService {
                 dividendPo.setMoney(money);
                 dividendPo.setType(3);
                 dividendPo.setMemberId(jsMemberId);
-                Timestamp timestamp = new Timestamp(new DateTime().withTime(0, 0, 0, 0).getMillis());
+                Timestamp timestamp = new Timestamp(endDate.getMillis());
                 dividendPo.setCreatedAt(timestamp);
                 MemberPo updatePo = new MemberPo();
                 updatePo.setId(jsMemberId);
@@ -198,7 +200,7 @@ public class FsZcService {
                 proxyFsLogPo.setName(memberPo.getName());
                 proxyFsLogPo.setJsAmount(betAmount.doubleValue());
                 proxyFsLogPo.setInsertTime(System.currentTimeMillis());
-                proxyFsLogPo.setStatTime(new DateTime().withTime(0, 0, 0, 0).getMillis());
+                proxyFsLogPo.setStatTime(endDate.getMillis());
 
                 proxyFsLogPo.setAgentId(jsMemberId);
                 try {
