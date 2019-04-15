@@ -39,11 +39,11 @@ public class BackService {
             updatePo.setMemberId(dividendPo.getMemberId());
             updatePo.setStatus(dividendPo.getStatus());
             updatePo.setDescribe("反水对冲");
-            updatePo.setType(4);
+            updatePo.setType(10);
             updatePo.setCreatedAt(new Timestamp(System.currentTimeMillis()));
             updatePo.setBeforeMoney(memberPo.getMoney());
             MemberPo updateMemberPo = new MemberPo();
-            updateMemberPo.setMoney(memberPo.getMoney().add(updatePo.getMoney()));
+            updateMemberPo.setMoney(updatePo.getMoney());
             updateMemberPo.setId(memberPo.getId());
 
             memberMapper.update(updateMemberPo);
