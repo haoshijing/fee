@@ -113,6 +113,7 @@ public class FsZcService {
                     log.warn("getQuota is null ,memberId = {}", jsZcMemberId);
                     rebatePo.setQuota(0);
                     jsZcMemberId = memberPo.getTop_id();
+                    continue;
                 }
                 BigDecimal money = zcMoney.multiply(new BigDecimal(quota)).divide(new BigDecimal(100));
                 proxyZcLogPo.setQuota(quota);
