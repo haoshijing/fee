@@ -27,10 +27,10 @@ public class FeeServiceTest extends BaseApiTest {
 
     @Test
     public void testFs() {
-        DateTime endDateTime = new DateTime(1555171200000l);
-        DateTime startDateTime = new DateTime(1553788800000L);
+        DateTime start = new DateTime(1555171200000L);
+        DateTime end = new DateTime(1555257600000L);
 
-        fsZcService.backMoney(startDateTime, endDateTime);
+        fsZcService.backMoney(start, end);
     }
 
 

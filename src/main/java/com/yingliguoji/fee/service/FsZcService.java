@@ -130,9 +130,7 @@ public class FsZcService {
                 proxyZcLogPo.setJsAmount(zcMoney.doubleValue());
                 proxyZcLogPo.setNetAmount(totalNetAmount.doubleValue());
                 try {
-                    if (proxyZcLogPo.getMoney() > 0) {
-                        proxyZcLogMapper.insert(proxyZcLogPo);
-                    }
+                    proxyZcLogMapper.insert(proxyZcLogPo);
                 } catch (Exception e) {
                     log.error("proxyZcLogPo = {}", proxyZcLogPo, e);
 
