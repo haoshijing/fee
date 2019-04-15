@@ -6,6 +6,7 @@
 
 package com.yingliguoji.fee.test;
 
+import com.yingliguoji.fee.controller.FeeController;
 import com.yingliguoji.fee.service.FsZcService;
 import org.joda.time.DateTime;
 import org.junit.Test;
@@ -20,6 +21,9 @@ public class FeeServiceTest extends BaseApiTest {
     @Autowired
     private FsZcService fsZcService;
 
+    @Autowired
+    private FeeController feeController;
+
 
     @Test
     public void testFs() {
@@ -27,5 +31,11 @@ public class FeeServiceTest extends BaseApiTest {
         DateTime startDateTime = new DateTime(1553788800000L);
 
         fsZcService.backMoney(startDateTime, endDateTime);
+    }
+
+
+    @Test
+    public void testBack() {
+        feeController.backMoney();
     }
 }

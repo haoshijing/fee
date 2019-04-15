@@ -34,4 +34,42 @@
 
     </insert>
 
+    <insert id="batchInsertData">
+
+        insert into
+        <include refid="tableName"/>
+        (
+        member_id,
+        money,
+        `type`,
+        `describe`,
+        before_money,
+        after_money,
+        created_at
+        )
+
+        VALUES
+        <foreach collection="datas" item="item" index="index" separator=",">
+            (
+            #{item.memberId},
+            #{item.money},
+            #{item.type},
+            #{item.describe},
+            #{item.beforeMoney},
+            #{item.afterMoney},
+            #{item.createdAt}
+            )
+        </foreach>
+
+    </insert>
+
+    <select id="queryList" parameterType="java.lang.Integer" resultType="com.yingliguoji.fee.po.DividendPo">
+        select member_id as memberId,
+        money
+
+        from
+        <include refid="tableName"/>
+        where type = #{type}
+    </select>
+
 </mapper>
