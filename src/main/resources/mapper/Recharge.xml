@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yingliguoji.fee.dao.RechargeMapper">
+
+    <select id="queryStaticsData" resultType="com.yingliguoji.fee.po.MoneyStaticsPo">
+        select sum(money) ,count(*) from recharge
+        where status = 3 and member_id in
+        <foreach collection="ids" item="item" close=")" open="(" separator=",">
+            #{item}
+        </foreach>
+    </select>
+</mapper>
