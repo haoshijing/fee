@@ -11,4 +11,7 @@ public class MoneyResponseVo {
     private String totalDrawWith;
     private Integer totalDrawWithCount;
     private String totalDrawWithFee;
+
+    private String name;
+    private String realName;
 }

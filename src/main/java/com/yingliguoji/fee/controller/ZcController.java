@@ -54,6 +54,7 @@ public class ZcController {
         return new ApiResponse<>(memberBetResponse);
     }
 
+    @PostMapping("/queryMemberBetTotal")
     public ApiResponse<List<MoneyResponseVo>> queryMoneyData(@RequestBody MoneyQueryRequest moneyQueryRequest){
         List<MoneyResponseVo> moneyResponseVos = memberMoneyService.queryMoneyData(moneyQueryRequest);
         return new ApiResponse<>(moneyResponseVos);

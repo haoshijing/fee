@@ -1,15 +1,87 @@
 package com.yingliguoji.fee.service.money;
-
-import com.google.common.collect.Lists;
 import com.yingliguoji.fee.controller.request.MoneyQueryRequest;
 import com.yingliguoji.fee.controller.response.MoneyResponseVo;
+import com.yingliguoji.fee.dao.MemberMapper;
+import com.yingliguoji.fee.dao.RechargeMapper;
+import com.yingliguoji.fee.dao.WithdrawMapper;
+import com.yingliguoji.fee.po.MemberPo;
+import com.yingliguoji.fee.po.MoneyStaticsPo;
+import com.yingliguoji.fee.service.MemberService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class MemberMoneyService {
+
+    @Autowired
+    private MemberMapper memberMapper;
+
+    @Autowired
+    private WithdrawMapper withdrawMapper;
+
+    @Autowired
+    private RechargeMapper rechargeMapper;
+
+    @Autowired
+    private MemberService memberService;
+
     public List<MoneyResponseVo> queryMoneyData(MoneyQueryRequest moneyQueryRequest) {
-        return  Lists.newArrayList();
+
+        List<Integer> agentIds = memberMapper.queryZcMember(moneyQueryRequest.getAgentId(), moneyQueryRequest.getName());
+        if (moneyQueryRequest.getAgentId() != 0) {
+            agentIds.add(0, moneyQueryRequest.getAgentId());
+        }
+
+        return agentIds.stream().map(agentId->{
+            MoneyResponseVo moneyResponseVo = queryMoney(agentId);
+            return moneyResponseVo;
+        }).collect(Collectors.toList());
+    }
+
+    private MoneyResponseVo queryMoney(Integer agentId){
+        MemberPo currentMemberPo = memberMapper.findById(agentId);
+        List<MemberPo> memberPos =  memberService.getMemberIds(agentId,"");
+        memberPos.add(memberMapper.findById(agentId));
+
+        List<Integer> agentIds = memberPos.stream().map(MemberPo::getId).collect(Collectors.toList());
+        MoneyResponseVo responseVo = new MoneyResponseVo();
+        responseVo.setName(currentMemberPo.getName());
+        responseVo.setRealName(currentMemberPo.getReal_name());
+        if(!CollectionUtils.isEmpty(agentIds)){
+            MoneyStaticsPo withDrawData =  withdrawMapper.queryStaticsData(agentIds);
+            MoneyStaticsPo rechargeData = rechargeMapper.queryStaticsData(agentIds);
+            if(withDrawData.getTotalMoney() == null){
+                withDrawData.setTotalMoney(new BigDecimal("0"));
+            }
+            if(rechargeData.getTotalMoney() == null){
+                rechargeData.setTotalMoney(new BigDecimal("0"));
+            }
+            responseVo.setTotalDrawWithCount(withDrawData.getTotalCount());
+            responseVo.setTotalPickUpCount(rechargeData.getTotalCount());
+
+            responseVo.setTotalPickUp(String.valueOf(rechargeData.getTotalMoney().doubleValue()));
+            responseVo.setTotalDrawWith(String.valueOf(withDrawData.getTotalMoney().doubleValue()));
+
+            BigDecimal pickFee = rechargeData.getTotalMoney().multiply(new BigDecimal(1.5)).divide(new BigDecimal(100));
+
+            BigDecimal withdrawFee = withDrawData.getTotalMoney().multiply(new BigDecimal(2)).divide(new BigDecimal(1000));
+            responseVo.setTotalPickupFee(String.valueOf(pickFee.doubleValue()));
+            responseVo.setTotalDrawWithFee(String.valueOf(withdrawFee.doubleValue()));
+        }else{
+            responseVo.setTotalPickUp("0");
+            responseVo.setTotalPickUpCount(0);
+            responseVo.setTotalPickupFee("0");
+            responseVo.setTotalDrawWithFee("0");
+            responseVo.setTotalDrawWithCount(0);
+            responseVo.setTotalDrawWith("0");
+
+        }
+        return responseVo;
+
     }
 }
