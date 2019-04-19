@@ -17,7 +17,7 @@
     <select id="queryBetClient" resultType="com.yingliguoji.fee.po.GameTypePo">
         select member_id as memberId,gameType from
         <include refid="tableName"/>
-        where updated_at BETWEEN #{start}
+        where betTime BETWEEN #{start} and isfs = 0
         and #{end} group by member_id , gameType
     </select>
 
@@ -29,14 +29,14 @@
         gameType
         from
         <include refid="tableName"/>
-        where 1 =1
+        where 1 =1 and isfs = 0
         <if test = "memberIds != null and memberIds.size() >0">
             AND member_id in
             <foreach collection="memberIds" item="item" open="(" close=")" separator=",">
                 #{item}
             </foreach>
             <if test="start != null and start != ''">
-                AND updated_at >= #{start}
+                AND betTime >= #{start}
             </if>
 
             <if test="gameType != null">
@@ -44,7 +44,7 @@
             </if>
 
             <if test="end != null and end != ''">
-                AND updated_at <![CDATA[ <= ]]> #{end}
+                AND betTime <![CDATA[ <= ]]> #{end}
             </if>
 
             GROUP  by member_id, gameType
@@ -58,13 +58,13 @@
         COALESCE(sum(betAmount), 0) as totalBetAmount
         from
         <include refid="tableName"/>
-        where 1 =1
+        where 1 =1 and isfs = 0
         <if test=" memberId != null">
             AND member_id = #{memberId}
         </if>
 
         <if test="start != null and start != ''">
-            AND updated_at >= #{start}
+            AND betTime >= #{start}
         </if>
 
         <if test="gameType != null">
@@ -72,7 +72,7 @@
         </if>
 
         <if test="end != null and end != ''">
-            AND updated_at <![CDATA[ <= ]]> #{end}
+            AND betTime <![CDATA[ <= ]]> #{end}
         </if>
     </select>
 
@@ -119,5 +119,13 @@
         </if>
 
     </select>
+
+    <update id="updateFs">
+        update
+        <include refid="tableName"/>
+        set isFs = 1
+        where betTime >= #{start} AND betTime <![CDATA[ <= ]]> #{end}
+        and isFs = 0
+    </update>
 
 </mapper>

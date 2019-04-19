@@ -66,6 +66,7 @@ public class FsZcService {
 
         List<GameTypePo> gameTypePos = gameRecordMapper.queryBetClient(start, end);
         handlerData(gameTypePos,start, end, endDate,"NORMAL");
+        gameRecordMapper.updateFs(start, end);
 
     }
     public void bcBack(DateTime startTime, DateTime endTime) {
@@ -184,7 +185,7 @@ public class FsZcService {
                 MemberPo afterPo = memberMapper.findById(jsMemberId);
                 dividendPo.setAfterMoney(afterPo.getMoney());
                 if (dividendPo.getMoney().doubleValue() > 0) {
-                    dividendMapper.insert(dividendPo);
+                    //dividendMapper.insert(dividendPo);
                 }
                 detectQuota = rebatePo.getQuota();
 
