@@ -24,6 +24,10 @@ public interface GameRecordMapper {
     GameSumPo querySum(GameRecordPo gameRecordPo);
 
     List<MemberGamePo> queryMemberGamePos(GameRecordPo queryPo);
+
+    List<GameTypePo> queryBcBetClient(@Param("start")String start,  @Param("end") String end);
+
+    GameSumPo queryBcSum(GameRecordPo gameRecordPo);
 }
 
 

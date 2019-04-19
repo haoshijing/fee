@@ -7,6 +7,7 @@ import com.yingliguoji.fee.enums.RebateType;
 import com.yingliguoji.fee.po.*;
 import com.yingliguoji.fee.po.js.GameSumPo;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -64,18 +65,7 @@ public class FsZcService {
         String end = endDate.toString("yyyy-MM-dd HH:mm:ss");
 
         List<GameTypePo> gameTypePos = gameRecordMapper.queryBetClient(start, end);
-        gameTypePos.forEach(gameTypePo -> {
-            GameRecordPo gameRecordPo = new GameRecordPo();
-            gameRecordPo.setStart(start);
-            gameRecordPo.setEnd(end);
-            gameRecordPo.setGameType(gameTypePo.getGameType());
-            gameRecordPo.setMemberId(gameTypePo.getMemberId());
-            GameSumPo gameSumPo = gameRecordMapper.querySum(gameRecordPo);
-            if (gameSumPo.getTotalBetAmount().doubleValue() > 0) {
-                handleJs(gameTypePo.getMemberId(), gameTypePo.getGameType(), gameSumPo, endDate);
-            }
-
-        });
+        handlerData(gameTypePos,start, end, endDate,"NORMAL");
 
     }
 
@@ -216,5 +206,33 @@ public class FsZcService {
             jsMemberId = memberPo.getTop_id();
         }
         return sumFs;
+    }
+
+    public void bcBack(DateTime startTime, DateTime endTime) {
+        String start = startTime.toString("yyyy-MM-dd HH:mm:ss");
+        String end = endTime.toString("yyyy-MM-dd HH:mm:ss");
+
+        List<GameTypePo> gameTypePos = gameRecordMapper.queryBcBetClient(start, end);
+        handlerData(gameTypePos,start, end, endTime, "BC");
+    }
+
+    private void handlerData(List<GameTypePo> gameTypePos, String start, String end, DateTime endTime, String type){
+        gameTypePos.forEach(gameTypePo -> {
+            GameRecordPo gameRecordPo = new GameRecordPo();
+            gameRecordPo.setStart(start);
+            gameRecordPo.setEnd(end);
+            gameRecordPo.setGameType(gameTypePo.getGameType());
+            gameRecordPo.setMemberId(gameTypePo.getMemberId());
+            GameSumPo gameSumPo = null;
+            if(StringUtils.equals(type,"NORMAL")) {
+                gameSumPo =   gameRecordMapper.querySum(gameRecordPo);
+            }else{
+                gameSumPo =   gameRecordMapper.queryBcSum(gameRecordPo);
+            }
+            if (gameSumPo.getTotalBetAmount().doubleValue() > 0) {
+                handleJs(gameTypePo.getMemberId(), gameTypePo.getGameType(), gameSumPo, endTime);
+            }
+
+        });
     }
 }

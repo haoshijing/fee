@@ -89,4 +89,35 @@
         where billNo = #{billNo} limit 1
     </select>
 
+    <select id="queryBcBetClient" resultType="com.yingliguoji.fee.po.GameTypePo">
+        select member_id as memberId , gameType
+          from (select * ,  substr(updated_at,1, 10) as updateAt ,  substr( betTime,1, 10) as betAt from game_record) game_record
+          where updateAt > betAt and betTime >=#{start} and betTime <![CDATA[ <= ]]> #{end} GROUP BY memberId, gameType
+    </select>
+
+    <select id="queryBcSum" parameterType="com.yingliguoji.fee.po.GameRecordPo" resultType="com.yingliguoji.fee.po.js.GameSumPo">
+        select COALESCE(sum(netAmount), 0) as totalNetAmount,
+        COALESCE(sum(validBetAmount), 0) as totalValidBetAmount,
+        COALESCE(sum(betAmount), 0) as totalBetAmount
+        from
+        (select * ,  substr(updated_at,1, 10) as updateAt ,  substr( betTime,1, 10) as betAt from game_record) game_record
+        where updateAt > betAt
+        <if test=" memberId != null">
+            AND member_id = #{memberId}
+        </if>
+
+        <if test="start != null and start != ''">
+            AND betTime >= #{start}
+        </if>
+
+        <if test="gameType != null">
+            AND gameType = #{gameType}
+        </if>
+
+        <if test="end != null and end != ''">
+            AND betTime <![CDATA[ <= ]]> #{end}
+        </if>
+
+    </select>
+
 </mapper>

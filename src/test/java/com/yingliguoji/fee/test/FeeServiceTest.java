@@ -24,6 +24,14 @@ public class FeeServiceTest extends BaseApiTest {
     @Autowired
     private FeeController feeController;
 
+    @Test
+    public void testBcFs() {
+        DateTime start = new DateTime(1555171200000L);
+        DateTime end = new DateTime(1555257600000L);
+
+        fsZcService.bcBack(start, end);
+    }
+
 
     @Test
     public void testFs() {

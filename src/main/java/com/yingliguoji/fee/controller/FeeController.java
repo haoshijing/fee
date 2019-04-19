@@ -27,6 +27,14 @@ public class FeeController {
         return new ApiResponse<>(true);
     }
 
+    @GetMapping("/bcBack")
+    public ApiResponse<Boolean> bcBack(Long startTime, Long endTime) {
+        for (Long t = startTime; t < endTime; t += DateUtils.MILLIS_PER_DAY) {
+            fsZcService.bcBack(new DateTime(t), new DateTime(t + DateUtils.MILLIS_PER_DAY));
+        }
+        return new ApiResponse<>(true);
+    }
+
     @GetMapping("/backMoney")
     public ApiResponse<Boolean> backMoney() {
         backService.backMoney();
