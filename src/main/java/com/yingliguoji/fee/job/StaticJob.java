@@ -28,9 +28,11 @@ public class StaticJob {
     }
 
     private void work() {
-        DateTime endDatetime = new DateTime().withHourOfDay(0).withMillisOfSecond(0).withMinuteOfHour(0);
-        DateTime startDateTime = endDatetime.plusDays(-1);
-        fsZcService.backMoney(startDateTime,endDatetime);
+        for (int i = 0; i < 10; i++) {
+            DateTime endDatetime = new DateTime().plusDays(0 - i).withHourOfDay(0).withMillisOfSecond(0).withMinuteOfHour(0);
+            DateTime startDateTime = endDatetime.plusDays(-1);
+            fsZcService.backMoney(startDateTime, endDatetime);
+        }
     }
 
 }

@@ -185,7 +185,7 @@ public class FsZcService {
                 MemberPo afterPo = memberMapper.findById(jsMemberId);
                 dividendPo.setAfterMoney(afterPo.getMoney());
                 if (dividendPo.getMoney().doubleValue() > 0) {
-                    //dividendMapper.insert(dividendPo);
+                    dividendMapper.insert(dividendPo);
                 }
                 detectQuota = rebatePo.getQuota();
 
