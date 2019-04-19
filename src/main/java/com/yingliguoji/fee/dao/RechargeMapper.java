@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface RechargeMapper {
 
-    MoneyStaticsPo queryStaticsData(@Param("ids") List<Integer> ids);
+    MoneyStaticsPo queryStaticsData(@Param("ids") List<Integer> ids, @Param("startTime")String start, @Param("endTime")String end);
 }

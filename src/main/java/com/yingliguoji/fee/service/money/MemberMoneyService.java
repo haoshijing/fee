@@ -7,6 +7,7 @@ import com.yingliguoji.fee.dao.WithdrawMapper;
 import com.yingliguoji.fee.po.MemberPo;
 import com.yingliguoji.fee.po.MoneyStaticsPo;
 import com.yingliguoji.fee.service.MemberService;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -30,20 +31,30 @@ public class MemberMoneyService {
     @Autowired
     private MemberService memberService;
 
-    public List<MoneyResponseVo> queryMoneyData(MoneyQueryRequest moneyQueryRequest) {
+    public List<MoneyResponseVo>                   queryMoneyData(MoneyQueryRequest moneyQueryRequest) {
 
         List<Integer> agentIds = memberMapper.queryZcMember(moneyQueryRequest.getAgentId(), moneyQueryRequest.getName());
+
         if (moneyQueryRequest.getAgentId() != 0) {
             agentIds.add(0, moneyQueryRequest.getAgentId());
         }
 
         return agentIds.stream().map(agentId->{
-            MoneyResponseVo moneyResponseVo = queryMoney(agentId);
+            String start = "";
+            String end = "";
+            if(moneyQueryRequest.getStart() != null){
+                start = new DateTime(moneyQueryRequest.getStart()).toString("yyyy-MM-dd HH:mm:ss");
+            }
+
+            if(moneyQueryRequest.getEnd() != null){
+                end = new DateTime(moneyQueryRequest.getEnd()).toString("yyyy-MM-dd HH:mm:ss");
+            }
+            MoneyResponseVo moneyResponseVo = queryMoney(agentId, start , end);
             return moneyResponseVo;
         }).collect(Collectors.toList());
     }
 
-    private MoneyResponseVo queryMoney(Integer agentId){
+    private MoneyResponseVo queryMoney(Integer agentId, String start, String end){
         MemberPo currentMemberPo = memberMapper.findById(agentId);
         List<MemberPo> memberPos =  memberService.getMemberIds(agentId,"");
         memberPos.add(memberMapper.findById(agentId));
@@ -53,8 +64,8 @@ public class MemberMoneyService {
         responseVo.setName(currentMemberPo.getName());
         responseVo.setRealName(currentMemberPo.getReal_name());
         if(!CollectionUtils.isEmpty(agentIds)){
-            MoneyStaticsPo withDrawData =  withdrawMapper.queryStaticsData(agentIds);
-            MoneyStaticsPo rechargeData = rechargeMapper.queryStaticsData(agentIds);
+            MoneyStaticsPo withDrawData =  withdrawMapper.queryStaticsData(agentIds, start, end);
+            MoneyStaticsPo rechargeData = rechargeMapper.queryStaticsData(agentIds, start, end);
             if(withDrawData.getTotalMoney() == null){
                 withDrawData.setTotalMoney(new BigDecimal("0"));
             }

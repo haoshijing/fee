@@ -4,10 +4,16 @@
 <mapper namespace="com.yingliguoji.fee.dao.WithdrawMapper">
 
     <select id="queryStaticsData" resultType="com.yingliguoji.fee.po.MoneyStaticsPo">
-        select sum(money) ,count(*) from drawing
+        select sum(money) as totalMoney ,count(*) as totalCount from drawing
         where status = 2 and member_id in
         <foreach collection="ids" item="item" close=")" open="(" separator=",">
             #{item}
         </foreach>
+        <if test="startTime != null">
+            and updated_at > #{startTime}
+        </if>
+        <if test="endTime != null">
+            and updated_at &lt;= #{endTime}
+        </if>
     </select>
 </mapper>
