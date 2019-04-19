@@ -68,6 +68,14 @@ public class FsZcService {
         handlerData(gameTypePos,start, end, endDate,"NORMAL");
 
     }
+    public void bcBack(DateTime startTime, DateTime endTime) {
+        String start = startTime.toString("yyyy-MM-dd HH:mm:ss");
+        String end = endTime.toString("yyyy-MM-dd HH:mm:ss");
+
+        List<GameTypePo> gameTypePos = gameRecordMapper.queryBcBetClient(start, end);
+        handlerData(gameTypePos,start, end, endTime, "BC");
+    }
+
 
 
     private void handleJs(Integer memberId, Integer gameType, GameSumPo gameSumPo, DateTime endDate) {
@@ -206,14 +214,6 @@ public class FsZcService {
             jsMemberId = memberPo.getTop_id();
         }
         return sumFs;
-    }
-
-    public void bcBack(DateTime startTime, DateTime endTime) {
-        String start = startTime.toString("yyyy-MM-dd HH:mm:ss");
-        String end = endTime.toString("yyyy-MM-dd HH:mm:ss");
-
-        List<GameTypePo> gameTypePos = gameRecordMapper.queryBcBetClient(start, end);
-        handlerData(gameTypePos,start, end, endTime, "BC");
     }
 
     private void handlerData(List<GameTypePo> gameTypePos, String start, String end, DateTime endTime, String type){
