@@ -181,7 +181,7 @@ public class FsZcService {
                 MemberPo updatePo = new MemberPo();
                 updatePo.setId(jsMemberId);
                 updatePo.setMoney(dividendPo.getMoney());
-                memberMapper.update(updatePo);
+                //memberMapper.update(updatePo);
                 MemberPo afterPo = memberMapper.findById(jsMemberId);
                 dividendPo.setAfterMoney(afterPo.getMoney());
                 if (dividendPo.getMoney().doubleValue() > 0) {
