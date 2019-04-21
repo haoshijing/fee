@@ -124,7 +124,9 @@ public class ZcQueryService {
                 if (feeDecimal == null) {
                     feeDecimal = new BigDecimal(0);
                 }
-                zcResponseListData.getGameZcDataList().add(new ZcResponseData.GameZcData(8, "费用", feeDecimal.doubleValue()));
+                ZcResponseData.GameZcData data = new ZcResponseData.GameZcData(8, "费用", feeDecimal.doubleValue());
+                data.setData(Double.valueOf(new DecimalFormat("0.00").format(feeDecimal.doubleValue())));
+                zcResponseListData.getGameZcDataList().add(data);
                 zcResponseListData.setData(zcResponseListData.getData() - feeDecimal.doubleValue());
 
                 zcResponseListData.setData((Double.valueOf(new DecimalFormat("0.00").format(zcResponseListData.getData()))));
