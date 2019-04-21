@@ -34,16 +34,9 @@ public class FeeServiceTest extends BaseApiTest {
 
 
     @Test
-    public void testFs() {
-        DateTime start = new DateTime(1555171200000L);
-        DateTime end = new DateTime(1555257600000L);
+    public void testBackFee() {
 
-        fsZcService.backMoney(start, end);
+        feeController.backFee(1551369600000L, 1555776000000L);
     }
 
-
-    @Test
-    public void testBack() {
-        feeController.backMoney();
-    }
 }

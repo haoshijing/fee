@@ -5,7 +5,7 @@
 
     <select id="queryStaticsData" resultType="com.yingliguoji.fee.po.MoneyStaticsPo">
         select sum(money) as totalMoney  ,count(*) as  totalCount from recharge
-        where status = 3 and member_id in
+        where status = 2 and member_id in
         <foreach collection="ids" item="item" close=")" open="(" separator=",">
             #{item}
         </foreach>
@@ -15,5 +15,11 @@
         <if test="endTime != null">
             and updated_at &lt;= #{endTime}
         </if>
+    </select>
+
+    <select id="queryRechargeMember" resultType="com.yingliguoji.fee.po.money.TotalFeeMoneyPo">
+        select sum(money) as money , member_id as memberId from recharge
+        where status = 2     and updated_at > #{startTime}
+        and updated_at &lt;= #{endTime} GROUP  by memberId
     </select>
 </mapper>

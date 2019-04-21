@@ -16,4 +16,10 @@
             and updated_at &lt;= #{endTime}
         </if>
     </select>
+
+    <select id="queryDrawingMember" resultType="com.yingliguoji.fee.po.money.TotalFeeMoneyPo">
+        select sum(money) as money , member_id as memberId from drawing
+        where status = 2 and    updated_at > #{startTime}
+        and updated_at &lt;= #{endTime} GROUP  by memberId
+    </select>
 </mapper>

@@ -1,8 +1,8 @@
 package com.yingliguoji.fee.controller;
 
 import com.yingliguoji.fee.ApiResponse;
-import com.yingliguoji.fee.service.BackService;
 import com.yingliguoji.fee.service.FsZcService;
+import com.yingliguoji.fee.service.MoneyFeeService;
 import org.apache.commons.lang3.time.DateUtils;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +17,7 @@ public class FeeController {
     private FsZcService fsZcService;
 
     @Autowired
-    private BackService backService;
+    private MoneyFeeService moneyFeeService;
 
     @GetMapping("/back")
     public ApiResponse<Boolean> back(Long startTime, Long endTime) {
@@ -27,17 +27,12 @@ public class FeeController {
         return new ApiResponse<>(true);
     }
 
-    @GetMapping("/bcBack")
-    public ApiResponse<Boolean> bcBack(Long startTime, Long endTime) {
-        for (Long t = startTime; t < endTime; t += DateUtils.MILLIS_PER_DAY) {
-            fsZcService.bcBack(new DateTime(t), new DateTime(t + DateUtils.MILLIS_PER_DAY));
-        }
-        return new ApiResponse<>(true);
-    }
 
-    @GetMapping("/backMoney")
-    public ApiResponse<Boolean> backMoney() {
-        backService.backMoney();
+    @GetMapping("/backFee")
+    public ApiResponse<Boolean> backFee(Long startTime, Long endTime) {
+        for (Long t = startTime; t < endTime; t += DateUtils.MILLIS_PER_DAY) {
+            moneyFeeService.handlerFee(new DateTime(t), new DateTime(t + DateUtils.MILLIS_PER_DAY));
+        }
         return new ApiResponse<>(true);
     }
 

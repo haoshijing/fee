@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yingliguoji.fee.dao.ProxyFeeZcMapper">
+
+    <sql id="tableName">
+        proxy_fee_zc
+    </sql>
+    <!-- 插入一条记录 -->
+
+    <insert id="insert" parameterType="com.yingliguoji.fee.po.ProxyFeeZcLog">
+
+        insert into
+        <include refid="tableName"/>
+        (
+        agentId,
+        quota,
+        memberId,
+        name,
+        type,
+        totalMoney,
+        totalFee,
+        statTime,
+        insertTime
+        )
+
+        VALUES (
+        #{agentId},
+        #{quota},
+        #{memberId},
+        #{name},
+        #{type},
+        #{totalMoney},
+        #{totalFee},
+        #{statTime},
+        #{insertTime}
+        )
+    </insert>
+
+
+    <select id="queryFee" parameterType="com.yingliguoji.fee.po.js.QueryProxyZcPo"
+            resultType="java.math.BigDecimal">
+        select
+        sum(totalFee) as totalFee
+        from proxy_fee_zc where 1= 1
+        <if test="start != null and start != ''">
+            and statTime > #{start}
+        </if>
+        <if test="end != null  and end != ''">
+            and statTime &lt;= #{end}
+        </if>
+        <if test="agentId != null">
+            AND agentId = #{agentId}
+        </if>
+    </select>
+
+</mapper>

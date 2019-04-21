@@ -10,6 +10,7 @@ import com.google.common.collect.Lists;
 import com.yingliguoji.fee.controller.request.ZcQueryRequest;
 import com.yingliguoji.fee.controller.request.ZcResponseData;
 import com.yingliguoji.fee.dao.MemberMapper;
+import com.yingliguoji.fee.dao.ProxyFeeZcMapper;
 import com.yingliguoji.fee.dao.ProxyZcLogMapper;
 import com.yingliguoji.fee.dao.RebateMapper;
 import com.yingliguoji.fee.enums.RebateType;
@@ -17,10 +18,12 @@ import com.yingliguoji.fee.po.MemberPo;
 import com.yingliguoji.fee.po.RebatePo;
 import com.yingliguoji.fee.po.js.QueryProxyZcPo;
 import com.yingliguoji.fee.po.js.ZcSumPo;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Optional;
@@ -38,6 +41,9 @@ public class ZcQueryService {
     private ProxyZcLogMapper proxyZcLogMapper;
 
     @Autowired
+    private ProxyFeeZcMapper proxyFeeZcMapper;
+
+    @Autowired
     private RebateMapper rebateMapper;
 
     @Autowired
@@ -46,6 +52,14 @@ public class ZcQueryService {
     public ZcResponseData queryZcList(ZcQueryRequest zcQueryRequest) {
         Integer queryType = zcQueryRequest.getQueryType();
         ZcResponseData responseData = new ZcResponseData();
+        String start = "";
+        String end = "";
+        if (zcQueryRequest.getStart() != null) {
+            start = new DateTime(zcQueryRequest.getStart()).toString("yyyy-MM-dd HH:mm:ss");
+        }
+        if (zcQueryRequest.getEnd() != null) {
+            end = new DateTime(zcQueryRequest.getEnd()).toString("yyyy-MM-dd HH:mm:ss");
+        }
         List<Integer> agentIds = memberMapper.queryZcMember(zcQueryRequest.getCurrentAgentId(), zcQueryRequest.getName());
         if (zcQueryRequest.getCurrentAgentId() != 0) {
             agentIds.add(0, zcQueryRequest.getCurrentAgentId());
@@ -80,10 +94,8 @@ public class ZcQueryService {
             zcSumPos = proxyZcLogMapper.queryZcList(queryProxyZcPo);
         }
         zcSumPos.forEach(zcSumPo -> {
-            Optional<ZcResponseData.ZcResponseListData> zcResponseListDataOptional =
-                    list.stream().filter(zcResponseListData ->
-                            zcResponseListData.getMemberId().equals(zcSumPo.getAgentId())).
-                            findFirst();
+            Optional<ZcResponseData.ZcResponseListData> zcResponseListDataOptional = list.stream().filter(zcResponseListData -> zcResponseListData.getMemberId().equals(zcSumPo.getAgentId())).
+                    findFirst();
             if (zcResponseListDataOptional.isPresent()) {
                 ZcResponseData.ZcResponseListData data = zcResponseListDataOptional.get();
                 data.resetData(zcSumPo, queryType);
@@ -103,6 +115,21 @@ public class ZcQueryService {
                 gameZcData1.setData(Double.valueOf(new DecimalFormat("0.00").format(gameZcData1.getData())));
             });
         });
+        if (queryType == 1) {
+            final String s = start;
+            final String e = end;
+            responseData.getGameZcDataList().add(new ZcResponseData.GameZcData(8, "费用", 0.0));
+            responseData.getZcResponseListData().forEach(zcResponseListData -> {
+                BigDecimal feeDecimal = proxyFeeZcMapper.queryFee(s, e, zcResponseListData.getMemberId());
+                if (feeDecimal == null) {
+                    feeDecimal = new BigDecimal(0);
+                }
+                zcResponseListData.getGameZcDataList().add(new ZcResponseData.GameZcData(8, "费用", feeDecimal.doubleValue()));
+                zcResponseListData.setData(zcResponseListData.getData() - feeDecimal.doubleValue());
+
+                zcResponseListData.setData((Double.valueOf(new DecimalFormat("0.00").format(zcResponseListData.getData()))));
+            });
+        }
         return responseData;
     }
 }
