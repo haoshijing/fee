@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yingliguoji.fee.dao.SystemConfigMapper">
+
+    <sql id="tableName">
+        system_config
+    </sql>
+    <!-- 插入一条记录 -->
+
+    <select id="getConfig" resultType="com.yingliguoji.fee.po.SystemConfigPo">
+        select cz_fee as czFee , tk_fee as tkFee from
+        <include refid="tableName"/>
+        where id = 1
+    </select>
+
+
+</mapper>

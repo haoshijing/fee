@@ -5,6 +5,7 @@ import com.yingliguoji.fee.enums.RebateType;
 import com.yingliguoji.fee.po.MemberPo;
 import com.yingliguoji.fee.po.ProxyFeeZcLog;
 import com.yingliguoji.fee.po.RebatePo;
+import com.yingliguoji.fee.po.SystemConfigPo;
 import com.yingliguoji.fee.po.money.TotalFeeMoneyPo;
 import lombok.extern.slf4j.Slf4j;
 import org.joda.time.DateTime;
@@ -32,6 +33,9 @@ public class MoneyFeeService {
 
     @Autowired
     private RebateMapper rebateMapper;
+
+    @Autowired
+    private SystemConfigMapper systemConfigMapper;
 
     public void handlerFee(DateTime startTime, DateTime endTime) {
         String start = startTime.toString("yyyy-MM-dd HH:mm:ss");
@@ -70,12 +74,15 @@ public class MoneyFeeService {
                     jsZcMemberId = memberPo.getTop_id();
                     continue;
                 }
+                final SystemConfigPo configPo = systemConfigMapper.getConfig();
+                BigDecimal czFeeRate = configPo.getCzFee() != null ? configPo.getCzFee() : new BigDecimal(0);
+                BigDecimal tkFeeRate = configPo.getTkFee() != null ? configPo.getTkFee() : new BigDecimal(0);
                 BigDecimal totalFee;
                 if (type == 1) {
-                    totalFee = totalMoney.multiply(new BigDecimal(0.015));
+                    totalFee = totalMoney.multiply(czFeeRate).divide(new BigDecimal(100));
 
                 } else {
-                    totalFee = totalMoney.multiply(new BigDecimal(0.002));
+                    totalFee = totalMoney.multiply(tkFeeRate).divide(new BigDecimal(1000));
                 }
                 totalFee = totalFee.multiply(new BigDecimal(quota)).divide(new BigDecimal(100));
                 ;

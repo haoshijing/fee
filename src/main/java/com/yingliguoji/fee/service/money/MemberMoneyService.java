@@ -3,9 +3,11 @@ import com.yingliguoji.fee.controller.request.MoneyQueryRequest;
 import com.yingliguoji.fee.controller.response.MoneyResponseVo;
 import com.yingliguoji.fee.dao.MemberMapper;
 import com.yingliguoji.fee.dao.RechargeMapper;
+import com.yingliguoji.fee.dao.SystemConfigMapper;
 import com.yingliguoji.fee.dao.WithdrawMapper;
 import com.yingliguoji.fee.po.MemberPo;
 import com.yingliguoji.fee.po.MoneyStaticsPo;
+import com.yingliguoji.fee.po.SystemConfigPo;
 import com.yingliguoji.fee.service.MemberService;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +33,10 @@ public class MemberMoneyService {
     @Autowired
     private MemberService memberService;
 
+
+    @Autowired
+    private SystemConfigMapper systemConfigMapper;
+
     public List<MoneyResponseVo>                   queryMoneyData(MoneyQueryRequest moneyQueryRequest) {
 
         List<Integer> agentIds = memberMapper.queryZcMember(moneyQueryRequest.getAgentId(), moneyQueryRequest.getName());
@@ -38,7 +44,7 @@ public class MemberMoneyService {
         if (moneyQueryRequest.getAgentId() != 0) {
             agentIds.add(0, moneyQueryRequest.getAgentId());
         }
-
+        final SystemConfigPo configPo = systemConfigMapper.getConfig();
         return agentIds.stream().map(agentId->{
             String start = "";
             String end = "";
@@ -49,12 +55,12 @@ public class MemberMoneyService {
             if(moneyQueryRequest.getEnd() != null){
                 end = new DateTime(moneyQueryRequest.getEnd()).toString("yyyy-MM-dd HH:mm:ss");
             }
-            MoneyResponseVo moneyResponseVo = queryMoney(agentId, start , end);
+            MoneyResponseVo moneyResponseVo = queryMoney(agentId, start, end, configPo);
             return moneyResponseVo;
         }).collect(Collectors.toList());
     }
 
-    private MoneyResponseVo queryMoney(Integer agentId, String start, String end){
+    private MoneyResponseVo queryMoney(Integer agentId, String start, String end, SystemConfigPo configPo) {
         MemberPo currentMemberPo = memberMapper.findById(agentId);
         List<MemberPo> memberPos =  memberService.getMemberIds(agentId,"");
         memberPos.add(memberMapper.findById(agentId));
@@ -78,9 +84,11 @@ public class MemberMoneyService {
             responseVo.setTotalPickUp(String.valueOf(rechargeData.getTotalMoney().doubleValue()));
             responseVo.setTotalDrawWith(String.valueOf(withDrawData.getTotalMoney().doubleValue()));
 
-            BigDecimal pickFee = rechargeData.getTotalMoney().multiply(new BigDecimal(1.5)).divide(new BigDecimal(100));
+            BigDecimal czFeeRate = configPo.getCzFee() != null ? configPo.getCzFee() : new BigDecimal(0);
+            BigDecimal tkFeeRate = configPo.getTkFee() != null ? configPo.getTkFee() : new BigDecimal(0);
+            BigDecimal pickFee = rechargeData.getTotalMoney().multiply(czFeeRate).divide(new BigDecimal(100));
 
-            BigDecimal withdrawFee = withDrawData.getTotalMoney().multiply(new BigDecimal(2)).divide(new BigDecimal(1000));
+            BigDecimal withdrawFee = withDrawData.getTotalMoney().multiply(tkFeeRate).divide(new BigDecimal(1000));
             responseVo.setTotalPickupFee(String.valueOf(pickFee.doubleValue()));
             responseVo.setTotalDrawWithFee(String.valueOf(withdrawFee.doubleValue()));
         }else{
