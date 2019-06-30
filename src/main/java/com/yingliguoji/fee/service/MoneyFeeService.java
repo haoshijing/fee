@@ -85,7 +85,6 @@ public class MoneyFeeService {
                     totalFee = totalMoney.multiply(tkFeeRate).divide(new BigDecimal(1000));
                 }
                 totalFee = totalFee.multiply(new BigDecimal(quota)).divide(new BigDecimal(100));
-                ;
                 proxyFeeZcLog.setQuota(quota);
                 proxyFeeZcLog.setTotalMoney(totalMoney.doubleValue());
                 proxyFeeZcLog.setMemberId(memberId);
