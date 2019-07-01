@@ -81,7 +81,7 @@ public class FsZcService {
 
     private void handleJs(Integer memberId, Integer gameType, GameSumPo gameSumPo, DateTime endDate) {
         //计算反水总值
-        BigDecimal sumFs = jsFs(memberId, gameType, gameSumPo.getTotalBetAmount(), endDate);
+        BigDecimal sumFs = jsFs(memberId, gameType, gameSumPo.getTotalValidBetAmount(), endDate);
         if (sumFs != null) {
             jsZc(memberId, gameType, gameSumPo, sumFs, endDate);
         }
