@@ -91,6 +91,7 @@ public class FsZcService {
         //占成值 = 总输赢 - 反水值
         Integer jsZcMemberId = memberId;
         BigDecimal totalNetAmount = gameSumPo.getTotalNetAmount();
+        log.info("memberId = {},totalNetAmount = {}", memberId, totalNetAmount);
         BigDecimal totalBetAmount = gameSumPo.getTotalBetAmount();
         BigDecimal totalValidBetAmount = gameSumPo.getTotalValidBetAmount();
         totalNetAmount = totalNetAmount.multiply(new BigDecimal(-1));
