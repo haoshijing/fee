@@ -58,7 +58,7 @@
         COALESCE(sum(betAmount), 0) as totalBetAmount
         from
         <include refid="tableName"/>
-        where 1 =1 and isfs = 0 and validBetAmount &lt;&gt; 0
+        where 1 =1 and isfs = 0 and netAmount &lt;&gt; 0
         <if test=" memberId != null">
             AND member_id = #{memberId}
         </if>
@@ -102,7 +102,7 @@
         from
         (select * , substr(updated_at,1, 10) as updateAt , substr( betTime,1, 10) as betAt from game_record where isfs =
         0) game_record
-        where updateAt > betAt and validBetAmount &lt;&gt; 0
+        where updateAt > betAt and netAmount &lt;&gt; 0
         <if test=" memberId != null">
             AND member_id = #{memberId}
         </if>

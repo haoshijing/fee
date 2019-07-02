@@ -36,7 +36,7 @@ public class FeeServiceTest extends BaseApiTest {
     @Test
     public void testBackFee() {
 
-        feeController.backFee(1551369600000L, 1555776000000L);
+        feeController.back(1561824000000L, 1561910400000L);
     }
 
 }
