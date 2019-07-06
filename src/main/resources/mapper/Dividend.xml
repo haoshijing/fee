@@ -72,7 +72,7 @@
         where type = #{type}
     </select>
 
-    <select id="queryNeedBackUser" resultType="com.yingliguoji.fee.po.DividendPo">
+    <select id="queryNeedBackUser" resultType="com.yingliguoji.fee.po.money.CzDividendPo">
         select member_id as memberId,
         COALESCE(sum(money),0) as money from
         <include refid="tableName"/>
