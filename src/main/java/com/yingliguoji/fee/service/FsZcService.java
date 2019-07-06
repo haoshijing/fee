@@ -65,6 +65,8 @@ public class FsZcService {
         String end = endDate.toString("yyyy-MM-dd HH:mm:ss");
 
         List<GameTypePo> gameTypePos = gameRecordMapper.queryBetClient(start, end);
+
+
         handlerData(gameTypePos,start, end, endDate,"NORMAL");
         gameRecordMapper.updateFs(start, end);
 
