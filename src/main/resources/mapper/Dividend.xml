@@ -72,4 +72,12 @@
         where type = #{type}
     </select>
 
+    <select id="queryNeedBackUser" resultType="com.yingliguoji.fee.po.DividendPo">
+        select member_id as memberId,
+        COALESCE(sum(money),0) as money from
+        <include refid="tableName"/>
+        where created_at > #{start} and created_at &lt;&gt; #{end} GROUP BY member_id
+
+    </select>
+
 </mapper>

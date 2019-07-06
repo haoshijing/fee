@@ -68,6 +68,7 @@
                 #{item}
             </foreach>
         </if>
+
         GROUP BY agentId , gameType
     </select>
 

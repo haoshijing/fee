@@ -6,6 +6,7 @@ import com.yingliguoji.fee.enums.GameType;
 import com.yingliguoji.fee.enums.RebateType;
 import com.yingliguoji.fee.po.*;
 import com.yingliguoji.fee.po.js.GameSumPo;
+import com.yingliguoji.fee.po.money.CzDividendPo;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
@@ -55,6 +56,7 @@ public class FsZcService {
         maps.put(GameType.DJ, "电竞");
         maps.put(GameType.BY, "捕鱼");
         maps.put(GameType.QP, "棋牌");
+        maps.put(8, "充值占成");
 
     }
 
@@ -68,8 +70,16 @@ public class FsZcService {
 
 
         handlerData(gameTypePos,start, end, endDate,"NORMAL");
+        handlerCzFee(start, end, endDate);
         gameRecordMapper.updateFs(start, end);
 
+    }
+
+    public void handlerCzFee(String start, String end, DateTime endDate) {
+        List<CzDividendPo> czDividendPos = dividendMapper.queryNeedBackUser(start, end);
+        czDividendPos.forEach(dividendPo -> {
+            jsBackZc(dividendPo.getMemberId(), dividendPo.getMoney(), endDate);
+        });
     }
     public void bcBack(DateTime startTime, DateTime endTime) {
         String start = startTime.toString("yyyy-MM-dd HH:mm:ss");
@@ -81,6 +91,7 @@ public class FsZcService {
 
 
 
+
     private void handleJs(Integer memberId, Integer gameType, GameSumPo gameSumPo, DateTime endDate) {
         //计算反水总值
         BigDecimal sumFs = jsFs(memberId, gameType, gameSumPo.getTotalValidBetAmount(), endDate);
@@ -88,6 +99,56 @@ public class FsZcService {
             jsZc(memberId, gameType, gameSumPo, sumFs, endDate);
         }
     }
+
+    private void jsBackZc(Integer memberId, BigDecimal sumFs, DateTime endDate) {
+        //占成值 = 总输赢 - 反水值
+        Integer jsZcMemberId = memberId;
+        log.info("memberId = {},sumFs = {}", memberId, sumFs);
+        BigDecimal zcMoney = sumFs.multiply(new BigDecimal(-1));
+        MemberPo memberPo;
+        MemberPo currentPo = memberMapper.findById(jsZcMemberId);
+
+        if (currentPo.getIs_daili() == 0) {
+            jsZcMemberId = currentPo.getTop_id();
+        }
+        while ((memberPo = memberMapper.findById(jsZcMemberId)) != null) {
+            RebatePo rebatePo = rebateMapper.findByRebateTypeAndMemberIdAndGameType(jsZcMemberId, RebateType.ZC, 0);
+            log.info("memberId = {} , zcRebatePo = {}", jsZcMemberId, rebatePo);
+            if (rebatePo != null) {
+                //增加占成日志
+                ProxyZcLogPo proxyZcLogPo = new ProxyZcLogPo();
+                Integer quota = rebatePo.getQuota();
+                if (quota == null || quota == 0) {
+                    log.warn("getQuota is null ,memberId = {}", jsZcMemberId);
+                    rebatePo.setQuota(0);
+                    jsZcMemberId = memberPo.getTop_id();
+                    continue;
+                }
+                BigDecimal money = zcMoney.multiply(new BigDecimal(quota)).divide(new BigDecimal(100));
+                proxyZcLogPo.setQuota(quota);
+                proxyZcLogPo.setMoney(money.doubleValue());
+                proxyZcLogPo.setMemberId(memberId);
+                proxyZcLogPo.setFsAmount(sumFs.doubleValue());
+                proxyZcLogPo.setGameType(8);
+                proxyZcLogPo.setBetAmount(sumFs.doubleValue());
+                proxyZcLogPo.setValidBetAmount(0.0);
+                proxyZcLogPo.setName(memberPo.getName());
+                proxyZcLogPo.setInsertTime(System.currentTimeMillis());
+                proxyZcLogPo.setStatTime(endDate.getMillis());
+                proxyZcLogPo.setAgentId(jsZcMemberId);
+                proxyZcLogPo.setJsAmount(zcMoney.doubleValue());
+                proxyZcLogPo.setNetAmount(0.0);
+                try {
+                    proxyZcLogMapper.insert(proxyZcLogPo);
+                } catch (Exception e) {
+                    log.error("proxyZcLogPo = {}", proxyZcLogPo, e);
+
+                }
+            }
+            jsZcMemberId = memberPo.getTop_id();
+        }
+    }
+
 
     private void jsZc(Integer memberId, Integer gameType, GameSumPo gameSumPo, BigDecimal sumFs, DateTime endDate) {
         //占成值 = 总输赢 - 反水值
@@ -220,6 +281,7 @@ public class FsZcService {
         return sumFs;
     }
 
+
     private void handlerData(List<GameTypePo> gameTypePos, String start, String end, DateTime endTime, String type){
         gameTypePos.forEach(gameTypePo -> {
             GameRecordPo gameRecordPo = new GameRecordPo();
@@ -238,5 +300,7 @@ public class FsZcService {
             }
 
         });
+
+
     }
 }
