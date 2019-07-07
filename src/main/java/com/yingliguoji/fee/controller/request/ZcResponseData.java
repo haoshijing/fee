@@ -35,6 +35,7 @@ public class ZcResponseData {
         gameZcDataList.add(new GameZcData(GameType.DJ, "电竞", 0.0));
         gameZcDataList.add(new GameZcData(GameType.BY, "捕鱼", 0.0));
         gameZcDataList.add(new GameZcData(GameType.QP, "棋牌", 0.0));
+        gameZcDataList.add(new GameZcData(8, "充值红利", 0.0));
     }
 
     public void addGamePo(ZcSumPo zcSumPo, int queryType) {

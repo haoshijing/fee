@@ -131,6 +131,8 @@ public class ZcQueryService {
 
                 zcResponseListData.setData((Double.valueOf(new DecimalFormat("0.00").format(zcResponseListData.getData()))));
             });
+
+
         }
         return responseData;
     }
