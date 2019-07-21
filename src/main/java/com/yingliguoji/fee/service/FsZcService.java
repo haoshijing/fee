@@ -70,7 +70,6 @@ public class FsZcService {
 
 
         handlerData(gameTypePos,start, end, endDate,"NORMAL");
-        handlerCzFee(start, end, endDate);
         gameRecordMapper.updateFs(start, end);
 
     }

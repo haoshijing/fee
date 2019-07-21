@@ -38,8 +38,10 @@ public class StaticJob {
             DateTime startDateTime = endDatetime.plusDays(-1);
             fsZcService.backMoney(startDateTime, endDatetime);
         }
+
         DateTime endDatetime = new DateTime().withHourOfDay(0).withMillisOfSecond(0).withMinuteOfHour(0);
         DateTime startDateTime = endDatetime.plusDays(-1);
+        fsZcService.handlerCzFee(new DateTime(startDateTime).toString("yyyy-MM-dd"), new DateTime(endDatetime).toString("yyyy-MM-dd"), endDatetime);
         moneyFeeService.handlerFee(startDateTime, endDatetime);
     }
 
