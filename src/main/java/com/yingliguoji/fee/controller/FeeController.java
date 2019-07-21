@@ -36,4 +36,12 @@ public class FeeController {
         return new ApiResponse<>(true);
     }
 
+    @GetMapping("/czZc")
+    public ApiResponse<Boolean> czZc(Long start, Long end) {
+        for (Long t = start; t < end; t += DateUtils.MILLIS_PER_DAY) {
+            fsZcService.handlerCzFee(new DateTime(t).toString("yyyy-MM-dd"), new DateTime(t + DateUtils.MILLIS_PER_DAY).toString("yyyy-MM-dd"), new DateTime(t + DateUtils.MILLIS_PER_DAY));
+        }
+        return new ApiResponse<>(true);
+    }
+
 }
